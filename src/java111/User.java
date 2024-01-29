@@ -1,0 +1,28 @@
+package java111;
+
+/**
+ * @author Remllez
+ * This class is for users, which have a name and unqiue id.
+ * Possible plans to impliment multi-user mode
+ */
+public class User{
+    private int userId = 1;
+    private String userName;
+    public User(String userName){
+        this.userName = userName;
+    }
+    /**
+     * Get the name of the user
+     * @return userName
+     */
+    public String getUserName(){
+        return userName;
+    }
+    /**
+     * Get the id of the user
+     * @return userId
+     */
+    public int getUserId(){
+        return userId;
+    }
+}
