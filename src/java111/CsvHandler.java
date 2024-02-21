@@ -65,14 +65,24 @@ public static void csvPrint(String path)
     }
 }
 
+/**
+ * Line (aka row) number 'lineNum' from file at 'path'
+ * @param path
+ * @param lineNum
+ * @return rowArray
+ */
 
-public static String getRow(String path, int lineNum)
+public static ArrayList<String> getRow(String path, int lineNum)
 {
 try{
     Stream<String> lines = Files.lines(Paths.get(path));
     String ret =  lines.skip(lineNum).findFirst().get();
+    ArrayList<String> retList = new ArrayList<String>();
+for ( String str : csvParse(ret))
+        retList.add(str);
+
     lines.close();
-    return ret;
+    return retList;
     }
 catch(Exception e){
     System.out.println(e);
@@ -195,7 +205,6 @@ switch (wo.getClass().getSimpleName()) {
         csvAppendStr("data//Workout.csv",wo.superToString());
         break;
     case "Isometric":
-        System.out.println(wo.toString());
         csvAppendStr("data//Isometric.csv",wo.toString());
         csvAppendStr("data//Workout.csv",wo.superToString());
         break;

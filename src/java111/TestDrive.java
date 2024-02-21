@@ -18,7 +18,7 @@ reps.add(200);
 reps.add(300);
 reps.add(400);
 st1.setWeight(StrParse.toWeight("100kg"));
-System.out.println(st1.toString());
+//System.out.println(st1.toString());
 CsvHandler.csvAppend(st1);
 
 
@@ -28,7 +28,7 @@ is1.setWeight(StrParse.toWeight("40lbs"));
 is1.setSet(StrParse.toIsometricSet("2:30, 1:15 , 2:20, 8:30"));
 
 CsvHandler.csvAppend(is1);
-System.out.println(is1.toString());
+//System.out.println(is1.toString());
 
 
 Strength s1 = new Strength(3, 9);
@@ -37,8 +37,11 @@ s1.setAnnotation("I am in bed");
 s1.addReps(19);
 s1.addReps(16);
 s1.setDate("eventually");
-System.out.println(s1.toString());
+//System.out.println(s1.toString());
 CsvHandler.csvAppend(s1);
+
+for (String mystr : CsvHandler.getRow("data/Isometric.csv",18))
+    System.out.println(mystr);
 
 }
 }
