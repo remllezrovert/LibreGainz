@@ -1,5 +1,7 @@
 package java111;
 import java.util.ArrayList;
+import java.text.ParseException;
+import java.util.Date;
 /**
  * @author Remllez
  * This class converts Strings into useful objects and ArrayLists
@@ -82,6 +84,18 @@ public static ArrayList<TimeObj> toIsometricSet(String commaList){
         retArr.add(toTime(str.trim()));
     }
     return retArr;
+}
+
+/**
+ * Convert string into date object
+ * @param dateStr
+ * @return
+ * @throws ParseException
+ */
+public static Date toDate(String dateStr) throws ParseException
+{
+    Date d = User.dateFormat.parse(dateStr);
+    return d;
 }
 
 

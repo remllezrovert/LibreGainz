@@ -4,10 +4,6 @@ package java111;
  * @author remllez
  */
 
-enum Unit{
-    KG,
-    LB;
-}
 public class WeightObj{
 int weight;
 Unit unit;
@@ -15,6 +11,7 @@ WeightObj(int weight, Unit unit){
     this.weight = weight;
     this.unit = unit;
 }
+
 /**
  * Converts pounds to kilograms
  * @param lb
@@ -34,6 +31,7 @@ public static int kg2Lb(int kg){
 public String toString(){
     return weight + this.unit.toString();
 }
+
 public int getWeight(){
     return weight;
 }

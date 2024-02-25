@@ -1,7 +1,5 @@
 package java111;
-import javax.management.openmbean.CompositeDataInvocationHandler;
 import java.util.ArrayList;
-import java.util.*;
 
 
 /**
@@ -10,6 +8,14 @@ import java.util.*;
  */
 public class TestDrive{
 public static void main(String[] args) throws Exception{
+
+
+Template benchPress = new Template("BenchPress");
+benchPress.csvAppend();
+
+Template deadLift = new Template("DeadLift");
+deadLift.csvAppend();
+
 
 Strength st1 = new Strength(1, 1);
 ArrayList<Integer> reps = new ArrayList<Integer>();
@@ -28,7 +34,7 @@ is1.setWeight(StrParse.toWeight("40lbs"));
 is1.setSet(StrParse.toIsometricSet("2:30, 1:15 , 2:20, 8:30"));
 
 CsvHandler.csvAppend(is1);
-//System.out.println(is1.toString());
+System.out.println(is1.toString());
 
 
 Strength s1 = new Strength(3, 9);
@@ -36,12 +42,15 @@ s1.setWeight(StrParse.toWeight("25lbs"));
 s1.setAnnotation("I am in bed");
 s1.addReps(19);
 s1.addReps(16);
-s1.setDate("eventually");
-//System.out.println(s1.toString());
+s1.setDate(StrParse.toDate("1/2/2023"));
+System.out.println(s1.toString());
+System.out.println(s1.superToString());
 CsvHandler.csvAppend(s1);
 
-for (String mystr : CsvHandler.getRow("data/Isometric.csv",18))
-    System.out.println(mystr);
+//for (String mystr : CsvHandler.getCol("data/Template.csv",0))
+//System.out.println(mystr);
+
+
 
 }
 }

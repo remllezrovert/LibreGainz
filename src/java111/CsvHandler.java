@@ -66,10 +66,10 @@ public static void csvPrint(String path)
 }
 
 /**
- * Line (aka row) number 'lineNum' from file at 'path'
+ * get ArrayList<String> for a specific csv file line (aka 'lineNum') from file at 'path'
  * @param path
  * @param lineNum
- * @return rowArray
+ * @return rowArrayList
  */
 
 public static ArrayList<String> getRow(String path, int lineNum)
@@ -84,10 +84,9 @@ for ( String str : csvParse(ret))
     lines.close();
     return retList;
     }
-catch(Exception e){
-    System.out.println(e);
-    return null;
-    }
+catch(NullPointerException np) {System.out.println("Row does not exist");return null;}
+catch(IOException io) {System.out.println("File does not exist");return null;}
+catch(Exception e) {return null;}
 }
 
 /**
@@ -141,7 +140,7 @@ public static Workout strToWorkout(String csvStr) throws Exception
     try{
     read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
     Workout wo = new Workout(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    wo.setDate(read.get(2));
+    wo.setDate(StrParse.toDate(read.get(2)));
     wo.setAnnotation(read.get(3));
     return wo;
     }
