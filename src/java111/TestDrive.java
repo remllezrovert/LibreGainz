@@ -1,7 +1,5 @@
 package java111;
-import javax.management.openmbean.CompositeDataInvocationHandler;
 import java.util.ArrayList;
-import java.util.*;
 
 
 /**
@@ -11,6 +9,14 @@ import java.util.*;
 public class TestDrive{
 public static void main(String[] args) throws Exception{
 
+
+Template benchPress = new Template("BenchPress");
+benchPress.csvAppend();
+
+Template deadLift = new Template("DeadLift");
+deadLift.csvAppend();
+
+
 Strength st1 = new Strength(1, 1);
 ArrayList<Integer> reps = new ArrayList<Integer>();
 reps.add(100);
@@ -18,7 +24,7 @@ reps.add(200);
 reps.add(300);
 reps.add(400);
 st1.setWeight(StrParse.toWeight("100kg"));
-System.out.println(st1.toString());
+//System.out.println(st1.toString());
 CsvHandler.csvAppend(st1);
 
 
@@ -36,9 +42,15 @@ s1.setWeight(StrParse.toWeight("25lbs"));
 s1.setAnnotation("I am in bed");
 s1.addReps(19);
 s1.addReps(16);
-s1.setDate("eventually");
+s1.setDate(StrParse.toDate("1/2/2023"));
 System.out.println(s1.toString());
+System.out.println(s1.superToString());
 CsvHandler.csvAppend(s1);
+
+//for (String mystr : CsvHandler.getCol("data/Template.csv",0))
+//System.out.println(mystr);
+
+
 
 }
 }

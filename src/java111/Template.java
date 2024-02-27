@@ -6,12 +6,12 @@ import java.io.FileWriter;
  */
 public class Template{
 public static ArrayList<Template> allTemplates = new ArrayList<Template>();
-private int userId;
 private int templateId;
+private String name;
 private String desc;
 private ArrayList<String> tags = new ArrayList<String>();
-Template(int userId){
-this.userId = userId;
+Template(String name){
+this.name = name;
 this.templateId = allTemplates.size();
 allTemplates.add(this);
 }
@@ -23,12 +23,21 @@ public int getTemplateId(){
     return templateId;
 }
 /**
- * Get the id of the user that owns this template
+ * Gets the display name for the template
  * @return
  */
-public int getUserId(){
-return this.userId;
+public String getName(){
+    return name;
 }
+/**
+ * Sets the display name for the template
+ * @param newName
+ */
+public void setName(String newName){
+    name = newName;
+}
+
+
 /**
  * Get a string describing the workout
  * @return
@@ -75,8 +84,8 @@ tags.remove(tagIndex);
  * Get a String representing this object for use in CSV files
  */
 public String toString(){
-return userId +
-    "," +  templateId +
+return templateId +
+    ",\"" + name + "\"" + 
     ",\"" + desc + "\"," + 
     "\"" + tags.toString().substring(1, tags.toString().length() - 1) + "\"";
 }

@@ -1,6 +1,6 @@
 package java111;
 import java.util.ArrayList;
-import java.io.FileWriter;
+import java.util.Date;
 /** This class has general workout information 
  * It's attributes are used to describe and search for workouts
  * @author remllez
@@ -9,7 +9,7 @@ public class Workout{
 protected int workoutId;
 protected int templateId;
 protected String annotation;
-protected String date;
+protected Date date = new Date();
 public static ArrayList<Workout> allWorkouts = new ArrayList<Workout>();
 // make this change on every other class aswell
 // do this so that it's easier to construct class from csv files.
@@ -35,14 +35,14 @@ public int getTemplateId(){
  * Set the date for this workout session
  * @param newDate
  */
-public void setDate(String newDate){
+public void setDate(Date newDate){
     date = newDate;
 }
 /**
  * Get the date for this workout session
  * @return
  */
-public String getDate(){
+public Date getDate(){
     return date;
 }
 /**
@@ -66,8 +66,8 @@ public String getAnnotation(){
 public String toString(){
 return templateId +
     "," + workoutId +
-    ",\"" + date +
-    ",\"" + annotation + "\"";
+    ",\"" + User.dateFormat.format(date) +
+    "\",\"" + annotation + "\"";
 }
 
  /* get a CSV friendly string representing this object's superclass
