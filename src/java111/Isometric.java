@@ -1,16 +1,13 @@
 package java111;
 import java.util.ArrayList;
-import java.io.FileWriter;
 
 
 /** @author Remllez
  * This class stores an ArrayList<TimeObj> and a weight object.
  */
 public class Isometric extends Workout{
-    public static ArrayList<Isometric> allIsometric = new ArrayList<Isometric>();
     Isometric(int templateId, int workoutId){
         super(templateId, workoutId);
-        allIsometric.add(this);
     }
     private WeightObj weight;
     private ArrayList<TimeObj> set = new ArrayList<TimeObj>();
@@ -75,7 +72,7 @@ public WeightObj getWeight(){
      * @return String
      */
     public String toString(){
-        return super.getTemplateId() +
+        return super.templateId +
         "," + super.workoutId +
         "," + weight.toString() +
         ",\"" + set.toString().substring(1, set.toString().length() - 1) + "\"";
@@ -88,5 +85,4 @@ public WeightObj getWeight(){
     public String superToString(){
         return super.toString();
     }
-
 }

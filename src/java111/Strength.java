@@ -1,18 +1,15 @@
 package java111;
-import java.io.FileWriter;
 import java.util.ArrayList;
 
 /**
  * This class contains an ArrayList<Integer> of reps, and a weight
  */
 public class Strength extends Workout{
-    public static ArrayList<Strength> allStrength = new ArrayList<Strength>();
     private ArrayList<Integer> set = new ArrayList<Integer>();
     private WeightObj weight;
 
     public Strength(int templateId, int workoutId){
         super(templateId, workoutId);
-        allStrength.add(this);
     }
     /**
      * Add reps to the ArrayList<int>
@@ -70,7 +67,8 @@ public class Strength extends Workout{
      * @return String 
      */
     public String toString(){
-        return super.getTemplateId() +
+
+        return super.templateId+
         "," + super.workoutId +
         "," + weight.toString() +
         ",\"" + set.toString().substring(1, set.toString().length() - 1) + "\"";
