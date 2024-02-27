@@ -1,5 +1,6 @@
 package java111;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -34,7 +35,7 @@ is1.setWeight(StrParse.toWeight("40lbs"));
 is1.setSet(StrParse.toIsometricSet("2:30, 1:15 , 2:20, 8:30"));
 
 CsvHandler.csvAppend(is1);
-System.out.println(is1.toString());
+//System.out.println(is1.toString());
 
 
 Strength s1 = new Strength(3, 9);
@@ -43,14 +44,21 @@ s1.setAnnotation("I am in bed");
 s1.addReps(19);
 s1.addReps(16);
 s1.setDate(StrParse.toDate("1/2/2023"));
-System.out.println(s1.toString());
-System.out.println(s1.superToString());
+//System.out.println(s1.toString());
+//System.out.println(s1.superToString());
 CsvHandler.csvAppend(s1);
 
-//for (String mystr : CsvHandler.getCol("data/Template.csv",0))
 //System.out.println(mystr);
 
+HashMap<Integer, Workout> hMapThing = new HashMap<Integer, Workout>();
+
+hMapThing.putIfAbsent(1, is1);
+hMapThing.putIfAbsent(2, s1);
 
 
+System.out.println(hMapThing.get(1).toString());
+System.out.println(hMapThing.get(1).superToString());
+System.out.println(hMapThing.get(2).toString());
+System.out.println(hMapThing.get(2).superToString());
 }
 }
