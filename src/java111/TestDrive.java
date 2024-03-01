@@ -60,5 +60,11 @@ System.out.println(hMapThing.get(1).toString());
 System.out.println(hMapThing.get(1).superToString());
 System.out.println(hMapThing.get(2).toString());
 System.out.println(hMapThing.get(2).superToString());
+
+Cardio c1 = new Cardio(12, 15);
+c1.setUnit(Unit.MI);
+c1.setDistance(200.2);
+c1.setTime(10, 15);
+System.out.println(c1.toString());
 }
 }
