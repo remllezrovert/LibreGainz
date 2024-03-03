@@ -62,6 +62,14 @@ public static WeightObj toWeight(String str){
     return retObj;
 }
 
+
+
+
+
+
+
+
+
 /**
  * Convert a String into an array of reps ArrayList<int> 
  * @param commaList

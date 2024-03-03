@@ -48,8 +48,6 @@ public class Cardio extends Workout{
      * @param seconds
      */
     public void setTime(TimeObj newTime) {
-    	//TimeObj t1 = new TimeObj(minutes, seconds);
-    	//time = t1;
         time = newTime;
     }
 

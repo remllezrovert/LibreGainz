@@ -4,11 +4,126 @@ import java.util.regex.*;
 import java.util.*;
 import java.nio.file.*;
 import java.util.stream.*; 
+
+
+//TODO: all toStrength/toIsometric etc. need error handling for null values
+
 /** 
  * @author Remllez
  * This is tools for handling CSV files
  */
 public class CsvHandler{
+
+
+public static void workoutLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            Workout wo = strToWorkout(line);
+            Main.workoutMap.putIfAbsent(wo.workoutId, wo);
+        }
+    }
+    catch(Exception e){
+
+    }
+    finally {
+
+    }
+}
+
+/**
+ * Opens csv file and turns it's contents into strength objects
+ * @param path
+ */
+public static void strengthLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            Strength st = strToStrength(line);
+            Workout wo = Main.workoutMap.get(st.workoutId);
+            Main.strengthMap.putIfAbsent(st.workoutId, st);
+            st.setDate(wo.getDate());
+            st.setAnnotation(wo.getAnnotation());
+        }
+    }
+    catch(Exception e){
+
+    }
+    finally {
+
+    }
+}
+
+
+
+
+/**
+ * Opens a csv file and turns it's contents into isometric objects
+ * @param path
+ */
+public static void isometricLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            Isometric iso = strToIsometric(line);
+            Workout wo = Main.workoutMap.get(iso.workoutId);
+            Main.isometricMap.putIfAbsent(iso.workoutId, iso);
+            iso.setDate(wo.getDate());
+            iso.setAnnotation(wo.getAnnotation());
+        }
+    }
+    catch(Exception e){
+
+    }
+    finally {
+
+    }
+}
+
+
+/**
+ * Opens a csv file and turns it's contents into cardio objects
+ * @param path
+ */
+public static void cardioLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            Cardio cdo = strToCardio(line);
+            Workout wo = Main.workoutMap.get(cdo.workoutId);
+            Main.cardioMap.putIfAbsent(cdo.workoutId, cdo);
+            cdo.setDate(wo.getDate());
+            cdo.setAnnotation(wo.getAnnotation());
+        }
+    }
+    catch(Exception e){
+    }
+    finally {
+    }
+}
+
+
+
+
+
+
+
 final static Pattern quote = Pattern.compile("^\\s*\"((?:[^\"]|(?:\"\"))*?)\"\\s*,");
 
 /**
@@ -64,10 +179,6 @@ public static void csvPrint(String path)
 
     }
 }
-
-
-
-
 
 
 /**
@@ -168,8 +279,8 @@ public static Strength strToStrength(String csvStr) throws Exception
     List<String> read = new ArrayList<String>();
     read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
     Strength st = new Strength(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    st.setWeight(StrParse.toWeight(read.get(3)));
-    st.setSet(StrParse.toStrengthSet(read.get(2)));
+    st.setWeight(StrParse.toWeight(read.get(2)));
+    st.setSet(StrParse.toStrengthSet(read.get(3)));
     return st;
 }
 
@@ -262,3 +373,6 @@ switch (wo.getClass().getSimpleName()) {
     }
 }
 }
+
+
+

@@ -12,10 +12,10 @@ public static void main(String[] args) throws Exception{
 
 
 Template benchPress = new Template("BenchPress");
-benchPress.csvAppend();
+//benchPress.csvAppend();
 
 Template deadLift = new Template("DeadLift");
-deadLift.csvAppend();
+//deadLift.csvAppend();
 
 
 Strength st1 = new Strength(1, 1);
@@ -26,7 +26,7 @@ reps.add(300);
 reps.add(400);
 st1.setWeight(StrParse.toWeight("100kg"));
 //System.out.println(st1.toString());
-CsvHandler.csvAppend(st1);
+//CsvHandler.csvAppend(st1);
 
 
 Isometric is1 = new Isometric(2, 2);
@@ -34,7 +34,7 @@ is1.setWeight(StrParse.toWeight("40lbs"));
 
 is1.setSet(StrParse.toIsometricSet("2:30, 1:15 , 2:20, 8:30"));
 
-CsvHandler.csvAppend(is1);
+//CsvHandler.csvAppend(is1);
 //System.out.println(is1.toString());
 
 
@@ -54,12 +54,12 @@ s1.setDate(StrParse.toDate("1/2/2023"));
 Cardio c2 = CsvHandler.strToCardio(CsvHandler.getRowStr("data//Cardio.csv", 0));
 
 // Once the object is created, call it's toString() method to prove that it exists.
-System.out.println(c2.toString());
+//System.out.println(c2.toString());
 
-
-
-
-
+CsvHandler.workoutLoad("data//Workout.csv");
+CsvHandler.isometricLoad("data//Isometric.csv");
+CsvHandler.cardioLoad("data//Cardio.csv");
+CsvHandler.strengthLoad("data//Strength.csv");
 
 
 
@@ -70,9 +70,21 @@ System.out.println(c2.toString());
 //hMapThing.putIfAbsent(1, is1);
 //hMapThing.putIfAbsent(2, s1);
 //System.out.println(hMapThing.get(1).toString());
-//System.out.println(hMapThing.get(1).superToString());
-//System.out.println(hMapThing.get(2).toString());
-//System.out.println(hMapThing.get(2).superToString());
+//System.out.println(Run.isometricMap.get(1).superToString());
+
+//System.out.println(Run.isometricMap.get(1).toString());
+//System.out.println(Run.isometricMap.get(1).superToString());
+
+
+Main.cardioMap.forEach((k, v) -> System.out.println(v.toString()));
+
+
+Main.isometricMap.forEach((k, v) -> System.out.println(v.toString()));
+
+Main.strengthMap.forEach((k, v) -> System.out.println(v.toString()));
+
+
+
 
 
 

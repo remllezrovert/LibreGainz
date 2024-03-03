@@ -45,8 +45,7 @@ private void MainMenu(){
  *  - quit
  */
 
-private void TemplateMenu(){
-System.out.println(
+private void TemplateMenu(){ System.out.println(
 "\n================ Template Menu ===============\n" +
 "b - Back to main menu\n" +
 "a - Add tags to template\n" +
