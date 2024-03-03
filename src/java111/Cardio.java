@@ -1,7 +1,5 @@
 package java111;
 
-import java.util.ArrayList;
-
 public class Cardio extends Workout{
 	protected double distance;
 	private TimeObj time;
@@ -10,9 +8,9 @@ public class Cardio extends Workout{
     public Cardio(int templateId, int workoutId){
         super(templateId, workoutId);
     }
-    
+   
+
     //set the units for the distance ran 
-    
     public void setUnit(Unit newUnit) {
     	this.distanceUnit = newUnit; 
     }
@@ -34,22 +32,33 @@ public class Cardio extends Workout{
     public void setDistance(double distance1) {
     	distance = distance1;
     }
-    
+
     /**
-     * deletes distance if needs to be edited 
-     * @param newDistance
+     * get the distance ran
+     * @return distance
      */
-    public void delDistance(int newDistance){
-        distance -= newDistance;
+    public double getDistance() {
+        return distance;
     }
+
+   
     /**
      * input minutes and seconds as parameters for time object
      * @param minutes
      * @param seconds
      */
-    public void setTime(int minutes, int seconds) {
-    	TimeObj t1 = new TimeObj(minutes, seconds);
-    	time = t1;
+    public void setTime(TimeObj newTime) {
+    	//TimeObj t1 = new TimeObj(minutes, seconds);
+    	//time = t1;
+        time = newTime;
+    }
+
+    /**
+     * Get the time object corisponding to this Cardio object
+     * @return
+     */
+    public TimeObj getTime(){
+        return time;
     }
   
     
@@ -63,8 +72,10 @@ public class Cardio extends Workout{
   
    
     
+    /**
+     * Return a CSV friendly string representing this object
+     */
     public String toString(){
-
         return super.templateId+
         "," + super.workoutId +
         "," + distance + distanceUnit + "," + time.toString();

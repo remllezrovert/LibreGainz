@@ -46,25 +46,39 @@ s1.addReps(16);
 s1.setDate(StrParse.toDate("1/2/2023"));
 //System.out.println(s1.toString());
 //System.out.println(s1.superToString());
-CsvHandler.csvAppend(s1);
-
-//System.out.println(mystr);
-
-HashMap<Integer, Workout> hMapThing = new HashMap<Integer, Workout>();
-
-hMapThing.putIfAbsent(1, is1);
-hMapThing.putIfAbsent(2, s1);
+//CsvHandler.csvAppend(s1);
 
 
-System.out.println(hMapThing.get(1).toString());
-System.out.println(hMapThing.get(1).superToString());
-System.out.println(hMapThing.get(2).toString());
-System.out.println(hMapThing.get(2).superToString());
 
-Cardio c1 = new Cardio(12, 15);
-c1.setUnit(Unit.MI);
-c1.setDistance(200.2);
-c1.setTime(10, 15);
-System.out.println(c1.toString());
+// This creates a new cardio object by reading from line zero of Cardio.csv
+Cardio c2 = CsvHandler.strToCardio(CsvHandler.getRowStr("data//Cardio.csv", 0));
+
+// Once the object is created, call it's toString() method to prove that it exists.
+System.out.println(c2.toString());
+
+
+
+
+
+
+
+
+
+
+// This is all experiments with hashmaps. Ignore this
+//HashMap<Integer, Workout> hMapThing = new HashMap<Integer, Workout>();
+//hMapThing.putIfAbsent(1, is1);
+//hMapThing.putIfAbsent(2, s1);
+//System.out.println(hMapThing.get(1).toString());
+//System.out.println(hMapThing.get(1).superToString());
+//System.out.println(hMapThing.get(2).toString());
+//System.out.println(hMapThing.get(2).superToString());
+
+
+
+
+
+
+
 }
 }

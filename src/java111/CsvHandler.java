@@ -65,6 +65,11 @@ public static void csvPrint(String path)
     }
 }
 
+
+
+
+
+
 /**
  * get ArrayList<String> for a specific csv file line (aka 'lineNum') from file at 'path'
  * @param path
@@ -87,6 +92,12 @@ for ( String str : csvParse(ret))
 catch(NullPointerException np) {System.out.println("Row does not exist");return null;}
 catch(IOException io) {System.out.println("File does not exist");return null;}
 catch(Exception e) {return null;}
+}
+
+public static String getRowStr(String path, int lineNum){
+List<String> li = getRow(path,lineNum);
+return li.stream().collect(Collectors.joining(","));
+
 }
 
 /**
@@ -178,6 +189,44 @@ public static Isometric strToIsometric(String csvStr) throws Exception
     }
 
 /**
+ * This converts a csv string into a Cardio object
+ * @param csvStr
+ * @return
+ * @throws Exception
+ */
+public static Cardio strToCardio(String csvStr) throws Exception
+    {
+    List<String> read = new ArrayList<String>();
+    read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
+    Cardio cdo = new Cardio(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
+    //cdo.setUnit(StrParse.toIsometricSet(read.get(3)));
+    //String alphaStr = read.get(3).replaceAll("[^A-Za-z]+", "");
+    cdo.setDistance(Double.parseDouble(read.get(2).replaceAll("[^\\d.]", "")));
+    cdo.setTime(StrParse.toTime(read.get(3)));
+    Unit unit; 
+    switch(read.get(3).replaceAll("[^A-Za-z]+", "").toUpperCase()){
+    case "KM":
+    case "KILOMETER":
+    case "K":
+        unit = Unit.KM; 
+        break;
+    case "MI":
+    case "MILES":
+    case "MILE":
+        unit = Unit.MI;
+        break;
+    default:
+        unit = Unit.MI;
+        break;
+    }
+    cdo.setUnit(unit);
+    return cdo;
+    }
+
+
+
+
+/**
  * This appends a string onto the end of a CSV file
  * @param path
  * @param str
@@ -207,6 +256,9 @@ switch (wo.getClass().getSimpleName()) {
         csvAppendStr("data//Isometric.csv",wo.toString());
         csvAppendStr("data//Workout.csv",wo.superToString());
         break;
+    case "Cardio":
+        csvAppendStr("data//Cardio.csv",wo.toString());
+        csvAppendStr("data//Workout.csv",wo.superToString());
     }
 }
 }
