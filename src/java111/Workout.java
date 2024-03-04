@@ -1,6 +1,7 @@
 package java111;
-import java.util.ArrayList;
 import java.util.Date;
+
+//TODO: Fix the constructor's workoutId system so that it only contains workout objects (no strength etc.)
 /** This class has general workout information 
  * It's attributes are used to describe and search for workouts
  * @author remllez
@@ -10,19 +11,37 @@ protected int workoutId;
 protected int templateId;
 protected String annotation;
 protected Date date = new Date();
-public static ArrayList<Workout> allWorkouts = new ArrayList<Workout>();
-// make this change on every other class aswell
-// do this so that it's easier to construct class from csv files.
 
 /** Create a workout object
  * @param templateId
  * @param workoutId
  */
-Workout(int templateId, int workoutId){
-    this.templateId = templateId;
-    this.workoutId = workoutId;
-    allWorkouts.add(this);
+Workout(int templateId, int workoutId)
+{
+    if (Main.templateMap.containsKey(templateId)){
+        this.templateId = templateId;
+        this.workoutId = workoutId;
+        Main.workoutMap.putIfAbsent(workoutId, this);
+    } else {System.out.println("Invalid templateId or workoutId");}
+
+
+    
 }
+
+Workout(int templateId)
+{
+    if (Main.templateMap.containsKey(templateId)){
+        this.templateId = templateId;
+    } else {System.out.println("No such template");}
+    int newKey = Main.workoutMap.size();
+    while(Main.workoutMap.containsKey(newKey)){
+        newKey++;
+    }
+    this.workoutId = newKey;
+    Main.workoutMap.putIfAbsent(workoutId, this);
+}
+
+
 
 /**
  * Get the templateId for this workout
@@ -59,6 +78,14 @@ public void setAnnotation(String newAnnotation){
 public String getAnnotation(){
     return annotation;
 }
+
+/**
+     * Remove this object from maps
+     */
+    public void deMap(){
+        Main.workoutMap.remove(workoutId);
+    }
+  
 
 /**
  * return a string summarizing this object for CSV files

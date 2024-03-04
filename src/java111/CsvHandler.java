@@ -15,6 +15,24 @@ import java.util.stream.*;
 public class CsvHandler{
 
 
+public static void templateLoad(String path)
+{
+    String file = path;
+    BufferedReader reader = null;
+    String line = "";
+    try{
+        reader = new BufferedReader(new FileReader(file));
+        while((line = reader.readLine())!= null){
+            strToTemplate(line);
+        }
+    }
+    catch(Exception e){
+
+    }
+    finally {
+
+    }
+}
 public static void workoutLoad(String path)
 {
     String file = path;
@@ -23,8 +41,7 @@ public static void workoutLoad(String path)
     try{
         reader = new BufferedReader(new FileReader(file));
         while((line = reader.readLine())!= null){
-            Workout wo = strToWorkout(line);
-            Main.workoutMap.putIfAbsent(wo.workoutId, wo);
+            strToWorkout(line);
         }
     }
     catch(Exception e){
@@ -49,7 +66,6 @@ public static void strengthLoad(String path)
         while((line = reader.readLine())!= null){
             Strength st = strToStrength(line);
             Workout wo = Main.workoutMap.get(st.workoutId);
-            Main.strengthMap.putIfAbsent(st.workoutId, st);
             st.setDate(wo.getDate());
             st.setAnnotation(wo.getAnnotation());
         }
@@ -61,9 +77,6 @@ public static void strengthLoad(String path)
 
     }
 }
-
-
-
 
 /**
  * Opens a csv file and turns it's contents into isometric objects
@@ -79,7 +92,6 @@ public static void isometricLoad(String path)
         while((line = reader.readLine())!= null){
             Isometric iso = strToIsometric(line);
             Workout wo = Main.workoutMap.get(iso.workoutId);
-            Main.isometricMap.putIfAbsent(iso.workoutId, iso);
             iso.setDate(wo.getDate());
             iso.setAnnotation(wo.getAnnotation());
         }
@@ -107,7 +119,6 @@ public static void cardioLoad(String path)
         while((line = reader.readLine())!= null){
             Cardio cdo = strToCardio(line);
             Workout wo = Main.workoutMap.get(cdo.workoutId);
-            Main.cardioMap.putIfAbsent(cdo.workoutId, cdo);
             cdo.setDate(wo.getDate());
             cdo.setAnnotation(wo.getAnnotation());
         }
@@ -246,9 +257,27 @@ public static boolean checkUnique(String path, int col, String checkString){
     return getCol(path, col).contains(checkString)? false : true;
 }
 
-//public static int getMax(String path, int col){
-    //return Collections.max(getCol(path, col));
-//}
+
+/**
+ * Convert a csvString into a template object
+ * @param csvStr
+ * @return
+ * @throws Exception
+ */
+public static Template strToTemplate(String csvStr) throws Exception
+    {
+    List<String> read = new ArrayList<String>();
+    try{
+    read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
+    Template t1 = new Template(Integer.parseInt(read.get(0)));
+    t1.setName(read.get(1));
+    t1.setDesc(read.get(2));
+    t1.setTags(StrParse.toTagArray(read.get(3)));
+    return t1;
+    }
+    catch(Exception e){}
+    return null;
+}
 
 
 /**
@@ -361,17 +390,53 @@ switch (wo.getClass().getSimpleName()) {
         break;
     case "Strength":
         csvAppendStr("data//Strength.csv",wo.toString());
-        csvAppendStr("data//Workout.csv",wo.superToString());
+        //csvAppendStr("data//Workout.csv",wo.superToString());
         break;
     case "Isometric":
         csvAppendStr("data//Isometric.csv",wo.toString());
-        csvAppendStr("data//Workout.csv",wo.superToString());
+        //csvAppendStr("data//Workout.csv",wo.superToString());
         break;
     case "Cardio":
         csvAppendStr("data//Cardio.csv",wo.toString());
-        csvAppendStr("data//Workout.csv",wo.superToString());
+        //csvAppendStr("data//Workout.csv",wo.superToString());
     }
 }
+
+/**
+ * Erases all data in a csv file
+ * @param path
+ */
+public static void csvWipe(String path){
+    try(FileWriter writer = new FileWriter(path, false)){
+    } catch(Exception e){
+    }
+    }
+
+    /**
+     * Wipes CSV files, overwriting them with data from workoutMaps
+     */
+public static void overWrite(){
+
+    csvWipe("data//Template.csv");
+    Main.templateMap.forEach((k, v) -> v.csvAppend());
+
+    csvWipe("data//Workout.csv");
+    Main.workoutMap.forEach((k, v) -> csvAppend(v));
+
+    csvWipe("data//Strength.csv");
+    Main.strengthMap.forEach((k, v) -> csvAppend(v));
+
+    csvWipe("data//Isometric.csv");
+    Main.isometricMap.forEach((k, v) -> csvAppend(v));
+
+    csvWipe("data//Cardio.csv");
+    Main.cardioMap.forEach((k, v) -> csvAppend(v));
+
+
+
+
+}
+
 }
 
 

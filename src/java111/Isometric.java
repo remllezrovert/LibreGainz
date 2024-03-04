@@ -8,7 +8,14 @@ import java.util.ArrayList;
 public class Isometric extends Workout{
     Isometric(int templateId, int workoutId){
         super(templateId, workoutId);
+        Main.isometricMap.putIfAbsent(workoutId, this);
     }
+
+    Isometric(int templateId){
+    super(templateId);
+    Main.isometricMap.putIfAbsent(workoutId, this);
+}
+
     private WeightObj weight;
     private ArrayList<TimeObj> set = new ArrayList<TimeObj>();
 
@@ -66,6 +73,14 @@ public void setWeight(WeightObj newWeight){
 public WeightObj getWeight(){
     return weight;
 }
+    /**
+     * Remove this object from maps
+     */
+    public void deMap(){
+        Main.isometricMap.remove(workoutId);
+        Main.workoutMap.remove(workoutId);
+    }
+  
 
     /**
      * Return a string for use in CSV files

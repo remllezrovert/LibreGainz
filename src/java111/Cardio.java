@@ -5,9 +5,15 @@ public class Cardio extends Workout{
 	private TimeObj time;
 	Unit distanceUnit;
 
-    public Cardio(int templateId, int workoutId){
+    Cardio(int templateId, int workoutId){
         super(templateId, workoutId);
+        Main.cardioMap.putIfAbsent(workoutId, this);
     }
+    Cardio(int templateId){
+        super(templateId);
+        Main.cardioMap.putIfAbsent(workoutId, this);
+    }
+
    
 
     //set the units for the distance ran 
@@ -66,7 +72,14 @@ public class Cardio extends Workout{
         TimeObj t1 = new TimeObj(setMinutes, setSeconds);
         time = t1; 
     }
-   
+
+   /**
+     * Remove this object from maps
+     */
+    public void deMap(){
+        Main.cardioMap.remove(workoutId);
+        Main.workoutMap.remove(workoutId);
+    }
   
    
     

@@ -5,15 +5,21 @@ import java.io.FileWriter;
  * @author Remllez
  */
 public class Template{
-public static ArrayList<Template> allTemplates = new ArrayList<Template>();
 private int templateId;
 private String name;
 private String desc;
 private ArrayList<String> tags = new ArrayList<String>();
-Template(String name){
-this.name = name;
-this.templateId = allTemplates.size();
-allTemplates.add(this);
+Template(){
+    int newKey = Main.templateMap.size();
+    while(Main.templateMap.containsKey(newKey)){
+        newKey++;
+    }
+    templateId = newKey;
+    Main.templateMap.putIfAbsent(templateId, this);
+}
+Template(int templateId){
+    this.templateId = templateId;
+    Main.templateMap.putIfAbsent(templateId, this);
 }
 /**
  * Get the id of this template
@@ -80,6 +86,15 @@ tags.add(newTag);
 public void delTag(int tagIndex){
 tags.remove(tagIndex);
 }
+/**
+ * Remove this from HashMap. 
+ */
+public void deMap(){
+    //Need to impliment a cascading delete
+    //All workouts using this template should be deleted if this template is
+    Main.templateMap.remove(templateId);
+}
+
 /**
  * Get a String representing this object for use in CSV files
  */

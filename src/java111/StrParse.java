@@ -8,7 +8,6 @@ import java.util.Date;
  */
 
 
-
  // TODO: Parse Date strings into objects and csv/sql readable formats
 
 public class StrParse{
@@ -64,8 +63,17 @@ public static WeightObj toWeight(String str){
 
 
 
-
-
+/**
+ * Convert comma separted list into an array of strings, or 'tags' for templates
+ * @param commaList
+ * @return
+ */
+public static ArrayList<String> toTagArray(String commaList){
+    ArrayList<String> retArr = new ArrayList<String>();
+    for (String str : commaList.split(","))
+        retArr.add(str.trim());
+    return retArr;
+}
 
 
 

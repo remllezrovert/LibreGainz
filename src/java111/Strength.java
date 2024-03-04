@@ -8,9 +8,18 @@ public class Strength extends Workout{
     private ArrayList<Integer> set = new ArrayList<Integer>();
     private WeightObj weight;
 
-    public Strength(int templateId, int workoutId){
+    Strength(int templateId, int workoutId){
         super(templateId, workoutId);
+        this.workoutId = super.workoutId;
+        Main.strengthMap.putIfAbsent(workoutId, this);
     }
+
+    Strength(int templateId){
+        super(templateId);
+        this.workoutId = super.workoutId;
+        Main.strengthMap.putIfAbsent(workoutId, this);
+    }
+
     /**
      * Add reps to the ArrayList<int>
      * @param newReps
@@ -62,6 +71,15 @@ public class Strength extends Workout{
     public WeightObj getWeight(){
         return weight;
     }
+
+    /**
+     * Remove this object from maps
+     */
+    public void deMap(){
+        Main.strengthMap.remove(workoutId);
+        Main.workoutMap.remove(workoutId);
+    }
+
     /**
      * Get the CSV friendly String that represents this object 
      * @return String 
