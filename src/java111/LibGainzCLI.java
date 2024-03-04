@@ -18,7 +18,7 @@ public class LibGainzCLI{
 *   - template menu 
 */
 
-private void MainMenu(){
+private void MainMenu(Scanner scnr){
     System.out.println(
 
     "\n==================== Menu ====================\n" +
@@ -45,7 +45,7 @@ private void MainMenu(){
  *  - quit
  */
 
-private void TemplateMenu(){ System.out.println(
+private void TemplateMenu(Scanner scnr){ System.out.println(
 "\n================ Template Menu ===============\n" +
 "b - Back to main menu\n" +
 "a - Add tags to template\n" +
@@ -65,6 +65,65 @@ private void TemplateMenu(){ System.out.println(
 }
 
 
+private void MVPMenu(Scanner scnr){
+    System.out.println(
+    "i"
+
+    );
+    String input = scnr.nextLine();
+    switch(input.toLowerCase()){
+        case "i":
+        case "s":
+        case "c":
+        case "q":
+    }
+
+}
+
+private static void strengthMenu(Scanner scnr){
+    Main.templateMap.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
+   try{
+    System.out.println("Enter a template number:");
+    Strength s = new Strength(scnr.nextInt());
+    System.out.println("Enter a Weight:");
+    s.setWeight(StrParse.toWeight(scnr.next()));
+    System.out.println("Enter Repetitions (comma separated):");
+    s.setSet(StrParse.toStrengthSet(scnr.next()));
+   } 
+   catch(Exception e){
+    //System.out.println(e);
+    System.out.println("Invalid input");
+   }
+
+
+}
+
+
+
+public static void main(String[] args){
+
+CsvHandler.templateLoad("data//Template.csv");
+CsvHandler.workoutLoad("data//Workout.csv");
+CsvHandler.isometricLoad("data//Isometric.csv");
+CsvHandler.cardioLoad("data//Cardio.csv");
+CsvHandler.strengthLoad("data//Strength.csv");
+
+
+Scanner scnr = new Scanner(System.in);
+strengthMenu(scnr);
+
+
+Main.cardioMap.forEach((k, v) -> System.out.println(v.toString()));
+Main.isometricMap.forEach((k, v) -> System.out.println(v.toString()));
+Main.strengthMap.forEach((k, v) -> System.out.println(v.toString()));
+
+
+
+//Strength strength1 = Main.strengthMap.get(3);
+//strength1.setSet(StrParse.toStrengthSet("9,9,9,9"));
+
+
+CsvHandler.overWrite();
 
 
 
@@ -72,3 +131,12 @@ private void TemplateMenu(){ System.out.println(
 
 
 }
+
+
+}
+
+
+
+
+
+
