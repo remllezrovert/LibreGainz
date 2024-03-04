@@ -5,7 +5,7 @@ import java.util.Scanner;
  * @author remllez
  * This is an experimental unfinished launcher for the app.
  */
-public class LibGainzCLI{
+public class MVP{
 
 
 
@@ -13,8 +13,7 @@ public class LibGainzCLI{
 *   - user menu
 *   - view previous workouts 
 *   - Create workout
-*   - Edit workouts
-*   - Delete workouts
+*   - Edit/delete workouts
 *   - template menu 
 */
 
