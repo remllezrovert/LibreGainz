@@ -54,7 +54,7 @@ public static WeightObj toWeight(String str){
         unit = Unit.LB;
         break;
     default:
-        unit = Unit.LB;
+        unit = User.getWeightUnit();
         break;
     }
     WeightObj retObj = new WeightObj(Integer.valueOf(weightBuffer.toString()), unit);

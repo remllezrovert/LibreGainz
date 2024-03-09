@@ -31,4 +31,31 @@ public class User{
     public int getUserId(){
         return userId;
     }
+    
+    public static void setWeightUnit(Unit newWeightUnit) {
+    	weightUnit = newWeightUnit;
+    }
+    
+    public static void setLongDistanceUnit (Unit newLongDistanceUnit) {
+    	longDistanceUnit = newLongDistanceUnit;
+    }
+    public static void setShortDistanceUnit (Unit newShortDistanceUnit) {
+    	shortDistanceUnit = newShortDistanceUnit;
+    }
+    
+    public static Unit getWeightUnit() {
+    	return weightUnit;
+    }
+    
+    public static Unit getLongDistanceUnit() {
+    	return longDistanceUnit;
+    }
+    
+    public static Unit getShortDistanceUnit() {
+    	return shortDistanceUnit;
+    }
+    
+    
+    
+    
 }

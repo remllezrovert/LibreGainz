@@ -108,6 +108,7 @@ CsvHandler.cardioLoad("data//Cardio.csv");
 CsvHandler.strengthLoad("data//Strength.csv");
 
 
+
 Scanner scnr = new Scanner(System.in);
 strengthMenu(scnr);
 

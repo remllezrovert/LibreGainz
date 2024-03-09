@@ -1,5 +1,5 @@
 package java111;
-
+import java.text.DecimalFormat;
 public class Cardio extends Workout{
 	protected double distance;
 	private TimeObj time;
@@ -45,6 +45,19 @@ public class Cardio extends Workout{
      */
     public double getDistance() {
         return distance;
+    }
+    
+    //Convert miles to kilos
+    public static String Miles2Kilos(double miles){
+    	DecimalFormat df = new DecimalFormat("0.000");
+    	double kilometers = miles *1.609344;
+        return df.format(kilometers);
+    }
+    
+    public static String Kilos2Miles(double kilos){
+    	DecimalFormat df = new DecimalFormat("0.000");
+        double miles = kilos * .62137119;
+        return df.format(miles);
     }
 
    

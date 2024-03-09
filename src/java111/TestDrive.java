@@ -12,7 +12,8 @@ public static void main(String[] args) throws Exception{
 
 
 
-
+System.out.print(Cardio.Miles2Kilos(154));
+System.out.print(Cardio.Kilos2Miles(154));
 // Once the object is created, call it's toString() method to prove that it exists.
 //System.out.println(c2.toString());
 
@@ -59,9 +60,9 @@ is1.setSet(StrParse.toIsometricSet("2:30, 1:15 , 2:20, 8:30"));
 
 
 //Main.templateMap.forEach((k, v) -> System.out.println(v.toString()));
-Main.cardioMap.forEach((k, v) -> System.out.println(v.toString()));
-Main.isometricMap.forEach((k, v) -> System.out.println(v.toString()));
-Main.strengthMap.forEach((k, v) -> System.out.println(v.toString()));
+//Main.cardioMap.forEach((k, v) -> System.out.println(v.toString()));
+//Main.isometricMap.forEach((k, v) -> System.out.println(v.toString()));
+//Main.strengthMap.forEach((k, v) -> System.out.println(v.toString()));
 
 
 
