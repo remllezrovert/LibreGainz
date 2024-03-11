@@ -1,26 +1,46 @@
 package java111;
 import java.util.ArrayList;
 import java.io.FileWriter;
+import java.util.HashMap;
 /**
  * @author Remllez
  */
 public class Template{
+private static String csvPath = "data//Template.csv";
+public static HashMap<Integer, Template> map = new HashMap<Integer, Template>();
 private int templateId;
 private String name;
 private String desc;
 private ArrayList<String> tags = new ArrayList<String>();
 Template(){
-    int newKey = Main.templateMap.size();
-    while(Main.templateMap.containsKey(newKey)){
+    int newKey = map.size();
+    while(map.containsKey(newKey)){
         newKey++;
     }
     templateId = newKey;
-    Main.templateMap.putIfAbsent(templateId, this);
+    map.putIfAbsent(templateId, this);
 }
+
 Template(int templateId){
     this.templateId = templateId;
-    Main.templateMap.putIfAbsent(templateId, this);
+    map.putIfAbsent(templateId, this);
 }
+    /**
+     * Get the path where the csv file for the object is saved
+     * @return
+     */
+    public static String getCsvPath(){
+        return csvPath;
+    }
+    /**
+     * Set the path where this csv file is saved
+     * @return
+     */
+    public static void setCsvPath(String newCsvPath){
+        csvPath = newCsvPath;
+    }
+
+
 /**
  * Get the id of this template
  * @return
@@ -92,7 +112,7 @@ tags.remove(tagIndex);
 public void deMap(){
     //Need to impliment a cascading delete
     //All workouts using this template should be deleted if this template is
-    Main.templateMap.remove(templateId);
+    map.remove(templateId);
 }
 
 /**

@@ -1,20 +1,38 @@
 package java111;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 public class Cardio extends Workout{
+    private static String csvPath = "data//Cardio.csv";
+    public static HashMap<Integer, Cardio> map = new HashMap<Integer, Cardio>();
 	protected double distance;
 	private TimeObj time;
 	Unit distanceUnit;
 
     Cardio(int templateId, int workoutId){
         super(templateId, workoutId);
-        Main.cardioMap.putIfAbsent(workoutId, this);
+        map.putIfAbsent(workoutId, this);
     }
     Cardio(int templateId){
         super(templateId);
-        Main.cardioMap.putIfAbsent(workoutId, this);
+        map.putIfAbsent(workoutId, this);
     }
 
-   
+    /**
+     * Get the path where the csv file for the object is saved
+     * @return
+     */
+    public static String getCsvPath(){
+        return csvPath;
+    }
+    /**
+     * Set the path where this csv file is saved
+     * @return
+     */
+    public static void setCsvPath(String newCsvPath){
+        csvPath = newCsvPath;
+    }
+
+  
 
     //set the units for the distance ran 
     public void setUnit(Unit newUnit) {
@@ -90,8 +108,8 @@ public class Cardio extends Workout{
      * Remove this object from maps
      */
     public void deMap(){
-        Main.cardioMap.remove(workoutId);
-        Main.workoutMap.remove(workoutId);
+        map.remove(workoutId);
+        Workout.map.remove(workoutId);
     }
   
    
@@ -111,6 +129,10 @@ public class Cardio extends Workout{
     public String superToString(){
     	
         return super.toString();
+    }
+    public void csvAppend(){
+        CsvHandler.csvAppendStr(csvPath, this.toString());
+        CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
     }
 
 }

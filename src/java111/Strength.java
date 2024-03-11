@@ -1,24 +1,41 @@
 package java111;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 /**
  * This class contains an ArrayList<Integer> of reps, and a weight
  */
 public class Strength extends Workout{
+    private static String csvPath = "data//Strength.csv";
+    public static HashMap<Integer, Strength> map = new HashMap<Integer, Strength>();
     private ArrayList<Integer> set = new ArrayList<Integer>();
     private WeightObj weight;
 
     Strength(int templateId, int workoutId){
         super(templateId, workoutId);
         this.workoutId = super.workoutId;
-        Main.strengthMap.putIfAbsent(workoutId, this);
+        map.putIfAbsent(workoutId, this);
     }
 
     Strength(int templateId){
         super(templateId);
         this.workoutId = super.workoutId;
-        Main.strengthMap.putIfAbsent(workoutId, this);
+        map.putIfAbsent(workoutId, this);
     }
+    /**
+     * Get the path where the csv file for the object is saved
+     * @return
+     */
+    public static String getCsvPath(){
+        return csvPath;
+    }
+    /**
+     * Set the path where this csv file is saved
+     * @return
+     */
+    public static void setCsvPath(String newCsvPath){
+        csvPath = newCsvPath;
+    }
+
 
     /**
      * Add reps to the ArrayList<int>
@@ -76,8 +93,8 @@ public class Strength extends Workout{
      * Remove this object from maps
      */
     public void deMap(){
-        Main.strengthMap.remove(workoutId);
-        Main.workoutMap.remove(workoutId);
+        map.remove(workoutId);
+        Workout.map.remove(workoutId);
     }
 
     /**
@@ -97,6 +114,11 @@ public class Strength extends Workout{
      */
     public String superToString(){
         return super.toString();
+    }
+
+    public void csvAppend(){
+        CsvHandler.csvAppendStr(csvPath, this.toString());
+        CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
     }
 
 }

@@ -80,7 +80,7 @@ private void MVPMenu(Scanner scnr){
 }
 
 private static void strengthMenu(Scanner scnr){
-    Main.templateMap.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
+    Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
    try{
     System.out.println("Enter a template number:");
     Strength s = new Strength(scnr.nextInt());
@@ -113,15 +113,15 @@ Scanner scnr = new Scanner(System.in);
 strengthMenu(scnr);
 
 
-Main.cardioMap.forEach((k, v) -> System.out.println(v.toString()));
-Main.isometricMap.forEach((k, v) -> System.out.println(v.toString()));
-Main.strengthMap.forEach((k, v) -> System.out.println(v.toString()));
+Cardio.map.forEach((k, v) -> System.out.println(v.toString()));
+Isometric.map.forEach((k, v) -> System.out.println(v.toString()));
+Strength.map.forEach((k, v) -> System.out.println(v.toString()));
+
+//Workout.map.forEach((k, v) -> System.out.println(v.toString()));
 
 
-
-//Strength strength1 = Main.strengthMap.get(3);
+//Strength strength1 = Main.map.get(3);
 //strength1.setSet(StrParse.toStrengthSet("9,9,9,9"));
-
 
 CsvHandler.overWrite();
 

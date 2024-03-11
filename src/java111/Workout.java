@@ -1,15 +1,17 @@
 package java111;
 import java.util.Date;
-
+import java.util.HashMap;
 //TODO: Fix the constructor's workoutId system so that it only contains workout objects (no strength etc.)
 /** This class has general workout information 
  * It's attributes are used to describe and search for workouts
  * @author remllez
  */
+
+
 public class Workout{
-protected int workoutId;
-protected int templateId;
-protected String annotation;
+private static String csvPath = "data//Workout.csv";
+public static HashMap<Integer, Workout> map = new HashMap<Integer, Workout>();
+protected int workoutId; protected int templateId; protected String annotation;
 protected Date date = new Date();
 
 /** Create a workout object
@@ -18,10 +20,10 @@ protected Date date = new Date();
  */
 Workout(int templateId, int workoutId)
 {
-    if (Main.templateMap.containsKey(templateId)){
+    if (Template.map.containsKey(templateId)){
         this.templateId = templateId;
         this.workoutId = workoutId;
-        Main.workoutMap.putIfAbsent(workoutId, this);
+        Workout.map.putIfAbsent(workoutId, this);
     } else {System.out.println("Invalid templateId or workoutId");}
 
 
@@ -30,16 +32,31 @@ Workout(int templateId, int workoutId)
 
 Workout(int templateId)
 {
-    if (Main.templateMap.containsKey(templateId)){
+    if (Template.map.containsKey(templateId)){
         this.templateId = templateId;
     } else {System.out.println("No such template");}
-    int newKey = Main.workoutMap.size();
-    while(Main.workoutMap.containsKey(newKey)){
+    int newKey = map.size();
+    while(map.containsKey(newKey)){
         newKey++;
     }
     this.workoutId = newKey;
-    Main.workoutMap.putIfAbsent(workoutId, this);
+    map.putIfAbsent(workoutId, this);
 }
+
+    /**
+     * Get the path where the csv file for the object is saved
+     * @return
+     */
+    public static String getCsvPath(){
+        return csvPath;
+    }
+    /**
+     * Set the path where this csv file is saved
+     * @return
+     */
+    public static void setCsvPath(String newCsvPath){
+        csvPath = newCsvPath;
+    }
 
 
 
@@ -83,7 +100,7 @@ public String getAnnotation(){
      * Remove this object from maps
      */
     public void deMap(){
-        Main.workoutMap.remove(workoutId);
+        map.remove(workoutId);
     }
   
 
@@ -101,6 +118,10 @@ return templateId +
  * @return csvStr
  */
 public String superToString(){
-        return super.toString();
+        return this.toString();
     }
+
+//public void csvAppend(){
+//    CsvHandler.csvAppendStr(csvPath, this.toString());
+//}
 }

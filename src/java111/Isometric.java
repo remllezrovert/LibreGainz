@@ -1,20 +1,36 @@
 package java111;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 
 /** @author Remllez
  * This class stores an ArrayList<TimeObj> and a weight object.
  */
 public class Isometric extends Workout{
+    private static String csvPath = "data//Isometric.csv";
+    public static HashMap<Integer, Isometric> map = new HashMap<Integer, Isometric>();
     Isometric(int templateId, int workoutId){
         super(templateId, workoutId);
-        Main.isometricMap.putIfAbsent(workoutId, this);
+        map.putIfAbsent(workoutId, this);
     }
 
     Isometric(int templateId){
     super(templateId);
-    Main.isometricMap.putIfAbsent(workoutId, this);
+    map.putIfAbsent(workoutId, this);
 }
+    /**
+     * Get the path where the csv file for the object is saved
+     * @return
+     */
+    public static String getCsvPath(){
+        return csvPath;
+    }
+    /**
+     * Set the path where this csv file is saved
+     * @return
+     */
+    public static void setCsvPath(String newCsvPath){
+        csvPath = newCsvPath;
+    }
 
     private WeightObj weight;
     private ArrayList<TimeObj> set = new ArrayList<TimeObj>();
@@ -77,8 +93,8 @@ public WeightObj getWeight(){
      * Remove this object from maps
      */
     public void deMap(){
-        Main.isometricMap.remove(workoutId);
-        Main.workoutMap.remove(workoutId);
+        map.remove(workoutId);
+        Workout.map.remove(workoutId);
     }
   
 
@@ -99,5 +115,10 @@ public WeightObj getWeight(){
  */
     public String superToString(){
         return super.toString();
+    }
+    public void csvAppend(){
+        CsvHandler.csvAppendStr(csvPath, this.toString());
+        CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
+
     }
 }

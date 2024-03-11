@@ -34,7 +34,7 @@ deadLift.setDesc("Heavy asf");
 deadLift.csvAppend();
 
 
-Strength st1 = new Strength(3);
+Strength st1 = new Strength(0);
 //ArrayList<Integer> reps = new ArrayList<Integer>();
 st1.addReps(111);
 st1.addReps(200);
@@ -59,15 +59,9 @@ is1.setSet(StrParse.toIsometricSet("2:30, 1:15 , 2:20, 8:30"));
 
 
 
-//Main.templateMap.forEach((k, v) -> System.out.println(v.toString()));
-//Main.cardioMap.forEach((k, v) -> System.out.println(v.toString()));
-//Main.isometricMap.forEach((k, v) -> System.out.println(v.toString()));
-//Main.strengthMap.forEach((k, v) -> System.out.println(v.toString()));
 
 
 
-//Strength strength1 = Main.strengthMap.get(3);
-//strength1.setSet(StrParse.toStrengthSet("9,9,9,9"));
 
 
 CsvHandler.overWrite();

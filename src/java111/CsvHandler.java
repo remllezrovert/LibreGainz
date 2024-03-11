@@ -65,7 +65,7 @@ public static void strengthLoad(String path)
         reader = new BufferedReader(new FileReader(file));
         while((line = reader.readLine())!= null){
             Strength st = strToStrength(line);
-            Workout wo = Main.workoutMap.get(st.workoutId);
+            Workout wo = Workout.map.get(st.workoutId);
             st.setDate(wo.getDate());
             st.setAnnotation(wo.getAnnotation());
         }
@@ -91,7 +91,7 @@ public static void isometricLoad(String path)
         reader = new BufferedReader(new FileReader(file));
         while((line = reader.readLine())!= null){
             Isometric iso = strToIsometric(line);
-            Workout wo = Main.workoutMap.get(iso.workoutId);
+            Workout wo = Isometric.map.get(iso.workoutId);
             iso.setDate(wo.getDate());
             iso.setAnnotation(wo.getAnnotation());
         }
@@ -118,7 +118,7 @@ public static void cardioLoad(String path)
         reader = new BufferedReader(new FileReader(file));
         while((line = reader.readLine())!= null){
             Cardio cdo = strToCardio(line);
-            Workout wo = Main.workoutMap.get(cdo.workoutId);
+            Workout wo = Cardio.map.get(cdo.workoutId);
             cdo.setDate(wo.getDate());
             cdo.setAnnotation(wo.getAnnotation());
         }
@@ -379,28 +379,6 @@ public static void csvAppendStr(String path, String str){
     }
 
 
-/**
- * This appends .toString() data from Workouts onto pre-set csv files
- * @param workoutToAppend
- */
-public static void csvAppend(Workout wo){
-switch (wo.getClass().getSimpleName()) {
-    case "Workout":
-        csvAppendStr("data//Workout.csv",wo.toString());
-        break;
-    case "Strength":
-        csvAppendStr("data//Strength.csv",wo.toString());
-        //csvAppendStr("data//Workout.csv",wo.superToString());
-        break;
-    case "Isometric":
-        csvAppendStr("data//Isometric.csv",wo.toString());
-        //csvAppendStr("data//Workout.csv",wo.superToString());
-        break;
-    case "Cardio":
-        csvAppendStr("data//Cardio.csv",wo.toString());
-        //csvAppendStr("data//Workout.csv",wo.superToString());
-    }
-}
 
 /**
  * Erases all data in a csv file
@@ -413,24 +391,24 @@ public static void csvWipe(String path){
     }
 
     /**
-     * Wipes CSV files, overwriting them with data from workoutMaps
+     * Wipes CSV files, overwriting them with data from maps
      */
 public static void overWrite(){
 
-    csvWipe("data//Template.csv");
-    Main.templateMap.forEach((k, v) -> v.csvAppend());
+    csvWipe(Template.getCsvPath());
+    Template.map.forEach((k, v) -> v.csvAppend());
 
     csvWipe("data//Workout.csv");
-    Main.workoutMap.forEach((k, v) -> csvAppend(v));
+    //Workout.map.forEach((k, v) -> v.csvAppend());
 
-    csvWipe("data//Strength.csv");
-    Main.strengthMap.forEach((k, v) -> csvAppend(v));
+    csvWipe(Strength.getCsvPath());
+    Strength.map.forEach((k, v) -> v.csvAppend());
 
-    csvWipe("data//Isometric.csv");
-    Main.isometricMap.forEach((k, v) -> csvAppend(v));
+    csvWipe(Isometric.getCsvPath());
+    Isometric.map.forEach((k, v) -> v.csvAppend());
 
-    csvWipe("data//Cardio.csv");
-    Main.cardioMap.forEach((k, v) -> csvAppend(v));
+    csvWipe(Cardio.getCsvPath());
+    Cardio.map.forEach((k, v) -> v.csvAppend());
 
 
 
