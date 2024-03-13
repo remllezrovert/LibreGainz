@@ -78,34 +78,7 @@ return desc;
 public void setDesc(String newDesc){
 this.desc = newDesc;
 }
-/**
- * Return a ArrayList<String> with all of the tags 
- * @return TagArray
- */
-public ArrayList<String> getTags(){
-    return tags;
-}
-/**
- * Replace the current tags array with a new one
- * @param newTags
- */
-public void setTags(ArrayList<String> newTags){
-tags = newTags;
-}
-/**
- * Add a new tag to the tag ArrayList<String>
- * @param newTag
- */
-public void addTag(String newTag){
-tags.add(newTag);
-}
-/**
- * Delete a tag from the ArrayList<String>
- * @param tagIndex
- */
-public void delTag(int tagIndex){
-tags.remove(tagIndex);
-}
+
 /**
  * Remove this from HashMap. 
  */
@@ -121,8 +94,7 @@ public void deMap(){
 public String toString(){
 return templateId +
     ",\"" + name + "\"" + 
-    ",\"" + desc + "\"," + 
-    "\"" + tags.toString().substring(1, tags.toString().length() - 1) + "\"";
+    ",\"" + desc + "\"";
 }
 /*
  * Append the toString() for this object onto a CSV file.

@@ -1,19 +1,19 @@
 package java111;
 import java.util.Date;
 import java.util.HashMap;
-//TODO: Fix the constructor's workoutId system so that it only contains workout objects (no strength etc.)
+import java.util.ArrayList;
 /** This class has general workout information 
  * It's attributes are used to describe and search for workouts
  * @author remllez
  */
-
-
 public class Workout{
 private static String csvPath = "data//Workout.csv";
 public static HashMap<Integer, Workout> map = new HashMap<Integer, Workout>();
-protected int workoutId; protected int templateId; protected String annotation;
+protected int workoutId; 
+protected int templateId; 
+protected String annotation;
 protected Date date = new Date();
-
+protected ArrayList<String> tags = new ArrayList<String>();
 /** Create a workout object
  * @param templateId
  * @param workoutId
@@ -25,8 +25,6 @@ Workout(int templateId, int workoutId)
         this.workoutId = workoutId;
         Workout.map.putIfAbsent(workoutId, this);
     } else {System.out.println("Invalid templateId or workoutId");}
-
-
     
 }
 
@@ -81,6 +79,7 @@ public void setDate(Date newDate){
 public Date getDate(){
     return date;
 }
+
 /**
  * Add an annotation to this workout session
  * @param newAnnotation
@@ -95,6 +94,31 @@ public void setAnnotation(String newAnnotation){
 public String getAnnotation(){
     return annotation;
 }
+public ArrayList<String> getTags(){
+    return tags;
+}
+/**
+ * Replace the current tags array with a new one
+ * @param newTags
+ */
+public void setTags(ArrayList<String> newTags){
+tags = newTags;
+}
+/**
+ * Add a new tag to the tag ArrayList<String>
+ * @param newTag
+ */
+public void addTag(String newTag){
+tags.add(newTag);
+}
+/**
+ * Delete a tag from the ArrayList<String>
+ * @param tagIndex
+ */
+public void delTag(int tagIndex){
+tags.remove(tagIndex);
+}
+
 
 /**
      * Remove this object from maps
@@ -111,7 +135,8 @@ public String toString(){
 return templateId +
     "," + workoutId +
     ",\"" + User.dateFormat.format(date) +
-    "\",\"" + annotation + "\"";
+    ",\"" + this.annotation +
+    "\",\"" + this.getTags().toString().substring(1, tags.toString().length() - 1) + "\"";
 }
 
  /* get a CSV friendly string representing this object's superclass

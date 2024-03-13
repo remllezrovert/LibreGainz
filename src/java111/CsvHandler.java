@@ -272,7 +272,7 @@ public static Template strToTemplate(String csvStr) throws Exception
     Template t1 = new Template(Integer.parseInt(read.get(0)));
     t1.setName(read.get(1));
     t1.setDesc(read.get(2));
-    t1.setTags(StrParse.toTagArray(read.get(3)));
+    //t1.setTags(StrParse.toTagArray(read.get(3)));
     return t1;
     }
     catch(Exception e){}
@@ -293,6 +293,9 @@ public static Workout strToWorkout(String csvStr) throws Exception
     Workout wo = new Workout(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
     wo.setDate(StrParse.toDate(read.get(2)));
     wo.setAnnotation(read.get(3));
+    wo.setTags(StrParse.toTagArray(read.get(4)));
+    //wo.setAnnotation(read.get(3));
+
     return wo;
     }
     catch(Exception e){}

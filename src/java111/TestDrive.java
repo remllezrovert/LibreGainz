@@ -35,15 +35,24 @@ deadLift.csvAppend();
 
 
 Strength st1 = new Strength(0);
-//ArrayList<Integer> reps = new ArrayList<Integer>();
+ArrayList<String> tags = new ArrayList<String>();
+tags.add("hi");
+tags.add("hello");
+tags.add("bye");
 st1.addReps(111);
 st1.addReps(200);
 st1.setWeight(StrParse.toWeight("199KG"));
 st1.setAnnotation("good session");
+st1.setTags(tags);
 
 Isometric is1 = new Isometric(0);
 is1.setWeight(StrParse.toWeight("13lbs"));
 is1.setSet(StrParse.toIsometricSet("2:30, 1:15 , 2:20, 8:30"));
+ArrayList<String> tags2 = new ArrayList<String>();
+tags2.add("bye");
+tags2.add("goodbye");
+
+is1.setTags(tags2);
 
 
 
