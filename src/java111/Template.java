@@ -11,6 +11,7 @@ public static HashMap<Integer, Template> map = new HashMap<Integer, Template>();
 private int templateId;
 private String name;
 private String desc;
+private String workoutType = "Workout";
 private ArrayList<String> tags = new ArrayList<String>();
 Template(){
     int newKey = map.size();
@@ -41,6 +42,20 @@ Template(int templateId){
     }
 
 
+    /**
+     * get the name of the workout class associated with this 
+     * @return workoutType
+     */
+    public String getWorkoutType() {
+        return workoutType;
+    }
+    /**
+     * set the name of the workout class associated with this
+     * @param workoutType
+     */
+    public void setWorkoutType(String workoutType) {
+        this.workoutType = workoutType;
+    }
 /**
  * Get the id of this template
  * @return
@@ -94,6 +109,7 @@ public void deMap(){
 public String toString(){
 return templateId +
     ",\"" + name + "\"" + 
+    ",\"" + workoutType + "\"" + 
     ",\"" + desc + "\"";
 }
 /*

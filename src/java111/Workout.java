@@ -8,9 +8,10 @@ import java.util.ArrayList;
  */
 public class Workout{
 private static String csvPath = "data//Workout.csv";
+private Template template;
 public static HashMap<Integer, Workout> map = new HashMap<Integer, Workout>();
-protected int workoutId; 
 protected int templateId; 
+protected int workoutId; 
 protected String annotation;
 protected Date date = new Date();
 protected ArrayList<String> tags = new ArrayList<String>();
@@ -24,6 +25,8 @@ Workout(int templateId, int workoutId)
         this.templateId = templateId;
         this.workoutId = workoutId;
         Workout.map.putIfAbsent(workoutId, this);
+        this.template = Template.map.get(templateId);
+        template.setWorkoutType(this.getClass().getSimpleName());
     } else {System.out.println("Invalid templateId or workoutId");}
     
 }

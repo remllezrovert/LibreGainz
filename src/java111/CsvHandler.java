@@ -271,7 +271,8 @@ public static Template strToTemplate(String csvStr) throws Exception
     read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
     Template t1 = new Template(Integer.parseInt(read.get(0)));
     t1.setName(read.get(1));
-    t1.setDesc(read.get(2));
+    t1.setWorkoutType(read.get(2));
+    t1.setDesc(read.get(3));
     //t1.setTags(StrParse.toTagArray(read.get(3)));
     return t1;
     }
