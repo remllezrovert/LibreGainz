@@ -1,14 +1,22 @@
-package java111;
+package org.LibreGainz;
 import java.io.*;
 import java.util.regex.*;
 import java.util.*;
 import java.nio.file.*;
 import java.util.stream.*; 
+import java.sql.*;
+
+
+//TODO: all toStrength/toIsometric etc. need error handling for null values
+
 /** 
  * @author Remllez
  * This is tools for handling CSV files
  */
 public class CsvHandler{
+
+
+
 final static Pattern quote = Pattern.compile("^\\s*\"((?:[^\"]|(?:\"\"))*?)\"\\s*,");
 
 /**
@@ -64,10 +72,6 @@ public static void csvPrint(String path)
 
     }
 }
-
-
-
-
 
 
 /**
@@ -135,93 +139,6 @@ public static boolean checkUnique(String path, int col, String checkString){
     return getCol(path, col).contains(checkString)? false : true;
 }
 
-//public static int getMax(String path, int col){
-    //return Collections.max(getCol(path, col));
-//}
-
-
-/**
- * This coverts a single row from a CSV file into a Workout object
- * @param line
- * @return WorkoutObject
- */
-public static Workout strToWorkout(String csvStr) throws Exception
-    {
-    List<String> read = new ArrayList<String>();
-    try{
-    read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
-    Workout wo = new Workout(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    wo.setDate(StrParse.toDate(read.get(2)));
-    wo.setAnnotation(read.get(3));
-    return wo;
-    }
-    catch(Exception e){}
-    return null;
-}
-/**
- * This coverts a single row from a CSV file into a Strength object
- * @param line
- * @return StrengthObject
- */
-public static Strength strToStrength(String csvStr) throws Exception
-    {
-    List<String> read = new ArrayList<String>();
-    read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
-    Strength st = new Strength(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    st.setWeight(StrParse.toWeight(read.get(3)));
-    st.setSet(StrParse.toStrengthSet(read.get(2)));
-    return st;
-}
-
-/**
- * This coverts a single row from a CSV file into a Isometric object
- * @param line
- * @return
- */
-public static Isometric strToIsometric(String csvStr) throws Exception
-    {
-    List<String> read = new ArrayList<String>();
-    read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
-    Isometric iso = new Isometric(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    iso.setWeight(StrParse.toWeight(read.get(2)));
-    iso.setSet(StrParse.toIsometricSet(read.get(3)));
-    return iso;
-    }
-
-/**
- * This converts a csv string into a Cardio object
- * @param csvStr
- * @return
- * @throws Exception
- */
-public static Cardio strToCardio(String csvStr) throws Exception
-    {
-    List<String> read = new ArrayList<String>();
-    read = Arrays.asList(csvParse(csvStr).toArray(new String[0]));
-    Cardio cdo = new Cardio(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    //cdo.setUnit(StrParse.toIsometricSet(read.get(3)));
-    //String alphaStr = read.get(3).replaceAll("[^A-Za-z]+", "");
-    cdo.setDistance(Double.parseDouble(read.get(2).replaceAll("[^\\d.]", "")));
-    cdo.setTime(StrParse.toTime(read.get(3)));
-    Unit unit; 
-    switch(read.get(3).replaceAll("[^A-Za-z]+", "").toUpperCase()){
-    case "KM":
-    case "KILOMETER":
-    case "K":
-        unit = Unit.KM; 
-        break;
-    case "MI":
-    case "MILES":
-    case "MILE":
-        unit = Unit.MI;
-        break;
-    default:
-        unit = Unit.MI;
-        break;
-    }
-    cdo.setUnit(unit);
-    return cdo;
-    }
 
 
 
@@ -239,26 +156,43 @@ public static void csvAppendStr(String path, String str){
     }
 
 
+
 /**
- * This appends .toString() data from Workouts onto pre-set csv files
- * @param workoutToAppend
+ * Erases all data in a csv file
+ * @param path
  */
-public static void csvAppend(Workout wo){
-switch (wo.getClass().getSimpleName()) {
-    case "Workout":
-        csvAppendStr("data//Workout.csv",wo.toString());
-        break;
-    case "Strength":
-        csvAppendStr("data//Strength.csv",wo.toString());
-        csvAppendStr("data//Workout.csv",wo.superToString());
-        break;
-    case "Isometric":
-        csvAppendStr("data//Isometric.csv",wo.toString());
-        csvAppendStr("data//Workout.csv",wo.superToString());
-        break;
-    case "Cardio":
-        csvAppendStr("data//Cardio.csv",wo.toString());
-        csvAppendStr("data//Workout.csv",wo.superToString());
+public static void csvWipe(String path){
+    try(FileWriter writer = new FileWriter(path, false)){
+    } catch(Exception e){
     }
+    }
+
+    /**
+     * Wipes CSV files, overwriting them with data from maps
+     */
+public static void overWrite(){
+
+    csvWipe(Template.getCsvPath());
+    Template.map.forEach((k, v) -> v.csvAppend());
+
+    csvWipe("data//Workout.csv");
+    Workout.map.forEach((k, v) -> v.csvAppend());
+
+    csvWipe(Strength.getCsvPath());
+    Strength.map.forEach((k, v) -> v.csvAppend());
+
+    csvWipe(Isometric.getCsvPath());
+    Isometric.map.forEach((k, v) -> v.csvAppend());
+
+    csvWipe(Cardio.getCsvPath());
+    Cardio.map.forEach((k, v) -> v.csvAppend());
+
+
+
+
 }
+
 }
+
+
+
