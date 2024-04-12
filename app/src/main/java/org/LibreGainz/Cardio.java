@@ -1,9 +1,11 @@
 package org.LibreGainz;
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.sql.*;
 import java.io.*;
+import java.net.http.HttpResponse;
 import java.util.*;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 public class Cardio extends Workout{
     private static String csvPath = "data//Cardio.csv";
     public static HashMap<Long, Cardio> map = new HashMap<Long, Cardio>();
@@ -207,4 +209,17 @@ public static void csvLoad(String path)
         //CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
     }
 
+    public static List<Cardio> jsonParse(){
+        try {
+            String jsonString = API.getResponseBody("http://remllez.com:8080/cardio");
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Cardio> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
+            return list ; 
+           
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+}
 }

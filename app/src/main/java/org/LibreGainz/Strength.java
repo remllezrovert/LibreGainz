@@ -2,8 +2,18 @@ package org.LibreGainz;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 import java.io.*;
+import java.net.http.HttpResponse;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+
 
 /**
  * This class contains an ArrayList<Integer> of reps, and a weight
@@ -200,4 +210,20 @@ public static void csvLoad(String path)
         CsvHandler.csvAppendStr(csvPath, this.toString());
     }
 
-}
+    public static List<Strength> jsonParse(){
+        try {
+            String jsonString = API.getResponseBody("http://remllez.com:8080/strength");
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Strength> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
+            return list ; 
+           
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    }
+
+

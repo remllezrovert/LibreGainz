@@ -4,7 +4,6 @@ package org.LibreGainz;
 /**
  * @author remllez
  */
-
 public class WeightObj{
 short weight;
 Unit unit;
@@ -12,7 +11,9 @@ public WeightObj(short weight, Unit unit){
     this.weight = weight;
     this.unit = unit;
 }
-
+public WeightObj(){
+    
+}
 /**
  * Converts pounds to kilograms
  * @param lb

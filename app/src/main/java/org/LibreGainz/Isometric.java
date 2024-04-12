@@ -3,7 +3,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.sql.*;
 import java.io.*;
+import java.net.http.HttpResponse;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Arrays;
 
 /** @author Remllez * This class stores an ArrayList<Time> and a weight object.  */
@@ -182,6 +186,18 @@ public static void csvLoad(String path)
         CsvHandler.csvAppendStr(csvPath, this.toString());
         //CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
 
+    }
+    public static List<Isometric> jsonParse(){
+        try {
+            String jsonString = API.getResponseBody("http://remllez.com:8080/isometric");
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Isometric> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
+            return list ; 
+           
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     
