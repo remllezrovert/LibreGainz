@@ -79,6 +79,42 @@ private void MVPMenu(Scanner scnr){
 
 }
 
+private static void cardioMenu(Scanner scnr){
+    Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
+   try{
+    System.out.println("Enter a template number:");
+    Cardio c = new Cardio(scnr.nextInt());
+    System.out.println("Enter a Time: ");
+    c.setTime(StrParse.toTime(scnr.next()));
+    System.out.println("Enter Distance: ");
+    c.setDistance((scnr.nextFloat()));
+   } 
+   catch(Exception e){
+    //System.out.println(e);
+    System.out.println("Invalid input");
+   }
+
+
+}
+
+private static void isometricMenu(Scanner scnr){
+    Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
+   try{
+    System.out.println("Enter a template number:");
+    Isometric i = new Isometric(scnr.nextInt());
+    System.out.println("Enter a Weight:");
+    i.setWeight(StrParse.toWeight(scnr.next()));
+    System.out.println("Enter Repetitions (comma separated):");
+    i.setSet(StrParse.toIsometricSet(scnr.next()));
+   } 
+   catch(Exception e){
+    //System.out.println(e);
+    System.out.println("Invalid input");
+   }
+
+
+}
+
 private static void strengthMenu(Scanner scnr){
     Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
    try{
@@ -94,12 +130,10 @@ private static void strengthMenu(Scanner scnr){
     System.out.println("Invalid input");
    }
 
-
 }
 
-
-
 public static void main(String[] args){
+
 
 CsvHandler.templateLoad("data//Template.csv");
 CsvHandler.workoutLoad("data//Workout.csv");
@@ -107,10 +141,11 @@ CsvHandler.isometricLoad("data//Isometric.csv");
 CsvHandler.cardioLoad("data//Cardio.csv");
 CsvHandler.strengthLoad("data//Strength.csv");
 
-
-
 Scanner scnr = new Scanner(System.in);
+
 strengthMenu(scnr);
+cardioMenu(scnr);
+isometricMenu(scnr);
 
 
 Cardio.map.forEach((k, v) -> System.out.println(v.toString()));
@@ -119,24 +154,11 @@ Strength.map.forEach((k, v) -> System.out.println(v.toString()));
 
 //Workout.map.forEach((k, v) -> System.out.println(v.toString()));
 
-
 //Strength strength1 = Main.map.get(3);
 //strength1.setSet(StrParse.toStrengthSet("9,9,9,9"));
 
 CsvHandler.overWrite();
 
-
-
-
-
-
 }
 
-
 }
-
-
-
-
-
-
