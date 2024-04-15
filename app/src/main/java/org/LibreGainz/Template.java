@@ -3,6 +3,8 @@ import java.util.*;
 import java.io.*;
 import java.util.HashMap;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 /**
  * @author Remllez
@@ -15,7 +17,6 @@ private String name;
 private String desc;
 private String workoutType = "Workout";
 private int userId;
-private ArrayList<String> tags = new ArrayList<String>();
 
 public Template(){
     int newKey = map.size();
@@ -192,5 +193,39 @@ public void csvAppend(){
 
     }
 }
+    /**
+     * This will get every template in the server database
+     * @return
+     */
+    public static List<Template> jsonParse(){
+        try {
+            String urlString = User.getBaseUrl() + "/" + User.getId() + "/template";
+            String jsonString = API.getResponseBody(urlString);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Template> list = objectMapper.readValue(jsonString.toString(), 
+                objectMapper.getTypeFactory()
+                .constructCollectionType(List.class, Template.class));
+            return list ; 
+           
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * This will POST every template in the map. Probably unnecessary
+     * @return boolean
+     */
+    public static boolean jsonPost(){
+    String urlString = User.getBaseUrl() + "/" + User.getId() + "/template";
+    ObjectMapper objectMapper = new ObjectMapper();
+        try {
+        API.post(urlString, objectMapper.writeValueAsString(new ArrayList<Template>(map.values())));
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
 }

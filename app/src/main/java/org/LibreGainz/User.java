@@ -13,12 +13,12 @@ public class User{
     public static Unit weightUnit = Unit.LB;
     public static Unit longDistanceUnit = Unit.MI;
     public static Unit shortDistanceUnit = Unit.M;
+    private static String baseUrl = "http://remllez.com:8080";
+    private static int userId = 0;
+    private static String name;
 
-    private int userId = 1;
-    private String name;
-
-    public User(String name){
-        this.name = name;
+    public User(String newName){
+        name = newName;
     }
 
     public User(){}
@@ -30,18 +30,27 @@ public class User{
         return name;
     }
 
-    public void setName(String name){
-        this.name = name;
+    public void setName(String newName){
+        name = newName;
     }
+
+    public static String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String newBaseUrl) {
+        baseUrl = newBaseUrl;
+    }
+
     /**
      * Get the id of the user
      * @return userId
      */
-    public int getId(){
+    public static int getId(){
         return userId;
     }
-    public void setId(int id){
-        this.userId = id;
+    public static void setId(int id){
+        userId = id;
     }
     
     public static void setWeightUnit(Unit newWeightUnit) {

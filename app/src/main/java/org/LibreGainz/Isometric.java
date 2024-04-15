@@ -187,9 +187,16 @@ public static void csvLoad(String path)
         //CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
 
     }
+
+    /**
+     * GET every Isometric object from the server for this user
+     * @return
+     */
     public static List<Isometric> jsonParse(){
         try {
-            String jsonString = API.getResponseBody("http://remllez.com:8080/isometric");
+
+            String urlString = User.getBaseUrl() + "/" + User.getId() + "/isometric";
+            String jsonString = API.getResponseBody(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Isometric> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
             return list ; 
@@ -199,6 +206,24 @@ public static void csvLoad(String path)
             return null;
         }
     }
+
+    /**
+     * POST every Isometric object to the server
+     * @return
+     */
+    public static boolean jsonPost(){
+    String urlString = User.getBaseUrl() + "/" + User.getId() + "/Isometric";
+    ObjectMapper objectMapper = new ObjectMapper();
+        try {
+        API.post(urlString, objectMapper.writeValueAsString(new ArrayList<Isometric>(map.values())));
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
 
     
 }

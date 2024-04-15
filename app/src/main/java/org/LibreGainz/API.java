@@ -16,7 +16,12 @@ import java.net.http.HttpClient;
 import java.io.IOException;
 
 public class API {
-   
+  
+    /**
+     * send GET request to the server 
+     * @param urlString
+     * @return
+     */
        public static String getResponseBody(String urlString){ 
             HttpRequest request = (HttpRequest) HttpRequest.newBuilder()
             .uri(URI.create(urlString))
@@ -39,39 +44,41 @@ public class API {
                 return null;
             }
         }
-           /*  try {
-                Template t = new Template(0);
-                ObjectMapper objectMapper = new ObjectMapper();
-                List<Strength> list = objectMapper.readValue(response.body(), objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
-                
-                for(Strength s : list){
-                    System.out.println(s.toString());
-                }
-            } catch (IOException e) {
+
+/**
+ * send POST request to the server
+ * @param urlString
+ * @param body
+ * @return
+ */
+public static String post(String urlString, String body){ 
+    HttpRequest request = HttpRequest.newBuilder()
+	.POST(HttpRequest.BodyPublishers.ofString(body))
+	.uri(URI.create(urlString))
+	.header("Content-Type", "application/json")
+	.build();
+            try{
+            HttpResponse<String> response = HttpClient.newHttpClient()
+                .send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println(response.statusCode());
+            System.out.println(response.body());
+            return response.body();
+
+            }
+            catch(IOException e){
                 e.printStackTrace();
-            }*/
-            //System.out.println(response.body());
-            //System.out.println(Strength.jsonParse(response.body()).toString());
-
-
-
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                return null;
+            }
+            catch(InterruptedException e){
+                e.printStackTrace();
+                return null;
+            }
         }
+
+
+
+
+    }
 
       
 

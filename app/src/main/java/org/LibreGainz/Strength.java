@@ -10,6 +10,7 @@ import java.net.http.HttpResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -209,10 +210,14 @@ public static void csvLoad(String path)
     public void csvAppend(){
         CsvHandler.csvAppendStr(csvPath, this.toString());
     }
-
+    /**
+     * This will GET all of the user's isometric objects from the server 
+     * @return
+     */
     public static List<Strength> jsonParse(){
         try {
-            String jsonString = API.getResponseBody("http://remllez.com:8080/strength");
+            String urlString = User.getBaseUrl() + "/" + User.getId() + "/strength";
+            String jsonString = API.getResponseBody(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Strength> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
             return list ; 
@@ -221,6 +226,21 @@ public static void csvLoad(String path)
             e.printStackTrace();
             return null;
         }
+    }
+    /**
+     * This will POST Strength.map to the server 
+     * @return boolean
+     */
+    public static boolean jsonPost(){
+    String urlString = User.getBaseUrl() + "/" + User.getId() + "/strength";
+    ObjectMapper objectMapper = new ObjectMapper();
+        try {
+        API.post(urlString, objectMapper.writeValueAsString(new ArrayList<Strength>(map.values())));
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 

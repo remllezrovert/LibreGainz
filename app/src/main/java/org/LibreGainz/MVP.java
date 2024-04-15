@@ -1,4 +1,7 @@
 package org.LibreGainz;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner; 
 
 /**
@@ -106,8 +109,6 @@ Workout.csvLoad("data//Workout.csv");
 Isometric.csvLoad("data//Isometric.csv");
 Cardio.csvLoad("data//Cardio.csv");
 Strength.csvLoad("data//Strength.csv");
-
-
 
 Scanner scnr = new Scanner(System.in);
 strengthMenu(scnr);

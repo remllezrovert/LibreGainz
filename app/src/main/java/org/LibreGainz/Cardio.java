@@ -209,9 +209,15 @@ public static void csvLoad(String path)
         //CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
     }
 
+    /**
+     * GET all cardio objects belonging to this user
+     * @return
+     */
     public static List<Cardio> jsonParse(){
         try {
-            String jsonString = API.getResponseBody("http://remllez.com:8080/cardio");
+
+            String urlString = User.getBaseUrl() + "/" + User.getId() + "/cardio";
+            String jsonString = API.getResponseBody(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Cardio> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
             return list ; 
@@ -220,6 +226,24 @@ public static void csvLoad(String path)
             e.printStackTrace();
             return null;
         }
-
 }
+/**
+ * POST the entire Cardio map
+ * @return boolean
+ */
+public static boolean jsonPost(){
+    String urlString = User.getBaseUrl() + "/" + User.getId() + "/cardio";
+    ObjectMapper objectMapper = new ObjectMapper();
+        try {
+        API.post(urlString, objectMapper
+            .writeValueAsString(new ArrayList<Cardio>(Cardio.map.values())));
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+
 }
