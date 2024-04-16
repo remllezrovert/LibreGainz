@@ -67,7 +67,7 @@ public static ArrayList<Short> strToSet(String commaList){
         retArr.add(Short.parseShort(str.trim()));
     }
     catch (NumberFormatException nfe){
-        System.out.println("NFE");
+        nfe.printStackTrace();
         return retArr;
     }
 

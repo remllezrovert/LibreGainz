@@ -1,11 +1,9 @@
 package org.LibreGainz;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.sql.Time;
 import java.util.Scanner; 
 
 /**
- * @author remllez
+ * @author Kyle
  * This is an experimental unfinished launcher for the app.
  */
 public class MVP{
@@ -67,30 +65,47 @@ private void TemplateMenu(Scanner scnr){ System.out.println(
 }
 
 
-private void MVPMenu(Scanner scnr){
+private static void MVPMenu(Scanner scnr){
     System.out.println(
-    "i"
-
+        """
+    ------------ MVP Menu --------------
+    i - isometric
+    s - strength
+    c - cardio
+    l - list workouts
+    q - quit
+    ------------------------------------
+                """
     );
+    try {
     String input = scnr.nextLine();
     switch(input.toLowerCase()){
-        case "i":
-        case "s":
-        case "c":
-        case "q":
+        case "i": isometricMenu(scnr); break;
+        case "li": Isometric.map.forEach((k, v) -> System.out.println(v.toString())); break;
+        case "s": strengthMenu(scnr); break;
+        case "ls": Strength.map.forEach((k, v) -> System.out.println(v.toString())); break;
+        case "c": cardioMenu(scnr); break;
+        case "lc": Cardio.map.forEach((k,v) -> System.out.println(v.toString())); break;
+        case "q": System.exit(0); break;
     }
+} catch(Exception e) {
+    e.printStackTrace();
+}
 
 }
 
-private static void strengthMenu(Scanner scnr){
+private static void cardioMenu(Scanner scnr){
     Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
    try{
     System.out.println("Enter a template number:");
-    Strength s = new Strength(scnr.nextInt());
-    System.out.println("Enter a Weight:");
-    s.setWeight(WeightObj.strToWeight(scnr.next()));
-    System.out.println("Enter Repetitions (comma separated):");
-    s.setSet(Strength.strToSet(scnr.next()));
+    Cardio c = new Cardio(scnr.nextInt());
+    scnr.nextLine();
+    System.out.println("Enter a Time: ");
+    c.setTime(Time.valueOf(scnr.nextLine()));
+    System.out.println("Enter Distance: ");
+    c.setDistance(scnr.nextLine());
+    c.csvAppend();
+    Cardio.map.forEach((k, v) -> System.out.println(v.toString()));
    } 
    catch(Exception e){
     //System.out.println(e);
@@ -100,38 +115,64 @@ private static void strengthMenu(Scanner scnr){
 
 }
 
+private static void isometricMenu(Scanner scnr){
+    Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
+   try{
+    System.out.println("Enter a template number:");
+    Isometric i = new Isometric(scnr.nextInt());
+    scnr.nextLine();
+    System.out.println("Enter a Weight:");
+    i.setWeight(WeightObj.strToWeight(scnr.nextLine()));
+    System.out.println("Enter Repetitions (comma separated):");
+    i.setSet(Isometric.strToSet(scnr.nextLine()));
+    i.csvAppend();
+   } 
+   catch(Exception e){
+    e.printStackTrace();
+   }
 
+
+}
+
+private static void strengthMenu(Scanner scnr){
+    Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
+   try{
+    System.out.println("Enter a template number:");
+    Strength s = new Strength(scnr.nextInt());
+    scnr.nextLine();
+    System.out.println("Enter a Weight:");
+    s.setWeight(WeightObj.strToWeight(scnr.nextLine()));
+    System.out.println("Enter Repetitions (comma separated):");
+    s.setSet(Strength.strToSet(scnr.nextLine()));
+    s.csvAppend();
+   } 
+   catch(Exception e){
+    //System.out.println(e);
+    System.out.println("Invalid input");
+   }
+
+}
 
 public static void main(String[] args){
+
 
 Template.csvLoad("data//Template.csv");
 Workout.csvLoad("data//Workout.csv");
 Isometric.csvLoad("data//Isometric.csv");
 Cardio.csvLoad("data//Cardio.csv");
 Strength.csvLoad("data//Strength.csv");
-
 Scanner scnr = new Scanner(System.in);
-strengthMenu(scnr);
 
-
-Cardio.map.forEach((k, v) -> System.out.println(v.toString()));
-Isometric.map.forEach((k, v) -> System.out.println(v.toString()));
-Strength.map.forEach((k, v) -> System.out.println(v.toString()));
-
-//Workout.map.forEach((k, v) -> System.out.println(v.toString()));
-
-
-//Strength strength1 = Main.map.get(3);
-//strength1.setSet(StrParse.toStrengthSet("9,9,9,9"));
-
-CsvHandler.overWrite();
-
-
-
-
-
+while (true) {
+try {
+    MVPMenu(scnr);
+    CsvHandler.overWrite();
+    }
+    catch (Exception e){
+        e.printStackTrace();
+    }
 
 }
 
-
+    }
 }
