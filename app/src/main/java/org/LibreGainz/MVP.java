@@ -80,12 +80,19 @@ private static void MVPMenu(Scanner scnr){
     try {
     String input = scnr.nextLine();
     switch(input.toLowerCase()){
-        case "i": isometricMenu(scnr); break;
+        case "i": isometricMenu(scnr).csvAppend(); break;
         case "li": Isometric.map.forEach((k, v) -> System.out.println(v.toString())); break;
-        case "s": strengthMenu(scnr); break;
+        case "s": strengthMenu(scnr).csvAppend(); break;
         case "ls": Strength.map.forEach((k, v) -> System.out.println(v.toString())); break;
-        case "c": cardioMenu(scnr); break;
+        case "c": cardioMenu(scnr).csvAppend(); break;
         case "lc": Cardio.map.forEach((k,v) -> System.out.println(v.toString())); break;
+        case "l":
+        Isometric.map.forEach((k, v) -> System.out.println(v.toString())); 
+        Cardio.map.forEach((k,v) -> System.out.println(v.toString()));
+        Strength.map.forEach((k, v) -> System.out.println(v.toString()));
+        break;
+
+
         case "q": System.exit(0); break;
     }
 } catch(Exception e) {
@@ -94,7 +101,7 @@ private static void MVPMenu(Scanner scnr){
 
 }
 
-private static void cardioMenu(Scanner scnr){
+private static Cardio cardioMenu(Scanner scnr){
     Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
    try{
     System.out.println("Enter a template number:");
@@ -103,19 +110,20 @@ private static void cardioMenu(Scanner scnr){
     System.out.println("Enter a Time: ");
     c.setTime(Time.valueOf(scnr.nextLine()));
     System.out.println("Enter Distance: ");
-    c.setDistance(scnr.nextLine());
+    c.setDistanceStr(scnr.nextLine());
     c.csvAppend();
     Cardio.map.forEach((k, v) -> System.out.println(v.toString()));
+    return c;
    } 
    catch(Exception e){
-    //System.out.println(e);
-    System.out.println("Invalid input");
+    e.printStackTrace();
+    return null;
    }
 
 
 }
 
-private static void isometricMenu(Scanner scnr){
+private static Isometric isometricMenu(Scanner scnr){
     Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
    try{
     System.out.println("Enter a template number:");
@@ -125,16 +133,17 @@ private static void isometricMenu(Scanner scnr){
     i.setWeight(WeightObj.strToWeight(scnr.nextLine()));
     System.out.println("Enter Repetitions (comma separated):");
     i.setSet(Isometric.strToSet(scnr.nextLine()));
-    i.csvAppend();
+    return i;
    } 
    catch(Exception e){
     e.printStackTrace();
+    return null;
    }
 
 
 }
 
-private static void strengthMenu(Scanner scnr){
+private static Strength strengthMenu(Scanner scnr){
     Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
    try{
     System.out.println("Enter a template number:");
@@ -144,11 +153,11 @@ private static void strengthMenu(Scanner scnr){
     s.setWeight(WeightObj.strToWeight(scnr.nextLine()));
     System.out.println("Enter Repetitions (comma separated):");
     s.setSet(Strength.strToSet(scnr.nextLine()));
-    s.csvAppend();
+    return s;
    } 
    catch(Exception e){
-    //System.out.println(e);
-    System.out.println("Invalid input");
+    e.printStackTrace();
+    return null;
    }
 
 }

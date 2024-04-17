@@ -63,7 +63,7 @@ public void setDistance(double distance1) {
     	distance = distance1;
 }
 
-public void setDistance(String distance){
+public void setDistanceStr(String distance){
 Unit unit;
 
 switch(distance.replaceAll("[^A-Za-z]+", "").toUpperCase()){
@@ -153,7 +153,7 @@ public static Cardio csvParse(String csvStr) throws Exception
     read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
     Cardio cdo = new Cardio(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
     cdo.setTime(Time.valueOf(read.get(3)));
-    cdo.setDistance(read.get(2));
+    cdo.setDistanceStr(read.get(2));
     
     return cdo;
     }
@@ -223,7 +223,7 @@ public static void csvLoad(String path)
             String urlString = User.getBaseUrl() + "/" + User.getId() + "/cardio";
             String jsonString = API.getResponseBody(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
-            List<Cardio> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
+            List<Cardio> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
             return list ; 
            
         } catch (IOException e) {
