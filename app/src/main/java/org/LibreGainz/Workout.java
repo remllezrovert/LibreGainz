@@ -1,6 +1,8 @@
 package org.LibreGainz;
 import java.util.Date;
 import java.util.HashMap;
+
+
 import java.util.ArrayList;
 import java.util.*;
 import java.io.*;
@@ -79,7 +81,6 @@ public int getUserId() {
 public void setUserId(int userId) {
     this.userId = userId;
 }
-
 /**
  * Set the workoutId
  * @param workoutId
@@ -192,7 +193,7 @@ public static Workout csvParse(String csvStr) throws Exception
     try{
     read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
     Workout wo = new Workout(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    wo.setDate(User.dateFormat.parse(read.get(2)));
+    wo.setDate(Device.getUser().dateFormat.parse(read.get(2)));
     wo.setAnnotation(read.get(3));
     wo.setTags(Workout.strToTags(read.get(4)));
 
@@ -228,7 +229,7 @@ public static void csvLoad(String path)
 
 
 public void jsonDelete(){
-    API.delete(User.getBaseUrl() + "/" + userId +"/workout/" + workoutId);
+    API.delete(Device.getBaseUrl() + "/" + userId +"/workout/" + workoutId);
 }
 
 
@@ -241,7 +242,7 @@ public void jsonDelete(){
 public String toString(){
 return templateId +
     "," + workoutId +
-    ",\"" + User.dateFormat.format(date) +
+    ",\"" + Device.getUser().dateFormat.format(date) +
     ",\"" + this.annotation +
     "\",\"" + this.getTags().toString().substring(1, tags.toString().length() - 1) + "\"";
 }
@@ -255,6 +256,15 @@ public String superToString(){
 
 public void csvAppend(){
     CsvHandler.csvAppendStr(csvPath, this.toString());
+
+
+
+
 }
+
+
+
+
+
 
 }

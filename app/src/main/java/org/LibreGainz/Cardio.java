@@ -214,13 +214,12 @@ public static void csvLoad(String path)
     }
 
     /**
-     * GET all cardio objects belonging to this user
+     * GET all cardio objects in the database
      * @return
      */
-    public static List<Cardio> jsonParse(){
+    public static List<Cardio> getRequestAll(){
         try {
-
-            String urlString = User.getBaseUrl() + "/" + User.getId() + "/cardio";
+            String urlString = Device.getBaseUrl() + "/cardio";
             String jsonString = API.getResponseBody(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Cardio> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
@@ -230,13 +229,35 @@ public static void csvLoad(String path)
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * Get all cardio objects belonging to this user
+     * @param user
+     * @return cardioList
+     */
+    public static List<Cardio> getRequest(User user){
+        try {
+
+            String urlString = Device.getBaseUrl() + "/" + user.getId() + "/cardio";
+            String jsonString = API.getResponseBody(urlString);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Cardio> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
+            return list ; 
+           
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
 }
 /**
  * POST the entire Cardio map
  * @return boolean
  */
-public static boolean jsonPost(){
-    String urlString = User.getBaseUrl() + "/" + User.getId() + "/cardio";
+public static boolean postRequestAll(){
+    String urlString = Device.getBaseUrl() + "/cardio";
     ObjectMapper objectMapper = new ObjectMapper();
         try {
         API.post(urlString, objectMapper
@@ -247,6 +268,33 @@ public static boolean jsonPost(){
         }
         return true;
     }
+
+
+/**
+ * POST single object (this)
+ * @return
+ */
+public boolean postRequest(){
+    String urlString = Device.getBaseUrl() + "/" + userId + "/cardio";
+    ObjectMapper objectMapper = new ObjectMapper();
+    ArrayList<Cardio> list = new ArrayList<Cardio>();
+    list.add(this);
+        try {
+        API.post(urlString, objectMapper
+            .writeValueAsString(list));
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+
+
+
 
 
 

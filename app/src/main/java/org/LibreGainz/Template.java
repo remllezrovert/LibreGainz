@@ -199,7 +199,7 @@ public void csvAppend(){
      */
     public static List<Template> jsonParse(){
         try {
-            String urlString = User.getBaseUrl() + "/" + User.getId() + "/template";
+            String urlString = Device.getBaseUrl() + "/" + Device.getUser().getId() + "/template";
             String jsonString = API.getResponseBody(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Template> list = objectMapper.readValue(jsonString.toString(), 
@@ -217,7 +217,7 @@ public void csvAppend(){
      * @return boolean
      */
     public static boolean jsonPost(){
-    String urlString = User.getBaseUrl() + "/" + User.getId() + "/template";
+    String urlString = Device.getBaseUrl() + "/" + Device.getUser().getId() + "/template";
     ObjectMapper objectMapper = new ObjectMapper();
         try {
         API.post(urlString, objectMapper.writeValueAsString(new ArrayList<Template>(map.values())));

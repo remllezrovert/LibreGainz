@@ -210,16 +210,19 @@ public static void csvLoad(String path)
     public void csvAppend(){
         CsvHandler.csvAppendStr(csvPath, this.toString());
     }
+
+
+
     /**
-     * This will GET all of the user's isometric objects from the server 
+     * GET all strength objects in the database
      * @return
      */
-    public static List<Strength> jsonParse(){
+    public static List<Strength> getRequestAll(){
         try {
-            String urlString = User.getBaseUrl() + "/" + User.getId() + "/strength";
+            String urlString = Device.getBaseUrl() + "/strength";
             String jsonString = API.getResponseBody(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
-            List<Strength> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
+            List<Strength> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
             return list ; 
            
         } catch (IOException e) {
@@ -227,21 +230,66 @@ public static void csvLoad(String path)
             return null;
         }
     }
+
     /**
-     * This will POST Strength.map to the server 
-     * @return boolean
+     * Get all strength objects belonging to this user
+     * @param user
+     * @return strengthList
      */
-    public static boolean jsonPost(){
-    String urlString = User.getBaseUrl() + "/" + User.getId() + "/strength";
+    public static List<Strength> getRequest(User user){
+        try {
+
+            String urlString = Device.getBaseUrl() + "/" + user.getId() + "/strength";
+            String jsonString = API.getResponseBody(urlString);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Strength> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
+            return list ; 
+           
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+}
+/**
+ * POST the entire Strength map
+ * @return boolean
+ */
+public static boolean postRequestAll(){
+    String urlString = Device.getBaseUrl() + "/strength";
     ObjectMapper objectMapper = new ObjectMapper();
         try {
-        API.post(urlString, objectMapper.writeValueAsString(new ArrayList<Strength>(map.values())));
+        API.post(urlString, objectMapper
+            .writeValueAsString(new ArrayList<Strength>(Strength.map.values())));
         } catch(IOException e){
             e.printStackTrace();
             return false;
         }
         return true;
     }
+
+
+/**
+ * POST single object (this)
+ * @return
+ */
+public boolean postRequest(){
+    String urlString = Device.getBaseUrl() + "/" + userId + "/strength";
+    ObjectMapper objectMapper = new ObjectMapper();
+    ArrayList<Strength> list = new ArrayList<Strength>();
+    list.add(this);
+        try {
+        API.post(urlString, objectMapper
+            .writeValueAsString(list));
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
 
 
     }

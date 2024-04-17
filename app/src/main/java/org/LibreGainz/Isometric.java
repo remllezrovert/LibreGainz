@@ -193,17 +193,17 @@ public static void csvLoad(String path)
 
     }
 
+
     /**
-     * GET every Isometric object from the server for this user
+     * GET all isometric objects in the database
      * @return
      */
-    public static List<Isometric> jsonParse(){
+    public static List<Isometric> getRequestAll(){
         try {
-
-            String urlString = User.getBaseUrl() + "/" + User.getId() + "/isometric";
+            String urlString = Device.getBaseUrl() + "/isometric";
             String jsonString = API.getResponseBody(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
-            List<Isometric> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
+            List<Isometric> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
             return list ; 
            
         } catch (IOException e) {
@@ -213,14 +213,56 @@ public static void csvLoad(String path)
     }
 
     /**
-     * POST every Isometric object to the server
-     * @return
+     * Get all isometric objects belonging to this user
+     * @param user
+     * @return isometricList
      */
-    public static boolean jsonPost(){
-    String urlString = User.getBaseUrl() + "/" + User.getId() + "/Isometric";
+    public static List<Isometric> getRequest(User user){
+        try {
+
+            String urlString = Device.getBaseUrl() + "/" + user.getId() + "/isometric";
+            String jsonString = API.getResponseBody(urlString);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<Isometric> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
+            return list ; 
+           
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+
+}
+/**
+ * POST the entire Isometric map
+ * @return boolean
+ */
+public static boolean postRequestAll(){
+    String urlString = Device.getBaseUrl() + "/isometric";
     ObjectMapper objectMapper = new ObjectMapper();
         try {
-        API.post(urlString, objectMapper.writeValueAsString(new ArrayList<Isometric>(map.values())));
+        API.post(urlString, objectMapper
+            .writeValueAsString(new ArrayList<Isometric>(Isometric.map.values())));
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+/**
+ * POST single object (this)
+ * @return
+ */
+public boolean postRequest(){
+    String urlString = Device.getBaseUrl() + "/" + userId + "/isometric";
+    ObjectMapper objectMapper = new ObjectMapper();
+    ArrayList<Isometric> list = new ArrayList<Isometric>();
+    list.add(this);
+        try {
+        API.post(urlString, objectMapper
+            .writeValueAsString(list));
         } catch(IOException e){
             e.printStackTrace();
             return false;
