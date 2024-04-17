@@ -289,6 +289,45 @@ public boolean postRequest(){
         return true;
     }
 
+    public static boolean patchRequestAll(){
+        String urlString = Device.getBaseUrl() + "/strength";
+        ObjectMapper objectMapper = new ObjectMapper();
+            try {
+            API.patch(urlString, objectMapper
+                .writeValueAsString(new ArrayList<Strength>(Strength.map.values())));
+            } catch(IOException e){
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+    
+    
+    /**
+     * POST single object (this)
+     * @return
+     */
+    public boolean patchRequest(){
+        String urlString = Device.getBaseUrl() + "/" + userId + "/strength";
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Strength> list = new ArrayList<Strength>();
+        list.add(this);
+            try {
+            API.patch(urlString, objectMapper
+                .writeValueAsString(list));
+            } catch(IOException e){
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+
+
+
+
+
+
+
 
 
 

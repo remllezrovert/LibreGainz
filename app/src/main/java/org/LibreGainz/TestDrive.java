@@ -12,6 +12,12 @@ public class TestDrive {
         tina.setId(0);
         System.out.println(Cardio.getRequest(tina));
 
+        Cardio.getRequest(tina);
+
+
+      
+
+
         //Template.csvLoad("data//Template.csv");
     //    System.out.println(Strength.jsonParse().toString());
     //    System.out.println(Isometric.jsonParse().toString());
@@ -25,12 +31,20 @@ public class TestDrive {
     //c.setUnit(Unit.KM);
     //System.out.println(Cardio.map.toString());
 
-    //Cardio.jsonParse().forEach((w) ->
-    //    {
-    //    System.out.println(w.toString());
-    //    Cardio.map.putIfAbsent(w.workoutId, w);
-    //    }
-    //);
+    /* 
+    Cardio.getRequestAll().forEach((w) ->
+       {
+        System.out.println(w.toString());
+        Cardio.map.putIfAbsent(w.workoutId, w);
+        w.setDistance(500.000);
+        w.patchRequest();
+        System.out.println(w.toString());
+        }
+    );
+
+    */
+
+    
     //Cardio.map.values().forEach((w) ->
     //{
     //w.jsonDelete();

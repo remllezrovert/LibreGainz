@@ -75,6 +75,31 @@ public static String post(String urlString, String body){
             }
         }
 
+        public static String patch(String urlString, String body){ 
+            HttpRequest request = HttpRequest.newBuilder()
+            .POST(HttpRequest.BodyPublishers.ofString(body))
+            .uri(URI.create(urlString))
+            .header("Content-Type", "application/json")
+            .method("PATCH", HttpRequest.BodyPublishers.ofString(body))
+            .build();
+                    try{
+                    HttpResponse<String> response = HttpClient.newHttpClient()
+                        .send(request, HttpResponse.BodyHandlers.ofString());
+                    //System.out.println(response.statusCode());
+                    //System.out.println(response.body());
+                    return response.body();
+        
+                    }
+                    catch(IOException e){
+                        e.printStackTrace();
+                        return null;
+                    }
+                    catch(InterruptedException e){
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+
 
 
 
