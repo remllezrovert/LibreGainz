@@ -21,7 +21,6 @@ public class Cardio extends Workout{
         map.putIfAbsent(workoutId, this);
     }
     public Cardio(){
-        super(0);
     }
 
     /**
@@ -60,9 +59,32 @@ public class Cardio extends Workout{
      */
   
  
-    public void setDistance(double distance1) {
+public void setDistance(double distance1) {
     	distance = distance1;
+}
+
+public void setDistanceStr(String distance){
+Unit unit;
+
+switch(distance.replaceAll("[^A-Za-z]+", "").toUpperCase()){
+    case "KM":
+    case "KILOMETER":
+    case "K":
+        unit = Unit.KM; 
+        break;
+    case "MI":
+    case "MILES":
+    case "MILE":
+        unit = Unit.MI;
+        break;
+    default:
+        unit = Unit.MI;
+        break;
     }
+    setUnit(unit);
+    setDistance(Double.parseDouble(distance.replaceAll("[^\\d.]", "")));
+    }
+
 
     /**
      * get the distance ran
@@ -130,27 +152,9 @@ public static Cardio csvParse(String csvStr) throws Exception
     List<String> read = new ArrayList<String>();
     read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
     Cardio cdo = new Cardio(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    //cdo.setUnit(Isometric.strToSet(read.get(3)));
-    //String alphaStr = read.get(3).replaceAll("[^A-Za-z]+", "");
-    cdo.setDistance(Double.parseDouble(read.get(2).replaceAll("[^\\d.]", "")));
     cdo.setTime(Time.valueOf(read.get(3)));
-    Unit unit; 
-    switch(read.get(3).replaceAll("[^A-Za-z]+", "").toUpperCase()){
-    case "KM":
-    case "KILOMETER":
-    case "K":
-        unit = Unit.KM; 
-        break;
-    case "MI":
-    case "MILES":
-    case "MILE":
-        unit = Unit.MI;
-        break;
-    default:
-        unit = Unit.MI;
-        break;
-    }
-    cdo.setUnit(unit);
+    cdo.setDistanceStr(read.get(2));
+    
     return cdo;
     }
 
@@ -219,7 +223,7 @@ public static void csvLoad(String path)
             String urlString = User.getBaseUrl() + "/" + User.getId() + "/cardio";
             String jsonString = API.getResponseBody(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
-            List<Cardio> list = objectMapper.readValue(jsonString.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
+            List<Cardio> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
             return list ; 
            
         } catch (IOException e) {

@@ -25,7 +25,7 @@ public class Isometric extends Workout{
     }
 
     public Isometric(){
-        super(0);
+        super();
     }
     /**
      * Get the path where the csv file for the object is saved
@@ -75,10 +75,15 @@ public class Isometric extends Workout{
  */
 public static ArrayList<Time> strToSet(String commaList){
     ArrayList<Time> retArr = new ArrayList<Time>();
+    try{
     for (String str : commaList.split(",")){
         retArr.add(Time.valueOf(str.trim()));
     }
     return retArr;
+    } catch(Exception e) {
+    e.printStackTrace();
+    return null;
+    }
 }
 
 

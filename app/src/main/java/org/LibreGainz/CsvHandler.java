@@ -171,7 +171,7 @@ public static void csvWipe(String path){
      * Wipes CSV files, overwriting them with data from maps
      */
 public static void overWrite(){
-
+    try{
     csvWipe(Template.getCsvPath());
     Template.map.forEach((k, v) -> v.csvAppend());
 
@@ -186,6 +186,11 @@ public static void overWrite(){
 
     csvWipe(Cardio.getCsvPath());
     Cardio.map.forEach((k, v) -> v.csvAppend());
+    }
+    catch(Exception e){
+        e.printStackTrace();
+
+    }
 
 
 

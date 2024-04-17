@@ -60,8 +60,8 @@ public static String post(String urlString, String body){
             try{
             HttpResponse<String> response = HttpClient.newHttpClient()
                 .send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(response.statusCode());
-            System.out.println(response.body());
+            //System.out.println(response.statusCode());
+            //System.out.println(response.body());
             return response.body();
 
             }
@@ -74,6 +74,52 @@ public static String post(String urlString, String body){
                 return null;
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * Send a DELETE http request to the server
+ * @param urlString
+ * @return
+ */
+public static boolean delete(String urlString){ 
+HttpRequest request = HttpRequest.newBuilder()
+	.DELETE()
+	.uri(URI.create(urlString))
+    .method("DELETE", HttpRequest.BodyPublishers.noBody())
+	.build();
+    try{
+    HttpResponse<String> response = HttpClient.newHttpClient()
+	.send(request, HttpResponse.BodyHandlers.ofString());
+    System.out.println(response.statusCode());
+    System.out.println(response.body());
+    return true;
+    } catch(Exception e){
+        e.printStackTrace();
+        return false;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 
 

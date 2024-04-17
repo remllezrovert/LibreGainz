@@ -226,6 +226,15 @@ public static void csvLoad(String path)
 }
 
 
+
+public void jsonDelete(){
+    API.delete(User.getBaseUrl() + "/" + userId +"/workout/" + workoutId);
+}
+
+
+
+
+
 /**
  * return a string summarizing this object for CSV files
  */
