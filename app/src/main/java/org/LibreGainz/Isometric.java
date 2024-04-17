@@ -270,6 +270,39 @@ public boolean postRequest(){
         return true;
     }
 
+    public static boolean patchRequestAll(){
+        String urlString = Device.getBaseUrl() + "/isometric";
+        ObjectMapper objectMapper = new ObjectMapper();
+            try {
+            API.patch(urlString, objectMapper
+                .writeValueAsString(new ArrayList<Isometric>(Isometric.map.values())));
+            } catch(IOException e){
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+    
+    
+    /**
+     * POST single object (this)
+     * @return
+     */
+    public boolean patchRequest(){
+        String urlString = Device.getBaseUrl() + "/" + userId + "/isometric";
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Isometric> list = new ArrayList<Isometric>();
+        list.add(this);
+            try {
+            API.patch(urlString, objectMapper
+                .writeValueAsString(list));
+            } catch(IOException e){
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+
 
 
     
