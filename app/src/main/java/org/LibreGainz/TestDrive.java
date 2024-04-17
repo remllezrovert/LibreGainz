@@ -5,9 +5,13 @@ import java.util.List;
 
 public class TestDrive {
     public static void main(String[] args){
-        //Template t1 = new Template(0);
-        //Template t2 = new Template(2);
-        //Template t3 = new Template(3);
+        Template t1 = new Template(0);
+        Template t2 = new Template(2);
+        Template t3 = new Template(3);
+        User tina = new User("tina");
+        tina.setId(0);
+        System.out.println(Cardio.getRequest(tina));
+
         //Template.csvLoad("data//Template.csv");
     //    System.out.println(Strength.jsonParse().toString());
     //    System.out.println(Isometric.jsonParse().toString());

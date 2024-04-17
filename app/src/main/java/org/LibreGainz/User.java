@@ -8,14 +8,13 @@ import java.text.SimpleDateFormat;
  */
 
 public class User{
-    private static String dateFormatStr = "MM/dd/yyyy";
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatStr);
-    public static Unit weightUnit = Unit.LB;
-    public static Unit longDistanceUnit = Unit.MI;
-    public static Unit shortDistanceUnit = Unit.M;
-    private static String baseUrl = "http://remllez.com:8080";
-    private static int userId = 0;
-    private static String name;
+    private String dateFormatStr = "MM/dd/yyyy";
+    public SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatStr);
+    public Unit weightUnit = Unit.LB;
+    public Unit longDistanceUnit = Unit.MI;
+    public Unit shortDistanceUnit = Unit.M;
+    private int userId = 0;
+    private String name;
 
     public User(String newName){
         name = newName;
@@ -34,45 +33,37 @@ public class User{
         name = newName;
     }
 
-    public static String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public void setBaseUrl(String newBaseUrl) {
-        baseUrl = newBaseUrl;
-    }
-
-    /**
+       /**
      * Get the id of the user
      * @return userId
      */
-    public static int getId(){
+    public int getId(){
         return userId;
     }
-    public static void setId(int id){
+    public void setId(int id){
         userId = id;
     }
     
-    public static void setWeightUnit(Unit newWeightUnit) {
+    public void setWeightUnit(Unit newWeightUnit) {
     	weightUnit = newWeightUnit;
     }
-    
-    public static void setLongDistanceUnit (Unit newLongDistanceUnit) {
+   
+    public void setLongDistanceUnit (Unit newLongDistanceUnit) {
     	longDistanceUnit = newLongDistanceUnit;
     }
-    public static void setShortDistanceUnit (Unit newShortDistanceUnit) {
+    public void setShortDistanceUnit (Unit newShortDistanceUnit) {
     	shortDistanceUnit = newShortDistanceUnit;
     }
     
-    public static Unit getWeightUnit() {
+    public Unit getWeightUnit() {
     	return weightUnit;
     }
     
-    public static Unit getLongDistanceUnit() {
+    public Unit getLongDistanceUnit() {
     	return longDistanceUnit;
     }
     
-    public static Unit getShortDistanceUnit() {
+    public Unit getShortDistanceUnit() {
     	return shortDistanceUnit;
     }
     

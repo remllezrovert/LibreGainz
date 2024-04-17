@@ -88,7 +88,7 @@ public static WeightObj strToWeight(String str){
         unit = Unit.LB;
         break;
     default:
-        unit = User.getWeightUnit();
+        unit = Device.getUser().getWeightUnit();
         break;
     }
     try{

@@ -7,7 +7,6 @@ import java.util.stream.*;
 import java.sql.*;
 
 
-//TODO: all toStrength/toIsometric etc. need error handling for null values
 
 /** 
  * @author Remllez
