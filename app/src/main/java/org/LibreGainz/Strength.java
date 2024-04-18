@@ -159,13 +159,12 @@ public static Strength csvParse(String csvStr) throws Exception
  * Opens csv file and turns it's contents into strength objects
  * @param path
  */
-public static void csvLoad(String path)
+public static void csvLoad()
 {
-    String file = path;
     BufferedReader reader = null;
     String line = "";
     try{
-        reader = new BufferedReader(new FileReader(file));
+        reader = new BufferedReader(new FileReader(csvPath));
         while((line = reader.readLine())!= null){
             Strength st = csvParse(line);
             Workout wo = Workout.map.get(st.workoutId);
@@ -220,7 +219,7 @@ public static void csvLoad(String path)
     public static List<Strength> getRequestAll(){
         try {
             String urlString = Device.getBaseUrl() + "/strength";
-            String jsonString = API.getResponseBody(urlString);
+            String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Strength> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
             return list ; 
@@ -240,7 +239,7 @@ public static void csvLoad(String path)
         try {
 
             String urlString = Device.getBaseUrl() + "/" + user.getId() + "/strength";
-            String jsonString = API.getResponseBody(urlString);
+            String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Strength> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
             return list ; 
