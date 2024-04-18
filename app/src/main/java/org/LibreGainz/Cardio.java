@@ -162,13 +162,12 @@ public static Cardio csvParse(String csvStr) throws Exception
  * Opens a csv file and turns it's contents into cardio objects
  * @param path
  */
-public static void csvLoad(String path)
+public static void csvLoad()
 {
-    String file = path;
     BufferedReader reader = null;
     String line = "";
     try{
-        reader = new BufferedReader(new FileReader(file));
+        reader = new BufferedReader(new FileReader(csvPath));
         while((line = reader.readLine())!= null){
             Cardio cdo = csvParse(line);
             Workout wo = Cardio.map.get(cdo.workoutId);
@@ -182,9 +181,7 @@ public static void csvLoad(String path)
     }
 }
 
-
-
-
+   
     
     /**
      * Return a CSV friendly string representing this object
@@ -220,7 +217,7 @@ public static void csvLoad(String path)
     public static List<Cardio> getRequestAll(){
         try {
             String urlString = Device.getBaseUrl() + "/cardio";
-            String jsonString = API.getResponseBody(urlString);
+            String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Cardio> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
             return list ; 
@@ -240,7 +237,7 @@ public static void csvLoad(String path)
         try {
 
             String urlString = Device.getBaseUrl() + "/" + user.getId() + "/cardio";
-            String jsonString = API.getResponseBody(urlString);
+            String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Cardio> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
             return list ; 

@@ -20,13 +20,21 @@ public class Discord {
 
         SlashCommand.with("ping", "A simple ping pong command!").createGlobal(api).join();
 
-     api.addSlashCommandCreateListener(event -> {
+
+
+        // This adds a new user
+        api.addSlashCommandCreateListener(event -> {
          SlashCommandInteraction slashCommandInteraction = event.getSlashCommandInteraction();
          if (slashCommandInteraction.getCommandName().equals("ping")) {
+
+            String name = slashCommandInteraction.getUser().getName();
+
+
              slashCommandInteraction.createImmediateResponder()
-                 .setContent("Pong!")
+                 .setContent(name)
                  .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
                  .respond();
+
          }
      });
 
