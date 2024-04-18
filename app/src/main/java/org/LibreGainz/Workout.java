@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
 
 /** This class has general workout information 
  * It's attributes are used to describe and search for workouts
@@ -17,7 +18,11 @@ private Template template;
 public static HashMap<Long, Workout> map = new HashMap<Long, Workout>();
 protected int templateId; 
 protected long workoutId; 
+
 protected int userId;
+protected User user = Device.getUser();
+
+
 protected String annotation;
 protected Date date = new Date();
 protected ArrayList<String> tags = new ArrayList<String>();
@@ -81,6 +86,15 @@ public int getUserId() {
 public void setUserId(int userId) {
     this.userId = userId;
 }
+public User getUser() {
+    return user;
+}
+public void setUser(User user) {
+    this.user = user;
+}
+
+
+
 /**
  * Set the workoutId
  * @param workoutId
@@ -189,14 +203,17 @@ tags.remove(tagIndex);
  */
 public static Workout csvParse(String csvStr) throws Exception
     {
+
     List<String> read = new ArrayList<String>();
     try{
     read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
     Workout wo = new Workout(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    wo.setDate(Device.getUser().dateFormat.parse(read.get(2)));
+    //Somehow we need to handle users, this won't work right now
+    User user = wo.getUser();
+    SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr());
+    wo.setDate(dateFormat.parse(read.get(2)));
     wo.setAnnotation(read.get(3));
     wo.setTags(Workout.strToTags(read.get(4)));
-
     return wo;
     }
     catch(Exception e){}
@@ -207,13 +224,12 @@ public static Workout csvParse(String csvStr) throws Exception
  * This loads a csv file
  * @param path
  */
-public static void csvLoad(String path)
+public static void csvLoad()
 {
-    String file = path;
     BufferedReader reader = null;
     String line = "";
     try{
-        reader = new BufferedReader(new FileReader(file));
+        reader = new BufferedReader(new FileReader(csvPath));
         while((line = reader.readLine())!= null){
             csvParse(line);
         }
@@ -225,6 +241,11 @@ public static void csvLoad(String path)
 
     }
 }
+
+public static void csvOverwrite(){
+    CsvHandler.csvWipe(csvPath);
+    map.forEach((k,v) -> v.csvAppend());
+    }
 
 
 
@@ -240,9 +261,10 @@ public void jsonDelete(){
  * return a string summarizing this object for CSV files
  */
 public String toString(){
+SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr());
 return templateId +
     "," + workoutId +
-    ",\"" + Device.getUser().dateFormat.format(date) +
+    ",\"" + dateFormat.format(date) +
     ",\"" + this.annotation +
     "\",\"" + this.getTags().toString().substring(1, tags.toString().length() - 1) + "\"";
 }
@@ -256,8 +278,6 @@ public String superToString(){
 
 public void csvAppend(){
     CsvHandler.csvAppendStr(csvPath, this.toString());
-
-
 
 
 }

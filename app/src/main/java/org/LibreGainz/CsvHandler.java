@@ -171,20 +171,12 @@ public static void csvWipe(String path){
      */
 public static void overWrite(){
     try{
-    csvWipe(Template.getCsvPath());
-    Template.map.forEach((k, v) -> v.csvAppend());
-
-    csvWipe("data//Workout.csv");
-    Workout.map.forEach((k, v) -> v.csvAppend());
-
-    csvWipe(Strength.getCsvPath());
-    Strength.map.forEach((k, v) -> v.csvAppend());
-
-    csvWipe(Isometric.getCsvPath());
-    Isometric.map.forEach((k, v) -> v.csvAppend());
-
-    csvWipe(Cardio.getCsvPath());
-    Cardio.map.forEach((k, v) -> v.csvAppend());
+    User.csvOverwrite();
+    Template.csvOverwrite();
+    Workout.csvOverwrite();
+    Strength.csvOverwrite();
+    Isometric.csvOverwrite();
+    Cardio.csvOverwrite();
     }
     catch(Exception e){
         e.printStackTrace();

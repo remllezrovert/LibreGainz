@@ -22,7 +22,7 @@ public class API {
      * @param urlString
      * @return
      */
-       public static String getResponseBody(String urlString){ 
+       public static String get(String urlString){ 
             HttpRequest request = (HttpRequest) HttpRequest.newBuilder()
             .uri(URI.create(urlString))
             //.header("X-RapidAPI-Host", "jokes-by-api-ninjas.p.rapidapi.com")
@@ -100,17 +100,6 @@ public static String post(String urlString, String body){
                     }
                 }
 
-
-
-
-
-
-
-
-
-
-
-
 /**
  * Send a DELETE http request to the server
  * @param urlString
@@ -134,18 +123,6 @@ HttpRequest request = HttpRequest.newBuilder()
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

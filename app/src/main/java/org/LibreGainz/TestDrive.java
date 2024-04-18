@@ -8,11 +8,26 @@ public class TestDrive {
         Template t1 = new Template(0);
         Template t2 = new Template(2);
         Template t3 = new Template(3);
+        User bill = new User("BillMetric");
         User tina = new User("tina");
         tina.setId(0);
-        System.out.println(Cardio.getRequest(tina));
+        bill.setId(9);
+        bill.setWeightUnit(Unit.KG);
+        bill.setLongDistanceUnit(Unit.KM);
+        bill.setDateFormatStr("dd/MM/yyyy");
+        User.csvOverwrite();
 
-        Cardio.getRequest(tina);
+        Device.setUser(bill);
+        //tina.setId(2);
+        bill.postRequest();
+        //System.out.println(Cardio.getRequest(tina));
+
+        System.out.println(Cardio.getRequest(tina).toString());
+
+        System.out.println(Strength.getRequest(tina).toString());
+
+        System.out.println(Isometric.getRequest(tina).toString());
+        
 
 
       

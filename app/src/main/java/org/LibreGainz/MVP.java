@@ -102,7 +102,12 @@ private static void MVPMenu(Scanner scnr){
 }
 
 private static Cardio cardioMenu(Scanner scnr){
-    Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
+ Template.map.forEach((k,v)-> {
+        if (v.getWorkoutType().equals("Cardio"))
+        System.out.println(k + " - " + v.getName());
+});
+
+
    try{
     System.out.println("Enter a template number:");
     Cardio c = new Cardio(scnr.nextInt());
@@ -124,7 +129,13 @@ private static Cardio cardioMenu(Scanner scnr){
 }
 
 private static Isometric isometricMenu(Scanner scnr){
-    Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
+ Template.map.forEach((k,v)-> {
+        if (v.getWorkoutType().equals("Isometric"))
+        System.out.println(k + " - " + v.getName());
+});
+
+
+
    try{
     System.out.println("Enter a template number:");
     Isometric i = new Isometric(scnr.nextInt());
@@ -144,7 +155,11 @@ private static Isometric isometricMenu(Scanner scnr){
 }
 
 private static Strength strengthMenu(Scanner scnr){
-    Template.map.forEach((k,v)-> System.out.println(k + " - " + v.getName()));
+    Template.map.forEach((k,v)-> {
+        if (v.getWorkoutType().equals("Strength"))
+        System.out.println(k + " - " + v.getName());
+});
+
    try{
     System.out.println("Enter a template number:");
     Strength s = new Strength(scnr.nextInt());
@@ -164,12 +179,12 @@ private static Strength strengthMenu(Scanner scnr){
 
 public static void main(String[] args){
 
-
-Template.csvLoad("data//Template.csv");
-Workout.csvLoad("data//Workout.csv");
-Isometric.csvLoad("data//Isometric.csv");
-Cardio.csvLoad("data//Cardio.csv");
-Strength.csvLoad("data//Strength.csv");
+User.csvLoad();
+Template.csvLoad();
+Workout.csvLoad();
+Isometric.csvLoad();
+Cardio.csvLoad();
+Strength.csvLoad();
 Scanner scnr = new Scanner(System.in);
 
 while (true) {
