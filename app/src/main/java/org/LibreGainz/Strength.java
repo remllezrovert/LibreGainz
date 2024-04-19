@@ -205,20 +205,55 @@ public static void csvLoad()
     public String superToString(){
         return super.toString();
     }
-
-    public void csvAppend(){
-        CsvHandler.csvAppendStr(csvPath, this.toString());
-    }
-
+   
 
 
     /**
-     * GET all strength objects in the database
+     * GET all objects in the database
      * @return
      */
     public static List<Strength> getRequestAll(){
         try {
             String urlString = Device.getBaseUrl() + "/strength";
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Get all objects belonging to this user
+     * @param user
+     * @return strengthList
+     */
+    public static List<Strength> getRequestUser(User user){
+        try {
+            String urlString = Device.getBaseUrl() + "/" + user.getId() + "/strength";
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * Get request to find objects using workoutId
+     * @param workoutId
+     * @return
+     */
+    public static List<Strength> getRequestId(int workoutId){
+        try {
+            String urlString = Device.getBaseUrl() + "/strength/" + String.valueOf(workoutId);
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<Strength> getRequest(String urlString){
+        try {
+
             String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Strength> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
@@ -230,27 +265,10 @@ public static void csvLoad()
         }
     }
 
-    /**
-     * Get all strength objects belonging to this user
-     * @param user
-     * @return strengthList
-     */
-    public static List<Strength> getRequest(User user){
-        try {
-
-            String urlString = Device.getBaseUrl() + "/" + user.getId() + "/strength";
-            String jsonString = API.get(urlString);
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<Strength> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Strength.class));
-            return list ; 
-           
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
 
 
-}
+
+
 /**
  * POST the entire Strength map
  * @return boolean

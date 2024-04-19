@@ -186,20 +186,53 @@ public static void csvLoad()
     public String superToString(){
         return super.toString();
     }
-    public void csvAppend(){
-        CsvHandler.csvAppendStr(csvPath, this.toString());
-        //CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
-
-    }
-
-
+   
     /**
-     * GET all isometric objects in the database
+     * GET all objects in the database
      * @return
      */
     public static List<Isometric> getRequestAll(){
         try {
             String urlString = Device.getBaseUrl() + "/isometric";
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Get all objects belonging to this user
+     * @param user
+     * @return isometricList
+     */
+    public static List<Isometric> getRequestUser(User user){
+        try {
+            String urlString = Device.getBaseUrl() + "/" + user.getId() + "/isometric";
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * Get request to find objects using workoutId
+     * @param workoutId
+     * @return
+     */
+    public static List<Isometric> getRequestId(int workoutId){
+        try {
+            String urlString = Device.getBaseUrl() + "/isometric/" + String.valueOf(workoutId);
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<Isometric> getRequest(String urlString){
+        try {
+
             String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Isometric> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
@@ -210,28 +243,6 @@ public static void csvLoad()
             return null;
         }
     }
-
-    /**
-     * Get all isometric objects belonging to this user
-     * @param user
-     * @return isometricList
-     */
-    public static List<Isometric> getRequest(User user){
-        try {
-
-            String urlString = Device.getBaseUrl() + "/" + user.getId() + "/isometric";
-            String jsonString = API.get(urlString);
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<Isometric> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Isometric.class));
-            return list ; 
-           
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-
-}
 /**
  * POST the entire Isometric map
  * @return boolean
