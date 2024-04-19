@@ -19,14 +19,12 @@ public class TestDrive {
 
         Device.setUser(bill);
         //tina.setId(2);
-        bill.postRequest();
-        //System.out.println(Cardio.getRequest(tina));
+        //bill.postRequest(); //System.out.println(Cardio.getRequest(tina));
+        System.out.println(Cardio.getRequestId(18));
 
-        System.out.println(Cardio.getRequest(tina).toString());
-
-        System.out.println(Strength.getRequest(tina).toString());
-
-        System.out.println(Isometric.getRequest(tina).toString());
+        //System.out.println(Cardio.getRequestUser(tina).toString());
+        //System.out.println(Strength.getRequestUser(tina).toString());
+        //System.out.println(Isometric.getRequestUser(tina).toString());
         
 
 

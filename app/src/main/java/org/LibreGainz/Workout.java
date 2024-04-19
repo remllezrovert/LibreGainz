@@ -207,16 +207,18 @@ public static Workout csvParse(String csvStr) throws Exception
     List<String> read = new ArrayList<String>();
     try{
     read = Arrays.asList(CsvHandler.csvParse(csvStr).toArray(new String[0]));
-    Workout wo = new Workout(Integer.valueOf(read.get(0)),Integer.valueOf(read.get(1)));
-    //Somehow we need to handle users, this won't work right now
-    User user = wo.getUser();
-    SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr());
-    wo.setDate(dateFormat.parse(read.get(2)));
-    wo.setAnnotation(read.get(3));
-    wo.setTags(Workout.strToTags(read.get(4)));
+    Workout wo = new Workout(Integer.valueOf(read.get(1)),Integer.valueOf(read.get(2)));
+    wo.setUserId(Integer.valueOf(read.get(0)));
+    wo.setUser(User.map.get(wo.getUserId()));
+    SimpleDateFormat dateFormat = new SimpleDateFormat(wo.user.getDateFormatStr());
+    wo.setDate(dateFormat.parse(read.get(3)));
+    wo.setAnnotation(read.get(4));
+    wo.setTags(Workout.strToTags(read.get(5)));
     return wo;
     }
-    catch(Exception e){}
+    catch(Exception e){
+        e.printStackTrace();
+    }
     return null;
 }
 
@@ -262,7 +264,9 @@ public void jsonDelete(){
  */
 public String toString(){
 SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr());
-return templateId +
+return 
+    userId + "," +
+    templateId + "," +
     "," + workoutId +
     ",\"" + dateFormat.format(date) +
     ",\"" + this.annotation +
@@ -273,13 +277,12 @@ return templateId +
  * @return csvStr
  */
 public String superToString(){
-        return this.toString();
+        return null; 
     }
 
 public void csvAppend(){
     CsvHandler.csvAppendStr(csvPath, this.toString());
-
-
+    CsvHandler.csvAppendStr(Workout.getCsvPath(), superToString());
 }
 
 
