@@ -205,18 +205,53 @@ public static void csvLoad()
     	
         return super.toString();
     }
-    public void csvAppend(){
-        CsvHandler.csvAppendStr(csvPath, this.toString());
-        //CsvHandler.csvAppendStr(super.getCsvPath(), super.toString());
-    }
 
     /**
-     * GET all cardio objects in the database
+     * GET all objects in the database
      * @return
      */
     public static List<Cardio> getRequestAll(){
         try {
             String urlString = Device.getBaseUrl() + "/cardio";
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Get all objects belonging to this user
+     * @param user
+     * @return cardioList
+     */
+    public static List<Cardio> getRequestUser(User user){
+        try {
+            String urlString = Device.getBaseUrl() + "/" + user.getId() + "/cardio";
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * Get request to find objects using workoutId
+     * @param workoutId
+     * @return
+     */
+    public static List<Cardio> getRequestId(int workoutId){
+        try {
+            String urlString = Device.getBaseUrl() + "/cardio/" + String.valueOf(workoutId);
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static List<Cardio> getRequest(String urlString){
+        try {
+
             String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Cardio> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
@@ -228,27 +263,6 @@ public static void csvLoad()
         }
     }
 
-    /**
-     * Get all cardio objects belonging to this user
-     * @param user
-     * @return cardioList
-     */
-    public static List<Cardio> getRequest(User user){
-        try {
-
-            String urlString = Device.getBaseUrl() + "/" + user.getId() + "/cardio";
-            String jsonString = API.get(urlString);
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<Cardio> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Cardio.class));
-            return list ; 
-           
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-
-
-}
 /**
  * POST the entire Cardio map
  * @return boolean

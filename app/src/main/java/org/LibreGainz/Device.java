@@ -6,7 +6,7 @@ public class Device {
     private int userId;
     private Timestamp sync;
     private static String baseUrl = "http://remllez.com:8080";
-    private static User user;
+    private static User user = new User("tina");
 
     public long getId() {
         return id;
