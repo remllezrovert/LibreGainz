@@ -2,13 +2,17 @@ package org.LibreGainz;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+@JsonIgnoreProperties(ignoreUnknown = true)
 
 
 /**
@@ -26,8 +30,11 @@ public class User{
     private int userId = 0;
     private String name;
     private static String csvPath = "data//User.csv";
+     @JsonProperty("timestamp")
+    private Timestamp timeStamp;
     
     public static HashMap<Integer,User> map = new HashMap<Integer,User>();
+
 
     public User(String newName){
         name = newName;
@@ -82,7 +89,9 @@ public class User{
     	return longDistanceUnit;
     }
 
-
+    public Timestamp getTimeStamp() {
+        return timeStamp;
+    }
 
  /**
      * Get the path where the csv file for the object is saved
@@ -112,13 +121,42 @@ public class User{
         try {
         String str = API.post(Device.getBaseUrl() + "/user",
         objectMapper.writeValueAsString(this));
-        System.out.println(str);
+        //System.out.println("new user id for " + name + " is " + str);
+        userId = Integer.parseInt(str);
         } catch(IOException e){
             e.printStackTrace();
             return false;
         }
         return true;
     }
+
+    //Fix this later. change backend too. This wont work for people named things like kyle.f1lthy because of the period in the url
+    //find a way to send parameters in get requests without putting them on the url path
+    public static User getRequestName(String name){
+        try{
+        String jsonString = API.get(Device.getBaseUrl() + "/user?name=" + name);
+         ObjectMapper objectMapper = new ObjectMapper();
+            User user = objectMapper.readValue(jsonString, User.class);
+            return user; 
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public static User getRequestId(int id){
+        try{
+         String jsonString = API.get(Device.getBaseUrl() + "/user/" + id);
+         ObjectMapper objectMapper = new ObjectMapper();
+            User user = objectMapper.readValue(jsonString, User.class);
+            return user; 
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
     public String getDateFormatStr() {
         return dateFormatStr;
