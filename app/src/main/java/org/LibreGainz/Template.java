@@ -202,7 +202,7 @@ public void csvAppend(){
      * This will get every template in the server database
      * @return
      */
-    public static List<Template> jsonParse(){
+    public static List<Template> getRequestAll(){
         try {
             String urlString = Device.getBaseUrl() + "/" + Device.getUser().getId() + "/template";
             String jsonString = API.get(urlString);
