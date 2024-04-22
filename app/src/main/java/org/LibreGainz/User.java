@@ -93,6 +93,15 @@ public class User{
         return timeStamp;
     }
 
+    public String getDateFormatStr() {
+        return dateFormatStr;
+    }
+
+    public void setDateFormatStr(String dateFormatStr) {
+        this.dateFormatStr = dateFormatStr;
+    }
+
+
  /**
      * Get the path where the csv file for the object is saved
      * @return
@@ -157,14 +166,6 @@ public class User{
         }
     }
 
-
-    public String getDateFormatStr() {
-        return dateFormatStr;
-    }
-
-    public void setDateFormatStr(String dateFormatStr) {
-        this.dateFormatStr = dateFormatStr;
-    }
 
 /**
  * This coverts a single row from a CSV file into a User object

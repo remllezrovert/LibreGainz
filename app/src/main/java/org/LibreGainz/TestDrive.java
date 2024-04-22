@@ -27,6 +27,14 @@ public class TestDrive {
         System.out.println(User.getRequestName("remllez").toString());
         System.out.println(User.getRequestId(16).toString());
 
+        Template template = new Template(12);
+        template.setName("BenchPress");
+        template.setUserId(16);
+        template.setDesc("Obnoxious chest bouncing");
+        template.setWorkoutType("Strength");
+        System.out.println(template.toString());
+        template.postRequest();
+
         //System.out.println(Cardio.getRequestUser(tina).toString());
         //System.out.println(Strength.getRequestUser(tina).toString());
         //System.out.println(Isometric.getRequestUser(tina).toString());

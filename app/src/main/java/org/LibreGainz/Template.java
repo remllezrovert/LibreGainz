@@ -204,7 +204,7 @@ public void csvAppend(){
      */
     public static List<Template> getRequestAll(){
         try {
-            String urlString = Device.getBaseUrl() + "/" + Device.getUser().getId() + "/template";
+            String urlString = Device.getBaseUrl() + "/template";
             String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<Template> list = objectMapper.readValue(jsonString.toString(), 
@@ -221,7 +221,7 @@ public void csvAppend(){
      * This will POST every template in the map. Probably unnecessary
      * @return boolean
      */
-    public static boolean jsonPost(){
+    public static boolean postRequestAll(){
     String urlString = Device.getBaseUrl() + "/" + Device.getUser().getId() + "/template";
     ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -232,5 +232,33 @@ public void csvAppend(){
         }
         return true;
     }
+
+
+/**
+ * POST single object (this)
+ * @return
+ */
+public boolean postRequest(){
+    String urlString = Device.getBaseUrl() + "/" + userId + "/template";
+    ObjectMapper objectMapper = new ObjectMapper();
+    ArrayList<Template> list = new ArrayList<Template>();
+    list.add(this);
+        try {
+        API.post(urlString, objectMapper
+            .writeValueAsString(list));
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+
+
+
+
 
 }

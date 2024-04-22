@@ -1,5 +1,6 @@
 package org.LibreGainz;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.SlashCommandOption;
 import org.javacord.api.interaction.SlashCommandOptionChoice;
 import org.javacord.api.interaction.SlashCommandOptionType;
+import org.javacord.api.interaction.SlashCommandUpdater;
 import org.javacord.api.interaction.SlashCommand;
 
 
@@ -45,10 +47,30 @@ public class Discord {
 
 
 
-    //this is information for the strength command, all the autofill options in discord
+
+
+
+
+
+
+
+
+
+
+    //This is an arraylist of template options. These are the autofill suggestions on discord for strenth templateid
+    ArrayList<SlashCommandOptionChoice> optionList = new ArrayList<SlashCommandOptionChoice>();
+    for (Template t : Template.map.values()){
+        if (t.getWorkoutType().equals("Strength"))
+            optionList.add(SlashCommandOptionChoice.create(t.getName(),String.valueOf(t.getId())));
+    }
+
+
+    //This is the strenth command
     SlashCommand.with("strength", "Testing for to see if I can get args.", 
     Arrays.asList(
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
+            optionList
+            ),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "weight", "weight", true),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
                 Arrays.asList(
@@ -57,6 +79,30 @@ public class Discord {
             )),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "set", "the set of reps (1,2,3,4,)", true)
         )).createGlobal(api).join();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
