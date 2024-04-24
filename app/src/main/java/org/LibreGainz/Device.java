@@ -1,9 +1,12 @@
 package org.LibreGainz;
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Device {
     private long id;
     private int userId;
+    @JsonProperty("timestamp")
     private Timestamp sync;
     private static String baseUrl = "http://remllez.com:8080";
     private static User user = new User("tina");

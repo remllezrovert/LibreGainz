@@ -9,7 +9,7 @@ public class TestDrive {
         Template t2 = new Template(2);
         Template t3 = new Template(3);
         User bill = new User("BillMetric");
-        User tina = new User("tina");
+        User tina = new User("Tina");
         tina.setId(0);
         bill.setId(9);
         bill.setWeightUnit(Unit.KG);
@@ -22,6 +22,17 @@ public class TestDrive {
         //tina.setId(2);
         //bill.postRequest(); //System.out.println(Cardio.getRequest(tina));
        // System.out.println(Cardio.getRequestId(18));
+        User.csvOverwrite();
+
+        Device.setUser(bill);
+
+        //System.out.println(Strength.getRequestUser(bill).toString());
+        //tina.setId(2);
+        //bill.postRequest(); //System.out.println(Cardio.getRequest(tina));
+        //System.out.println(Cardio.getRequestId(18));
+
+        System.out.println(User.getRequestName("remllez").toString());
+        System.out.println(User.getRequestId(16).toString());
 
         //System.out.println(Cardio.getRequestUser(tina).toString());
         //System.out.println(Strength.getRequestUser(tina).toString());
