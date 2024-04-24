@@ -16,23 +16,23 @@ public class TestDrive {
         bill.setLongDistanceUnit(Unit.KM);
         bill.setDateFormatStr("dd/MM/yyyy");
         User.csvOverwrite(); */
-       System.out.print(TimeConversion.convertToSqlTime("0h 3m 3s"));
+       //System.out.print(TimeConversion.convertToSqlTime("0h 3m 3s"));
+
+       System.out.print(TimeConversion.convertToSqlTime("3s 4m"));
         
        // Device.setUser(bill);
         //tina.setId(2);
         //bill.postRequest(); //System.out.println(Cardio.getRequest(tina));
        // System.out.println(Cardio.getRequestId(18));
-        User.csvOverwrite();
 
-        Device.setUser(bill);
 
         //System.out.println(Strength.getRequestUser(bill).toString());
         //tina.setId(2);
         //bill.postRequest(); //System.out.println(Cardio.getRequest(tina));
         //System.out.println(Cardio.getRequestId(18));
 
-        System.out.println(User.getRequestName("remllez").toString());
-        System.out.println(User.getRequestId(16).toString());
+        //System.out.println(User.getRequestName("remllez").toString());
+        //System.out.println(User.getRequestId(16).toString());
 
         //System.out.println(Cardio.getRequestUser(tina).toString());
         //System.out.println(Strength.getRequestUser(tina).toString());
