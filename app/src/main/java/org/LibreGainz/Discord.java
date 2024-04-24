@@ -8,7 +8,7 @@ import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
 import org.javacord.api.interaction.SlashCommand;
-import net.dv8tion.jda.api.EmbedBuilder;
+
 
 
 public class Discord {
