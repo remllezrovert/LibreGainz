@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TestDrive {
     public static void main(String[] args){
-        Template t1 = new Template(0);
+       /*  Template t1 = new Template(0);
         Template t2 = new Template(2);
         Template t3 = new Template(3);
         User bill = new User("BillMetric");
@@ -16,15 +16,21 @@ public class TestDrive {
         bill.setWeightUnit(Unit.KG);
         bill.setLongDistanceUnit(Unit.KM);
         bill.setDateFormatStr("dd/MM/yyyy");
-        User.csvOverwrite();
+        User.csvOverwrite(); */
+       //System.out.print(TimeConversion.convertToSqlTime("0h 3m 3s"));
 
-        Device.setUser(bill);
+       System.out.print(TimeConversion.convertToSqlTime("3s 4m"));
+        
+       // Device.setUser(bill);
+        //tina.setId(2);
+        //bill.postRequest(); //System.out.println(Cardio.getRequest(tina));
+       // System.out.println(Cardio.getRequestId(18));
+
 
         //System.out.println(Strength.getRequestUser(bill).toString());
         //tina.setId(2);
         //bill.postRequest(); //System.out.println(Cardio.getRequest(tina));
         //System.out.println(Cardio.getRequestId(18));
-
         System.out.println(User.getRequestName("remllez").toString());
         System.out.println(User.getRequestId(16).toString());
     
@@ -53,6 +59,8 @@ public class TestDrive {
        // template.setWorkoutType("Strength");
        // System.out.println(template.toString());
        // template.postRequest();
+        //System.out.println(User.getRequestName("remllez").toString());
+        //System.out.println(User.getRequestId(16).toString());
 
         //System.out.println(Cardio.getRequestUser(tina).toString());
         //System.out.println(Strength.getRequestUser(tina).toString());
