@@ -1,7 +1,9 @@
 package org.LibreGainz;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.sql.Date;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -13,6 +15,7 @@ import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.SlashCommandOption;
 import org.javacord.api.interaction.SlashCommandOptionChoice;
 import org.javacord.api.interaction.SlashCommandOptionType;
+import org.javacord.api.interaction.SlashCommandUpdater;
 import org.javacord.api.interaction.SlashCommand;
 
 
@@ -33,9 +36,9 @@ public class Discord {
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
-            SlashCommandOptionChoice.create("user","select for this user"),
-            SlashCommandOptionChoice.create("top","select the top of all time"),
-            SlashCommandOptionChoice.create("all","all in general")
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
             ))
         )).createGlobal(api).join();
 
@@ -45,10 +48,30 @@ public class Discord {
 
 
 
-    //this is information for the strength command, all the autofill options in discord
+
+
+
+
+
+
+
+
+
+
+    //This is an arraylist of template options. These are the autofill suggestions on discord for strenth templateid
+    ArrayList<SlashCommandOptionChoice> optionList = new ArrayList<SlashCommandOptionChoice>();
+    for (Template t : Template.map.values()){
+        if (t.getWorkoutType().equals("Strength"))
+            optionList.add(SlashCommandOptionChoice.create(t.getName(),String.valueOf(t.getId())));
+    }
+
+
+    //This is the strenth command
     SlashCommand.with("strength", "Testing for to see if I can get args.", 
     Arrays.asList(
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
+            optionList
+            ),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "weight", "weight", true),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
                 Arrays.asList(
@@ -57,6 +80,30 @@ public class Discord {
             )),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "set", "the set of reps (1,2,3,4,)", true)
         )).createGlobal(api).join();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -81,7 +128,7 @@ public class Discord {
                 break;
             case "demolist":
             case "ls":
-                getStrengthUser(sci);
+                getStrengthDate(sci);
                 break;
         }
     });
@@ -137,7 +184,6 @@ public class Discord {
     public static List<Strength> getStrengthUser(SlashCommandInteraction sci){
         postUser(sci); 
         User user = User.getRequestName(sci.getUser().getName()); //get the user, add them to the database if they are new
-        //User user = User.getRequestId(16);
         try {
         List<Strength> list = Strength.getRequestUser(user);
         String ret = "";
@@ -151,6 +197,58 @@ public class Discord {
             return null;
         }
     }
+
+
+
+
+
+
+
+
+    /**
+     * GET all of the strength objects that belong to this user
+     * @param sci
+     * @return
+     */
+    public static List<Strength> getStrengthDate(SlashCommandInteraction sci){
+        postUser(sci); 
+        User user = User.getRequestName(sci.getUser().getName()); //get the user, add them to the database if they are new
+        String search = sci.getArgumentStringValueByName("search").get();
+
+        java.util.Date date = new java.util.Date(); //today
+        java.sql.Date endDate = new Date(date.getTime()); //get today
+        java.sql.Date startDate;
+
+        switch(search){
+            case "month":
+                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-730*60*60*1000));
+                break;
+            case "week": 
+                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-168*60*60*1000));
+                break;
+            default:
+                startDate = new Date(date.getTime());
+                break;
+        }
+        try {
+        List<Strength> list = Strength.getRequestDate(user,startDate,endDate,15);
+        String ret = "";
+        for (Strength s: list){
+            ret += "\n" + s.toString();
+        }
+        respondPrivate(sci, ret);
+        return list;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
+
 
 
 
