@@ -238,9 +238,7 @@ public class Discord {
                 getIsometricDate(sci);
                 break;
             case "listall":
-            getIsometricDate(sci);
-            getStrengthDate(sci);
-            getCardioDate(sci);
+            getAllDate(sci);
                 break;
 
 
@@ -486,6 +484,52 @@ public class Discord {
 
 
 
+
+
+
+
+
+    /**
+     * GET all of the objects that belong to this user
+     * @param sci
+     * @return
+     */
+    public static List<Object> getAllDate(SlashCommandInteraction sci){
+        postUser(sci); 
+        User user = User.getRequestName(sci.getUser().getName()); //get the user, add them to the database if they are new
+        String search = sci.getArgumentStringValueByName("search").get();
+
+        java.util.Date date = new java.util.Date(); //today
+        java.sql.Date endDate = new Date(date.getTime()); //get today
+        java.sql.Date startDate;
+
+        switch(search){
+            case "month":
+                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-730*60*60*1000));
+                break;
+            case "week": 
+                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-168*60*60*1000));
+                break;
+            default:
+                startDate = new Date(date.getTime());
+                break;
+        }
+        try {
+        List<Object> list = new ArrayList();
+        Strength.getRequestDate(user,startDate,endDate,15).forEach((s) -> list.add(s));
+        Isometric.getRequestDate(user,startDate,endDate,15).forEach((s) -> list.add(s));
+        Cardio.getRequestDate(user,startDate,endDate,15).forEach((s) -> list.add(s));
+        String ret = "";
+        for (Object s: list){
+            ret += "\n" + s.toString();
+        }
+        respondPrivate(sci, ret);
+        return list;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
 
