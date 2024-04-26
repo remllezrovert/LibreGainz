@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.*;
 import java.net.http.HttpResponse;
+import java.sql.Date;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,8 +64,10 @@ public static ArrayList<Short> strToSet(String commaList){
     ArrayList<Short> retArr = new ArrayList<Short>();
 
     try{
-    for (String str : commaList.split(","))
+    for (String str : commaList.split(",")) {
+        str.replaceAll("[^0-9]", "");
         retArr.add(Short.parseShort(str.trim()));
+    }
     }
     catch (NumberFormatException nfe){
         nfe.printStackTrace();
@@ -236,6 +239,56 @@ public static void csvLoad()
             return null;
         }
     }
+
+
+
+    public static List<Strength> getRequestDate(User user, int templateId, Date startDate, Date endDate, int limit){
+        try {
+            String urlString = Device.getBaseUrl() + 
+            "/" + user.getId() + 
+            "/strength/date/template?templateId=" + templateId +
+            "&startDate=" + startDate +
+            "&endDate=" + endDate +
+            "&limit=" + limit;
+            System.out.println(urlString);
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+    public static List<Strength> getRequestDate(User user, Date startDate, Date endDate, int limit){
+        try {
+            String urlString = Device.getBaseUrl() + 
+            "/" + user.getId() +
+            "/strength/date?startDate=" + startDate +
+            "&endDate=" + endDate +
+            "&limit=" + limit;
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Get request to find objects using workoutId
      * @param workoutId

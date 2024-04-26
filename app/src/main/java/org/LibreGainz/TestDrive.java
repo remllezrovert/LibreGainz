@@ -1,5 +1,6 @@
 package org.LibreGainz;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
@@ -26,6 +27,32 @@ public class TestDrive {
 
         System.out.println(User.getRequestName("remllez").toString());
         System.out.println(User.getRequestId(16).toString());
+    
+
+
+    java.util.Date date = new java.util.Date();
+    java.sql.Date endDate = new Date(date.getTime()); //get today
+    java.sql.Date startDate= (new Date(System.currentTimeMillis()-168*60*60*1000)); //get last week
+
+
+
+        System.out.println(
+        Strength.getRequestDate(User.getRequestName("remllez"), startDate, endDate, 10).toString()
+        );
+
+        //This is broken. Not sure why.
+        System.out.println(
+        Strength.getRequestDate(User.getRequestName("remllez"),3, startDate, endDate, 10).toString()
+        );
+
+
+       // Template template = new Template(12);
+       // template.setName("BenchPress");
+       // template.setUserId(16);
+       // template.setDesc("Obnoxious chest bouncing");
+       // template.setWorkoutType("Strength");
+       // System.out.println(template.toString());
+       // template.postRequest();
 
         //System.out.println(Cardio.getRequestUser(tina).toString());
         //System.out.println(Strength.getRequestUser(tina).toString());
