@@ -17,6 +17,7 @@ import org.javacord.api.interaction.SlashCommandOptionChoice;
 import org.javacord.api.interaction.SlashCommandOptionType;
 import org.javacord.api.interaction.SlashCommandUpdater;
 import org.javacord.api.interaction.SlashCommand;
+import java.sql.Time;
 
 
 public class Discord {
@@ -32,7 +33,7 @@ public class Discord {
 
 
         //this is information for the demolist command, and all of the autofill options in discord
-        SlashCommand.with("demolist", "list strength",
+        SlashCommand.with("liststrength", "lists strength workouts",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
@@ -40,6 +41,44 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
+
+            
+        )).createGlobal(api).join();
+
+        SlashCommand.with("listcardio", "lists cardio workouts",
+        Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
+            Arrays.asList(
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
+            ))
+
+            
+        )).createGlobal(api).join();
+
+        SlashCommand.with("listisometric", "lists isometric workouts",
+        Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
+            Arrays.asList(
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
+            ))
+
+            
+        )).createGlobal(api).join();
+
+        SlashCommand.with("listall", "lists all workouts",
+        Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
+            Arrays.asList(
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
+            ))
+
+            
         )).createGlobal(api).join();
 
 
@@ -83,6 +122,65 @@ public class Discord {
 
 
 
+        //isometric
+        ArrayList<SlashCommandOptionChoice> optionList2 = new ArrayList<SlashCommandOptionChoice>();
+    for (Template t : Template.map.values()){
+        if (t.getWorkoutType().equals("Isometric"))
+            optionList2.add(SlashCommandOptionChoice.create(t.getName(),String.valueOf(t.getId())));
+    }
+        SlashCommand.with("isometric", "Testing for to see if I can get args.", 
+    Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
+            optionList2
+            ),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "weight", "weight", true),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
+                Arrays.asList(
+                        SlashCommandOptionChoice.create("KG", "KG"),
+                        SlashCommandOptionChoice.create("LB", "LB")
+            )),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "Time", "Time 2h 5m 3s, 2h 5m 3s", true)
+        )).createGlobal(api).join();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //Cardio
+        ArrayList<SlashCommandOptionChoice> optionList1 = new ArrayList<SlashCommandOptionChoice>();
+    for (Template t : Template.map.values()){
+        if (t.getWorkoutType().equals("Cardio"))
+            optionList1.add(SlashCommandOptionChoice.create(t.getName(),String.valueOf(t.getId())));
+    }
+
+
+    //This is the strenth command
+    SlashCommand.with("cardio", "Testing for to see if I can get args.", 
+    Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
+            optionList1
+            ),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.DECIMAL, "distance", "distance", true),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
+                Arrays.asList(
+                        SlashCommandOptionChoice.create("MI", "MI"),
+                        SlashCommandOptionChoice.create("KM", "KM")
+            )),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "Time", "Time (2h 5m 3s)", false)
+        )).createGlobal(api).join();
+
+
+
 
 
 
@@ -120,16 +218,32 @@ public class Discord {
                 postUser(sci);
                 postStrength(sci);
                 break;
-            case "cardio":
+            case "cardio":     
             case "c":
+                postUser(sci);
+                postCardio(sci);
                 break;
             case "isometric":
-            case "i":
+            case "i":;
+                postIsometric(sci);
                 break;
-            case "demolist":
+            case "liststrength":
             case "ls":
                 getStrengthDate(sci);
                 break;
+            case "listcardio":
+                getCardioDate(sci);
+                break;
+            case "listisometric":
+                getIsometricDate(sci);
+                break;
+            case "listall":
+            getIsometricDate(sci);
+            getStrengthDate(sci);
+            getCardioDate(sci);
+                break;
+
+
         }
     });
 
@@ -256,6 +370,140 @@ public class Discord {
 
 
 
+    public static List<Isometric> getIsometricDate(SlashCommandInteraction sci){
+        postUser(sci); 
+        User user = User.getRequestName(sci.getUser().getName()); //get the user, add them to the database if they are new
+        String search = sci.getArgumentStringValueByName("search").get();
+
+        java.util.Date date = new java.util.Date(); //today
+        java.sql.Date endDate = new Date(date.getTime()); //get today
+        java.sql.Date startDate;
+
+        switch(search){
+            case "month":
+                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-730*60*60*1000));
+                break;
+            case "week": 
+                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-168*60*60*1000));
+                break;
+            default:
+                startDate = new Date(date.getTime());
+                break;
+        }
+        try {
+        List<Isometric> list = Isometric.getRequestDate(user,startDate,endDate,15);
+        String ret = "";
+        for (Isometric s: list){
+            ret += "\n" + s.toString();
+        }
+        respondPrivate(sci, ret);
+        return list;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static List<Cardio> getCardioDate(SlashCommandInteraction sci){
+        postUser(sci); 
+        User user = User.getRequestName(sci.getUser().getName()); //get the user, add them to the database if they are new
+        String search = sci.getArgumentStringValueByName("search").get();
+
+        java.util.Date date = new java.util.Date(); //today
+        java.sql.Date endDate = new Date(date.getTime()); //get today
+        java.sql.Date startDate;
+
+        switch(search){
+            case "month":
+                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-730*60*60*1000));
+                break;
+            case "week": 
+                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-168*60*60*1000));
+                break;
+            default:
+                startDate = new Date(date.getTime());
+                break;
+        }
+        try {
+        List<Cardio> list = Cardio.getRequestDate(user,startDate,endDate,15);
+        String ret = "";
+        for (Cardio s: list){
+            ret += "\n" + s.toString();
+        }
+        respondPrivate(sci, ret);
+        return list;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * POST a new strength object to the database
@@ -281,6 +529,84 @@ public class Discord {
         s.postRequest(); 
         respondPrivate(sci, s.toString());
     }
+
+
+
+
+
+
+
+
+
+    private static void postCardio(SlashCommandInteraction sci){
+        User user = getUser(sci);
+        //User user = User.getRequestId(16);
+        Cardio s = new Cardio(
+            Integer.parseInt(sci.getArgumentStringValueByIndex(0).get())
+        );
+        s.setUser(user);
+        s.setUserId(user.getId());
+        s.setUnit(Unit.valueOf(sci.getArgumentStringValueByIndex(2).get()));
+        try{
+            String timeInput = sci.getArgumentStringValueByIndex(3).get();
+            Time distanceTime = TimeConversion.convertToSqlTime(timeInput);
+            s.setTime(distanceTime);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        s.setDistance(
+            sci.getArgumentDecimalValueByIndex(1).get()
+        );
+        s.postRequest(); 
+        respondPrivate(sci, s.toString());
+    }
+
+
+
+
+
+    private static void postIsometric(SlashCommandInteraction sci){
+        User user = getUser(sci);
+        //User user = User.getRequestId(16);
+        Isometric s = new Isometric(
+            Integer.parseInt(sci.getArgumentStringValueByIndex(0).get())
+        );
+        s.setUser(user);
+        s.setUserId(user.getId());
+        s.setWeight(
+        new WeightObj(
+            Short.parseShort(sci.getArgumentStringValueByIndex(1).get()),
+            Unit.valueOf(sci.getArgumentStringValueByIndex(2).get())
+            )
+        );
+        s.setSet(
+            Isometric.strToSet(sci.getArgumentStringValueByIndex(3).get())
+        );
+        s.postRequest(); 
+        respondPrivate(sci, s.toString());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
 

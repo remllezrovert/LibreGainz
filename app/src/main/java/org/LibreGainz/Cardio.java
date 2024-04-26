@@ -4,6 +4,7 @@ import java.sql.*;
 import java.io.*;
 import java.net.http.HttpResponse;
 import java.util.*;
+import java.sql.Date;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 public class Cardio extends Workout{
@@ -331,6 +332,45 @@ public boolean postRequest(){
                 return false;
             }
             return true;
+        }
+
+
+
+
+
+
+
+
+
+
+        public static List<Cardio> getRequestDate(User user, int templateId, Date startDate, Date endDate, int limit){
+            try {
+                String urlString = Device.getBaseUrl() + 
+                "/" + user.getId() + 
+                "/cardio/date/template?templateId=" + templateId +
+                "&startDate=" + startDate +
+                "&endDate=" + endDate +
+                "&limit=" + limit;
+                System.out.println(urlString);
+                return getRequest(urlString); 
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        public static List<Cardio> getRequestDate(User user, Date startDate, Date endDate, int limit){
+            try {
+                String urlString = Device.getBaseUrl() + 
+                "/" + user.getId() +
+                "/cardio/date?startDate=" + startDate +
+                "&endDate=" + endDate +
+                "&limit=" + limit;
+                return getRequest(urlString); 
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
 
