@@ -77,7 +77,7 @@ public static ArrayList<Time> strToSet(String commaList){
     ArrayList<Time> retArr = new ArrayList<Time>();
     try{
     for (String str : commaList.split(",")){
-        retArr.add(Time.valueOf(str.trim()));
+        retArr.add(TimeConversion.convertToSqlTime(str));
     }
     return retArr;
     } catch(Exception e) {
@@ -311,6 +311,43 @@ public boolean postRequest(){
                 return false;
             }
             return true;
+        }
+
+
+
+
+
+
+
+        public static List<Isometric> getRequestDate(User user, int templateId, Date startDate, Date endDate, int limit){
+            try {
+                String urlString = Device.getBaseUrl() + 
+                "/" + user.getId() + 
+                "/isometric/date/template?templateId=" + templateId +
+                "&startDate=" + startDate +
+                "&endDate=" + endDate +
+                "&limit=" + limit;
+                System.out.println(urlString);
+                return getRequest(urlString); 
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        public static List<Isometric> getRequestDate(User user, Date startDate, Date endDate, int limit){
+            try {
+                String urlString = Device.getBaseUrl() + 
+                "/" + user.getId() +
+                "/isometric/date?startDate=" + startDate +
+                "&endDate=" + endDate +
+                "&limit=" + limit;
+                System.out.println(getRequest(urlString));
+                return getRequest(urlString); 
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
 
