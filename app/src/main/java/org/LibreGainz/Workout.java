@@ -252,8 +252,12 @@ public static void csvOverwrite(){
 
 
 
-public void jsonDelete(){
+public void deleteRequest(){
     API.delete(Device.getBaseUrl() + "/" + userId +"/workout/" + workoutId);
+}
+
+public static void deleteRequest(int workoutId){
+    API.delete(Device.getBaseUrl() + "/workout/" + workoutId);
 }
 
 

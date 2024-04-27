@@ -2,28 +2,45 @@ package org.LibreGainz;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.sql.Date;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
-
-
+import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.MessageFlag;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.component.HighLevelComponent;
+import org.javacord.api.event.interaction.ButtonClickEvent;
+import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.SlashCommandInteractionOption;
 import org.javacord.api.interaction.SlashCommandOption;
 import org.javacord.api.interaction.SlashCommandOptionChoice;
 import org.javacord.api.interaction.SlashCommandOptionType;
 import org.javacord.api.interaction.SlashCommandUpdater;
+import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+
+import okhttp3.internal.ws.RealWebSocket.Message;
+
+import org.javacord.api.interaction.ButtonInteraction;
+import org.javacord.api.interaction.Interaction;
 import org.javacord.api.interaction.SlashCommand;
 import java.sql.Time;
 
-
+/* TODO: Fix the listall command
+ * 
+ */
 public class Discord {
 
     public static void main(String[] args) {
         String token = "";  // Insert your bot's token here
+    
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
         Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
 
@@ -41,8 +58,6 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-
-            
         )).createGlobal(api).join();
 
         SlashCommand.with("listcardio", "lists cardio workouts",
@@ -77,9 +92,31 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-
-            
         )).createGlobal(api).join();
+
+
+
+
+
+
+
+
+       
+
+        //this is information for the demolist command, and all of the autofill options in discord
+        SlashCommand.with("demolist", "lists strength workouts",
+        Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
+            Arrays.asList(
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
+            ))
+        )).createGlobal(api).join();
+
+
+
+
 
 
 
@@ -206,12 +243,72 @@ public class Discord {
 
 
 
+  
+        api.addButtonClickListener(event -> {
+    // Check if the button clicked is the one you are interested in
+    System.out.println(event.getButtonInteraction().getCustomId());
+        int index = Integer.parseInt(
+            event.getButtonInteraction()
+            .getCustomId()
+            .split(",")[0]
+            .replaceAll("[^0-9]", "")
+        );
+        String btnStr = event.
+        getButtonInteraction()
+            .getCustomId()
+            .split(",")[1]
+            .replaceAll("[0-9]","");
+ 
+        int workoutId = Integer.parseInt(
+            event.getButtonInteraction()
+            .getCustomId()
+            .split(",")[2]
+            .replaceAll("[^0-9]", "")
+        );
+
+
+
+   
+
+        if (btnStr.equals("d")){
+        Workout.deleteRequest(workoutId);
+
+        try {
+        event.getButtonInteraction()
+        .getMessage()
+        .delete();
+        }
+
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
+        event.getButtonInteraction()
+            .createImmediateResponder()
+            .setContent("Deleting Workout!")
+            .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
+            .respond();
+
+                 // Cast the interaction to ButtonInteraction
+            //ButtonInteraction buttonInteraction = (ButtonInteraction) event;
+            // Get the component object
+                }
+
+
+    }
+
+);
+
 
 
 
         //This switch case listens and handles all of our commands
         api.addSlashCommandCreateListener(event -> {
          SlashCommandInteraction sci = event.getSlashCommandInteraction();
+
+
         switch(sci.getCommandName()){
             case "strength":
             case "s":
@@ -229,16 +326,20 @@ public class Discord {
                 break;
             case "liststrength":
             case "ls":
-                getStrengthDate(sci);
+                buttonMenu(sci,getStrengthDate(sci));
                 break;
             case "listcardio":
-                getCardioDate(sci);
+                buttonMenu(sci,getCardioDate(sci));
                 break;
             case "listisometric":
-                getIsometricDate(sci);
+                buttonMenu(sci,getIsometricDate(sci));
                 break;
             case "listall":
-            getAllDate(sci);
+                ArrayList<Workout> listAll = new ArrayList<>();   // THIS DOES NOT WORK
+                listAll.addAll(getStrengthDate(sci));
+                listAll.addAll(getIsometricDate(sci));
+                listAll.addAll(getCardioDate(sci));
+                buttonMenu(sci,listAll);
                 break;
 
 
@@ -345,10 +446,6 @@ public class Discord {
         try {
         List<Strength> list = Strength.getRequestDate(user,startDate,endDate,15);
         String ret = "";
-        for (Strength s: list){
-            ret += "\n" + s.toString();
-        }
-        respondPrivate(sci, ret);
         return list;
         } catch (Exception e){
             e.printStackTrace();
@@ -390,11 +487,6 @@ public class Discord {
         }
         try {
         List<Isometric> list = Isometric.getRequestDate(user,startDate,endDate,15);
-        String ret = "";
-        for (Isometric s: list){
-            ret += "\n" + s.toString();
-        }
-        respondPrivate(sci, ret);
         return list;
         } catch (Exception e){
             e.printStackTrace();
@@ -465,11 +557,6 @@ public class Discord {
         }
         try {
         List<Cardio> list = Cardio.getRequestDate(user,startDate,endDate,15);
-        String ret = "";
-        for (Cardio s: list){
-            ret += "\n" + s.toString();
-        }
-        respondPrivate(sci, ret);
         return list;
         } catch (Exception e){
             e.printStackTrace();
@@ -477,59 +564,6 @@ public class Discord {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * GET all of the objects that belong to this user
-     * @param sci
-     * @return
-     */
-    public static List<Object> getAllDate(SlashCommandInteraction sci){
-        postUser(sci); 
-        User user = User.getRequestName(sci.getUser().getName()); //get the user, add them to the database if they are new
-        String search = sci.getArgumentStringValueByName("search").get();
-
-        java.util.Date date = new java.util.Date(); //today
-        java.sql.Date endDate = new Date(date.getTime()); //get today
-        java.sql.Date startDate;
-
-        switch(search){
-            case "month":
-                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-730*60*60*1000));
-                break;
-            case "week": 
-                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-168*60*60*1000));
-                break;
-            default:
-                startDate = new Date(date.getTime());
-                break;
-        }
-        try {
-        List<Object> list = new ArrayList();
-        Strength.getRequestDate(user,startDate,endDate,15).forEach((s) -> list.add(s));
-        Isometric.getRequestDate(user,startDate,endDate,15).forEach((s) -> list.add(s));
-        Cardio.getRequestDate(user,startDate,endDate,15).forEach((s) -> list.add(s));
-        String ret = "";
-        for (Object s: list){
-            ret += "\n" + s.toString();
-        }
-        respondPrivate(sci, ret);
-        return list;
-        } catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
 
 
 
@@ -676,6 +710,8 @@ public class Discord {
 
 
 
+
+
     /**
      * Respond to the discord user with a public message
      * @param sci
@@ -691,5 +727,24 @@ public class Discord {
 
 
 
+    public static CompletableFuture<InteractionOriginalResponseUpdater> 
+        buttonMenu(SlashCommandInteraction sci, List<? extends Workout> list){
+        System.out.println(list.toString());
+    InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
+        .setContent("Workout List")
+        .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
+    int index = 0;
+    for (Workout workout : list) {
+        String idStr = String.valueOf(workout.getId());
+        responder
+        .addComponents(
+            ActionRow.of(Button.secondary(index + ",e," + idStr, workout.toString()),  //This edits the workout
+                Button.danger(index + ",d," + idStr, "🗑️")                   //This deletes the workout
+            ));
+        index += 1;
+        }
+   return responder.respond();
+   
+    }
 
 }  
