@@ -8,19 +8,37 @@ public class TestDrive {
         Template t1 = new Template(0);
         Template t2 = new Template(2);
         Template t3 = new Template(3);
-        User bill = new User("BillMetric");
-        User tina = new User("tina");
-        tina.setId(0);
-        bill.setId(9);
-        bill.setWeightUnit(Unit.KG);
-        bill.setLongDistanceUnit(Unit.KM);
-        bill.setDateFormatStr("dd/MM/yyyy");
-        User.csvOverwrite();
+        
+        Cardio cardio = new Cardio(3);
+        Strength strength = new Strength(0);
+        Isometric isometric = new Isometric(2);
+        isometric.addTime(("01:34:57"));
+        isometric.addTime(("02:34:21"));
+        
+        t1.setName("Deadlift");
+        t2.setName("Stretching");
+        t3.setName("Running");
 
-        Device.setUser(bill);
+        System.out.println(cardio.toString2());
+        System.out.println(strength.toString2());
+        System.out.println(isometric.toString2());
+
+        
+
+
+        //User bill = new User("BillMetric");
+        //tina.setId(0);
+        //bill.setId(9);
+        //ill.setWeightUnit(Unit.KG);
+        //bill.setLongDistanceUnit(Unit.KM);
+        //bill.setDateFormatStr("dd/MM/yyyy");
+        //User.csvOverwrite();
+
+        //Device.setUser(bill);
+        
         //tina.setId(2);
         //bill.postRequest(); //System.out.println(Cardio.getRequest(tina));
-        System.out.println(Cardio.getRequestId(18));
+        //System.out.println(Cardio.getRequestId(18));
 
         //System.out.println(Cardio.getRequestUser(tina).toString());
         //System.out.println(Strength.getRequestUser(tina).toString());

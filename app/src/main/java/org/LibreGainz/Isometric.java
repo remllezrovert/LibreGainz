@@ -2,6 +2,7 @@ package org.LibreGainz;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.io.*;
 import java.net.http.HttpResponse;
 import java.util.List;
@@ -179,6 +180,30 @@ public static void csvLoad()
         ",\"" + set.toString().substring(1, set.toString().length() - 1) + "\"";
     }
 
+    public String toString2() {
+        String dateString = "0";
+        String weightString;
+        if (date != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr()); 
+                dateString = dateFormat.format(date);
+        }
+        else {
+             dateString = "null";
+        }
+        if (weight != null) {
+            weightString = weight.toString();
+              
+        }
+        else {
+            weightString = "null";
+        }
+        return dateString + ",  " +
+        Template.map.get(getTemplateId()).getName() +
+        ",  " + weightString + ",   " 
+        + set.toString().substring(1, set.toString().length() - 1).replaceAll(",", ",   ");
+
+
+    }
 
  /* get a CSV friendly string representing this object's superclass
  * @return csvStr
