@@ -96,6 +96,7 @@ public void setUser(User user) {
 
 
 
+
 /**
  * Set the workoutId
  * @param workoutId
@@ -276,6 +277,10 @@ return
     ",\"" + dateFormat.format(date) +
     ",\"" + this.annotation +
     "\",\"" + this.getTags().toString().substring(1, tags.toString().length() - 1) + "\"";
+}
+
+public String toString2(){
+    return "null";
 }
 
  /* get a CSV friendly string representing this object's superclass

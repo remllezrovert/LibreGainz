@@ -401,7 +401,7 @@ public class Discord {
         List<Strength> list = Strength.getRequestUser(user);
         String ret = "";
         for (Strength s: list){
-            ret += "\n" + s.toString();
+            ret += "\n" + s.toString2();
         }
         respondPrivate(sci, ret);
         return list;
@@ -605,7 +605,7 @@ public class Discord {
             Strength.strToSet(sci.getArgumentStringValueByIndex(3).get())
         );
         s.postRequest(); 
-        respondPrivate(sci, s.toString());
+        respondPrivate(sci, s.toString2());
     }
 
 
@@ -638,7 +638,7 @@ public class Discord {
             sci.getArgumentDecimalValueByIndex(1).get()
         );
         s.postRequest(); 
-        respondPrivate(sci, s.toString());
+        respondPrivate(sci, s.toString2());
     }
 
 
@@ -663,7 +663,7 @@ public class Discord {
             Isometric.strToSet(sci.getArgumentStringValueByIndex(3).get())
         );
         s.postRequest(); 
-        respondPrivate(sci, s.toString());
+        respondPrivate(sci, s.toString2());
     }
 
 
@@ -729,7 +729,7 @@ public class Discord {
 
     public static CompletableFuture<InteractionOriginalResponseUpdater> 
         buttonMenu(SlashCommandInteraction sci, List<? extends Workout> list){
-        System.out.println(list.toString());
+        // System.out.println(list.toString2());
     InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
         .setContent("Workout List")
         .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
@@ -738,7 +738,7 @@ public class Discord {
         String idStr = String.valueOf(workout.getId());
         responder
         .addComponents(
-            ActionRow.of(Button.secondary(index + ",e," + idStr, workout.toString()),  //This edits the workout
+            ActionRow.of(Button.secondary(index + ",e," + idStr, workout.toString2()),  //This edits the workout
                 Button.danger(index + ",d," + idStr, "🗑️")                   //This deletes the workout
             ));
         index += 1;

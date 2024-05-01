@@ -1,5 +1,6 @@
 package org.LibreGainz;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.sql.*;
 import java.io.*;
 import java.net.http.HttpResponse;
@@ -198,6 +199,29 @@ public static void csvLoad()
         "," + super.workoutId +
         "," + distance + distanceUnit + "," + "null";
     }
+
+    public String toString2() {
+        String dateString = "0";
+        String timeString; 
+        if (date != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr()); 
+                dateString = dateFormat.format(date);
+        }
+        else {
+             dateString = "null";
+        }
+        if (time != null) {
+            timeString = time.toString();
+              
+        }
+        else {
+            timeString = "null";
+        }
+        return dateString + ",  " + Template.map.get(getTemplateId()).getName() +
+        ",  " + distance + " " + distanceUnit + 
+        ",  " + timeString;
+    }
+    
     /**
      * get a CSV friendly string representing this object's superclass
      * @return csvStr
