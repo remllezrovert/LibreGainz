@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.io.*;
 import java.net.http.HttpResponse;
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -196,6 +197,28 @@ public static void csvLoad()
         "," + super.workoutId +
         "," + weight.toString() +
         ",\"" + set.toString().substring(1, set.toString().length() - 1) + "\"";
+    }
+
+    public String toString2() {
+        String dateString = "0";
+        String weightString;
+        if (date != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr()); 
+                dateString = dateFormat.format(date);
+        }
+        else {
+             dateString = "null";
+        }
+        if (weight != null) {
+            weightString = weight.toString();
+              
+        }
+        else {
+            weightString = "null";
+        }
+        return dateString + 
+        ",  " + Template.map.get(getTemplateId()).getName() + 
+        ",  " + weightString + "  " + set.toString().substring(1, set.toString().length() - 1).replaceAll(",", ", ");
     }
 
 
