@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.sql.Date;
@@ -31,6 +32,8 @@ import okhttp3.internal.ws.RealWebSocket.Message;
 import org.javacord.api.interaction.ButtonInteraction;
 import org.javacord.api.interaction.Interaction;
 import org.javacord.api.interaction.SlashCommand;
+import org.javacord.api.interaction.SlashCommandBuilder;
+
 import java.sql.Time;
 
 /* TODO: Fix the listall command
@@ -38,19 +41,29 @@ import java.sql.Time;
  */
 public class Discord {
 
+
+    public static ArrayList<SlashCommandOptionChoice> createTemplateChoiceList(String workoutType){
+    Template.map.clear();
+    Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
+    ArrayList<SlashCommandOptionChoice> templateList = new ArrayList<SlashCommandOptionChoice>();
+    for (Template t : Template.map.values()){
+        if (t.getWorkoutType().toLowerCase().equals(workoutType.toLowerCase()))
+            templateList.add(SlashCommandOptionChoice.create(t.getName(),String.valueOf(t.getId())));
+    }
+    return templateList;
+    }
+
+
     public static void main(String[] args) {
         String token = "";  // Insert your bot's token here
     
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
+        Template.map.clear();
         Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
 
 
-
-
-
-
         //this is information for the demolist command, and all of the autofill options in discord
-        SlashCommand.with("liststrength", "lists strength workouts",
+        SlashCommand liststrengthCommand = SlashCommand.with("liststrength", "lists strength workouts",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
@@ -60,7 +73,15 @@ public class Discord {
             ))
         )).createGlobal(api).join();
 
-        SlashCommand.with("listcardio", "lists cardio workouts",
+
+
+
+
+
+
+
+
+        SlashCommand listcardioCommand = SlashCommand.with("listcardio", "lists cardio workouts",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
@@ -68,11 +89,19 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-
-            
         )).createGlobal(api).join();
 
-        SlashCommand.with("listisometric", "lists isometric workouts",
+        //this is how we update! I think????
+        //listcardio.createSlashCommandUpdater().updateGlobal(api);
+
+
+
+
+
+
+
+
+        SlashCommand listisometricCommand = SlashCommand.with("listisometric", "lists isometric workouts",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
@@ -80,11 +109,12 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-
-            
         )).createGlobal(api).join();
 
-        SlashCommand.with("listall", "lists all workouts",
+
+
+
+        SlashCommand listallCommand = SlashCommand.with("listall", "lists all workouts",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
@@ -104,7 +134,7 @@ public class Discord {
        
 
         //this is information for the demolist command, and all of the autofill options in discord
-        SlashCommand.with("demolist", "lists strength workouts",
+        SlashCommand demolistCommand = SlashCommand.with("demolist", "lists strength workouts",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
@@ -134,19 +164,11 @@ public class Discord {
 
 
 
-    //This is an arraylist of template options. These are the autofill suggestions on discord for strenth templateid
-    ArrayList<SlashCommandOptionChoice> optionList = new ArrayList<SlashCommandOptionChoice>();
-    for (Template t : Template.map.values()){
-        if (t.getWorkoutType().equals("Strength"))
-            optionList.add(SlashCommandOptionChoice.create(t.getName(),String.valueOf(t.getId())));
-    }
-
-
     //This is the strenth command
-    SlashCommand.with("strength", "Testing for to see if I can get args.", 
+    SlashCommand strengthCommand = SlashCommand.with("strength", "Testing for to see if I can get args.", 
     Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
-            optionList
+            createTemplateChoiceList("strength")
             ),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "weight", "weight", true),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
@@ -159,16 +181,18 @@ public class Discord {
 
 
 
-        //isometric
-        ArrayList<SlashCommandOptionChoice> optionList2 = new ArrayList<SlashCommandOptionChoice>();
-    for (Template t : Template.map.values()){
-        if (t.getWorkoutType().equals("Isometric"))
-            optionList2.add(SlashCommandOptionChoice.create(t.getName(),String.valueOf(t.getId())));
-    }
-        SlashCommand.with("isometric", "Testing for to see if I can get args.", 
+
+
+
+
+
+
+
+
+        SlashCommand isometricCommand = SlashCommand.with("isometric", "Testing for to see if I can get args.", 
     Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
-            optionList2
+            createTemplateChoiceList("isometric")
             ),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "weight", "weight", true),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
@@ -193,19 +217,12 @@ public class Discord {
 
 
 
-        //Cardio
-        ArrayList<SlashCommandOptionChoice> optionList1 = new ArrayList<SlashCommandOptionChoice>();
-    for (Template t : Template.map.values()){
-        if (t.getWorkoutType().equals("Cardio"))
-            optionList1.add(SlashCommandOptionChoice.create(t.getName(),String.valueOf(t.getId())));
-    }
 
-
-    //This is the strenth command
-    SlashCommand.with("cardio", "Testing for to see if I can get args.", 
+    //This is the cardio command
+    SlashCommand cardioCommand = SlashCommand.with("cardio", "Testing for to see if I can get args.", 
     Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
-            optionList1
+            createTemplateChoiceList("cardio")
             ),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.DECIMAL, "distance", "distance", true),
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
@@ -257,7 +274,7 @@ public class Discord {
         getButtonInteraction()
             .getCustomId()
             .split(",")[1]
-            .replaceAll("[0-9]","");
+            .replaceAll("[^a-zA-Z]", "");
  
         int workoutId = Integer.parseInt(
             event.getButtonInteraction()
@@ -270,7 +287,7 @@ public class Discord {
 
    
 
-        if (btnStr.equals("d")){
+        if (btnStr.equals("Delete")){
         Workout.deleteRequest(workoutId);
 
         try {
@@ -445,7 +462,6 @@ public class Discord {
         }
         try {
         List<Strength> list = Strength.getRequestDate(user,startDate,endDate,15);
-        String ret = "";
         return list;
         } catch (Exception e){
             e.printStackTrace();
@@ -727,24 +743,24 @@ public class Discord {
 
 
 
-    public static CompletableFuture<InteractionOriginalResponseUpdater> 
-        buttonMenu(SlashCommandInteraction sci, List<? extends Workout> list){
+    public static <T extends Workout> CompletableFuture<InteractionOriginalResponseUpdater> 
+        buttonMenu(SlashCommandInteraction sci, List<T> list){
         System.out.println(list.toString());
     InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
         .setContent("Workout List")
         .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
     int index = 0;
-    for (Workout workout : list) {
+    for (T workout : list) {
         String idStr = String.valueOf(workout.getId());
         responder
         .addComponents(
-            ActionRow.of(Button.secondary(index + ",e," + idStr, workout.toString()),  //This edits the workout
-                Button.danger(index + ",d," + idStr, "🗑️")                   //This deletes the workout
+            ActionRow.of(Button.secondary(
+                index + "," + workout.getClass().getSimpleName() + "," + 
+                idStr, workout.toString()),  //This edits the workout
+                Button.danger(index + ",Delete," + idStr, "🗑️")  //This deletes the workout
             ));
         index += 1;
         }
    return responder.respond();
-   
     }
-
 }  

@@ -80,6 +80,7 @@ public long getId(){
     return this.workoutId;
 }
 
+
 public int getUserId() {
     return userId;
 }
@@ -98,6 +99,7 @@ public void setUser(User user) {
 
 /**
  * Set the workoutId
+ * @override
  * @param workoutId
  */
 public void setId(long workoutId) {

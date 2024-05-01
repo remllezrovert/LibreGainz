@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 /**
  * @author Remllez
- */
+ * TODO: add GET request that uses templateId
+ */ 
 public class Template{
 private static String csvPath = "data//Template.csv";
 public static HashMap<Integer, Template> map = new HashMap<Integer, Template>();
