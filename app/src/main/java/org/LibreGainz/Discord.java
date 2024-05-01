@@ -247,7 +247,19 @@ public class Discord {
 
 
 
+        SlashCommand.with("excercise", "Testing for to see if I can get args.", 
+        Arrays.asList(
+                SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true, 
+                Arrays.asList(
+                    SlashCommandOptionChoice.create("Strength", "Strength"),
+                    SlashCommandOptionChoice.create("Cardio", "Cardio"),
+                    SlashCommandOptionChoice.create("Isometric", "Isometric")
+                    )),
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of excercise", true)
 
+                
+            )).createGlobal(api).join();
+    
 
 
 
@@ -358,6 +370,10 @@ public class Discord {
                 listAll.addAll(getCardioDate(sci));
                 buttonMenu(sci,listAll);
                 break;
+            case "excercise":
+                postTemplate(sci);
+                break;
+
 
 
         }
@@ -418,7 +434,7 @@ public class Discord {
         List<Strength> list = Strength.getRequestUser(user);
         String ret = "";
         for (Strength s: list){
-            ret += "\n" + s.toString();
+            ret += "\n" + s.toString2();
         }
         respondPrivate(sci, ret);
         return list;
@@ -621,7 +637,7 @@ public class Discord {
             Strength.strToSet(sci.getArgumentStringValueByIndex(3).get())
         );
         s.postRequest(); 
-        respondPrivate(sci, s.toString());
+        respondPrivate(sci, s.toString2());
     }
 
 
@@ -654,7 +670,7 @@ public class Discord {
             sci.getArgumentDecimalValueByIndex(1).get()
         );
         s.postRequest(); 
-        respondPrivate(sci, s.toString());
+        respondPrivate(sci, s.toString2());
     }
 
 
@@ -679,7 +695,7 @@ public class Discord {
             Isometric.strToSet(sci.getArgumentStringValueByIndex(3).get())
         );
         s.postRequest(); 
-        respondPrivate(sci, s.toString());
+        respondPrivate(sci, s.toString2());
     }
 
 
@@ -690,6 +706,27 @@ public class Discord {
 
 
 
+
+
+
+
+
+
+
+
+
+    private static void postTemplate(SlashCommandInteraction sci){
+        User user = getUser(sci);
+        //User user = User.getRequestId(16);
+        Template t = new Template();
+        sci.getArgumentStringValueByIndex(0).get();
+        t.setUserId(user.getId());
+        
+        t.setWorkoutType(sci.getArgumentStringValueByIndex(0).get());
+        t.setName(sci.getArgumentStringValueByIndex(1).get());
+        t.postRequest();
+        respondPrivate(sci, t.toString());
+    }
 
 
 
@@ -742,10 +779,10 @@ public class Discord {
 
 
 
-
     public static <T extends Workout> CompletableFuture<InteractionOriginalResponseUpdater> 
         buttonMenu(SlashCommandInteraction sci, List<T> list){
         System.out.println(list.toString());
+
     InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
         .setContent("Workout List")
         .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
@@ -758,9 +795,25 @@ public class Discord {
                 index + "," + workout.getClass().getSimpleName() + "," + 
                 idStr, workout.toString()),  //This edits the workout
                 Button.danger(index + ",Delete," + idStr, "🗑️")  //This deletes the workout
+
             ));
         index += 1;
         }
    return responder.respond();
     }
-}  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
