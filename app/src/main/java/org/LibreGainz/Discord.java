@@ -230,7 +230,19 @@ public class Discord {
 
 
 
+        SlashCommand.with("excercise", "Testing for to see if I can get args.", 
+        Arrays.asList(
+                SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true, 
+                Arrays.asList(
+                    SlashCommandOptionChoice.create("Strength", "Strength"),
+                    SlashCommandOptionChoice.create("Cardio", "Cardio"),
+                    SlashCommandOptionChoice.create("Isometric", "Isometric")
+                    )),
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of excercise", true)
 
+                
+            )).createGlobal(api).join();
+    
 
 
 
@@ -341,6 +353,10 @@ public class Discord {
                 listAll.addAll(getCardioDate(sci));
                 buttonMenu(sci,listAll);
                 break;
+            case "excercise":
+                postTemplate(sci);
+                break;
+
 
 
         }
@@ -683,6 +699,27 @@ public class Discord {
 
 
 
+    private static void postTemplate(SlashCommandInteraction sci){
+        User user = getUser(sci);
+        //User user = User.getRequestId(16);
+        Template t = new Template();
+        sci.getArgumentStringValueByIndex(0).get();
+        t.setUserId(user.getId());
+        
+        t.setWorkoutType(sci.getArgumentStringValueByIndex(0).get());
+        t.setName(sci.getArgumentStringValueByIndex(1).get());
+        t.postRequest();
+        respondPrivate(sci, t.toString());
+    }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -746,5 +783,23 @@ public class Discord {
    return responder.respond();
    
     }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //Evan Code
+  
 
 }  
