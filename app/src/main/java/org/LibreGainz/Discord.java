@@ -16,6 +16,8 @@ import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.component.HighLevelComponent;
+import org.javacord.api.entity.message.component.SelectMenu;
+import org.javacord.api.entity.message.component.SelectMenuOption;
 import org.javacord.api.event.interaction.ButtonClickEvent;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
@@ -26,6 +28,7 @@ import org.javacord.api.interaction.SlashCommandOptionType;
 import org.javacord.api.interaction.SlashCommandUpdater;
 import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
+
 
 import okhttp3.internal.ws.RealWebSocket.Message;
 
@@ -276,6 +279,7 @@ public class Discord {
         api.addButtonClickListener(event -> {
     // Check if the button clicked is the one you are interested in
     System.out.println(event.getButtonInteraction().getCustomId());
+        ButtonInteraction b = event.getButtonInteraction();
         int index = Integer.parseInt(
             event.getButtonInteraction()
             .getCustomId()
@@ -297,7 +301,17 @@ public class Discord {
 
 
 
-   
+        
+        System.out.println(btnStr);
+
+
+        if (btnStr.equals("Strength")){
+            workoutEditMenu(b,                    
+            Strength.getRequestId(workoutId).get(0)
+            );
+        }
+
+
 
         if (btnStr.equals("Delete")){
         Workout.deleteRequest(workoutId);
@@ -311,6 +325,13 @@ public class Discord {
         catch (Exception e){
             e.printStackTrace();
         }
+
+
+      
+
+
+
+
 
 
 
@@ -793,7 +814,7 @@ public class Discord {
         .addComponents(
             ActionRow.of(Button.secondary(
                 index + "," + workout.getClass().getSimpleName() + "," + 
-                idStr, workout.toString()),  //This edits the workout
+                idStr, workout.toString2()),  //This edits the workout
                 Button.danger(index + ",Delete," + idStr, "🗑️")  //This deletes the workout
 
             ));
@@ -801,6 +822,70 @@ public class Discord {
         }
    return responder.respond();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // edit menu 
+
+    public static <T extends Workout> CompletableFuture<InteractionOriginalResponseUpdater> 
+        workoutEditMenu(ButtonInteraction b, T workout){
+        System.out.println(workout.toString());
+
+    InteractionImmediateResponseBuilder responder = b.createImmediateResponder()
+        .setContent("Edit workout")
+        .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
+        int index = 0;
+            List<SelectMenuOption> list = createTemplateSelectMenuList(Template.map.get(workout.getTemplateId()).getClass().getSimpleName());
+            responder
+            .addComponents(
+                ActionRow.of(SelectMenu.create("options", "Click here to show the options",
+                list)
+             
+                ) 
+            );
+            
+            
+
+
+
+
+
+   return responder.respond();
+    }
+
+
+
+
+
+
+
+
+
+    public static ArrayList<SelectMenuOption> createTemplateSelectMenuList(String workoutType){
+        Template.map.clear();
+        Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
+        ArrayList<SelectMenuOption> templateList = new ArrayList<SelectMenuOption>();
+        for (Template t : Template.map.values()){
+            if (t.getWorkoutType().toLowerCase().equals(workoutType.toLowerCase()))
+                templateList.add(SelectMenuOption.create(t.getName(),String.valueOf(t.getId())));
+        }
+        return templateList;
+        }
+   
+
+}
     
 
 
