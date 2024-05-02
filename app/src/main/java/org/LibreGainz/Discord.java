@@ -10,17 +10,20 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.sql.Date;
-
 import org.checkerframework.checker.units.qual.A;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.MessageFlag;
+import org.javacord.api.entity.message.Messageable;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.component.Component;
 import org.javacord.api.entity.message.component.HighLevelComponent;
 import org.javacord.api.entity.message.component.SelectMenu;
 import org.javacord.api.entity.message.component.SelectMenuOption;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.ButtonClickEvent;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
@@ -31,8 +34,7 @@ import org.javacord.api.interaction.SlashCommandOptionType;
 import org.javacord.api.interaction.SlashCommandUpdater;
 import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
-
-import okhttp3.internal.ws.RealWebSocket.Message;
+import org.javacord.api.listener.interaction.MessageComponentCreateListener;
 
 import org.javacord.api.interaction.ButtonInteraction;
 import org.javacord.api.interaction.Interaction;
@@ -424,6 +426,7 @@ public class Discord {
             case "liststrength":
             case "ls":
                 buttonMenu(sci,getStrengthDate(sci));
+                //messagePackager(getStrengthDate(sci)).forEach((arr) -> buttonMenu(sci, arr));
                 break;
             case "listcardio":
                 buttonMenu(sci,getCardioDate(sci));
@@ -883,27 +886,49 @@ public class Discord {
 
 
 
-
-    public static <T extends Workout> CompletableFuture<InteractionOriginalResponseUpdater> 
+/*
+    public static <T extends Workout> List<CompletableFuture<InteractionOriginalResponseUpdater>>
         buttonMenu(SlashCommandInteraction sci, List<T> list){
-    InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
+
+    List<CompletableFuture<InteractionOriginalResponseUpdater>> ret = new ArrayList<>();
+    for (List<T> arr : messagePackager(list)){
+        InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
         .setContent("Workout List")
         .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
-    int index = 0;
-    for (T workout : list) {
-        String idStr = String.valueOf(workout.getId());
-        responder
-        .addComponents(
-            ActionRow.of(Button.secondary(
-                index + "," + workout.getClass().getSimpleName() + "," + 
-                idStr, workout.toString2()),  //This edits the workout
-                Button.danger(index + ",Delete," + idStr, "🗑️")  //This deletes the workout
+        int index = 0;
+            for (T workout : arr) {
+            String idStr = String.valueOf(workout.getId());
+            responder
+            .addComponents(
+                ActionRow.of(Button.secondary(
+                    index + "," + workout.getClass().getSimpleName() + "," + 
+                    idStr, workout.toString2()),  //This edits the workout
+                    Button.danger(index + ",Delete," + idStr, "🗑️")  //This deletes the workout
 
-            ));
-        index += 1;
-        }
-   return responder.respond();
+                ));
+                index += 1;
+            }
+            CompletableFuture<InteractionOriginalResponseUpdater> future = responder.respond();
+            ret.add(future);
+            future.join();
+        //ret.add(responder.respond());
     }
+    return ret;
+    }
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1012,20 +1037,50 @@ public static ActionRow createCardioActionRow(Cardio workout){
    
 
     
+public static <T extends Workout> List<CompletableFuture<InteractionOriginalResponseUpdater>> buttonMenu(SlashCommandInteraction sci, List<T> list) {
+    List<CompletableFuture<InteractionOriginalResponseUpdater>> ret = new ArrayList<>();
+    try {
+        for (List<T> arr : messagePackager(list)) {
+            InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
+                    .setContent("Workout List")
+                    .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
+            int index = 0;
+            for (T workout : arr) {
+                String idStr = String.valueOf(workout.getId());
+                responder.addComponents(
+                        ActionRow.of(
+                                Button.secondary(
+                                        index + "," + workout.getClass().getSimpleName() + "," + idStr,
+                                        workout.toString2()),  // This edits the workout
+                                Button.danger(index + ",Delete," + idStr, "🗑️")  // This deletes the workout
+                        ));
+                index += 1;
+            }
+            CompletableFuture<InteractionOriginalResponseUpdater> future = responder.respond();
+            ret.add(future);
+            future.join(); // Wait for the response to be sent before moving to the next batch
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return ret;
+}
 
 
 
-
-    public static CompletableFuture<InteractionOriginalResponseUpdater> 
+    public static List<CompletableFuture<InteractionOriginalResponseUpdater>>
     templateButtonMenu(SlashCommandInteraction sci, List<Template> list)
         {
+            try{
         //System.out.println(list.toString());
         InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
             .setContent("Excercise List")
             .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
-        int index = 0;
-        ArrayList<String> templateNameList = new ArrayList<>();
-        for (Template template : list) {
+        List<CompletableFuture<InteractionOriginalResponseUpdater>> ret = new ArrayList<>();
+        for (List<Template> arr: messagePackager(list)){
+            int index = 0;
+            ArrayList<String> templateNameList = new ArrayList<>();
+            for (Template template : arr) {
             String idStr = String.valueOf(template.getId());
             if (!templateNameList.contains(template.getName())){                       ///NEW STuFF aHaHaaaaaa
             responder
@@ -1038,8 +1093,40 @@ public static ActionRow createCardioActionRow(Cardio workout){
             index += 1;
             templateNameList.add(template.getName());
             }
+            }
+            responder.respond();
+            ret.add(responder.respond());
+            TimeUnit.MILLISECONDS.sleep(500);
         }
-        return responder.respond();
+        return ret;
+    } catch (Exception e){
+        e.printStackTrace();
+        return null;
     }
-}
+    }
+
+    //The packager creates Responses with 5 action menus
+    public static <T> List<List<T>> messagePackager(List<T> list) {
+        List<List<T>> retArr = new ArrayList<>();
+        List<T> groupArr = new ArrayList<>();
+
+        for (T object : list) {
+            if (groupArr.size() == 5) {
+                retArr.add(groupArr);  // Add the current full group to the return list
+                groupArr = new ArrayList<>();  // Create a new group list for new elements
+            }
+            groupArr.add(object);  // Add current object to the current group
+        }
+
+        // After loop, check if the last group contains any elements
+        if (!groupArr.isEmpty()) {
+            retArr.add(groupArr);  // Add the remaining elements as the last group
+        }
+        System.out.println(retArr);
+        return retArr;
+    }     
+    
+
+
+   }
     
