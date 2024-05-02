@@ -207,7 +207,7 @@ public void csvAppend(){
             String urlString = Device.getBaseUrl() + "/template";
             String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
-            List<Template> list = objectMapper.readValue(jsonString.toString(), 
+            List<Template> list = objectMapper.readValue(jsonString, 
                 objectMapper.getTypeFactory()
                 .constructCollectionType(List.class, Template.class));
             return list ; 

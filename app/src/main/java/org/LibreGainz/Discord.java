@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.sql.Date;
 
+import org.checkerframework.checker.units.qual.A;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.message.MessageBuilder;
@@ -30,7 +32,6 @@ import org.javacord.api.interaction.SlashCommandUpdater;
 import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 
-
 import okhttp3.internal.ws.RealWebSocket.Message;
 
 import org.javacord.api.interaction.ButtonInteraction;
@@ -39,6 +40,7 @@ import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandBuilder;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 
 /* TODO: Fix the listall command
  * 
@@ -297,7 +299,7 @@ public class Discord {
   
         api.addButtonClickListener(event -> {
     // Check if the button clicked is the one you are interested in
-    System.out.println(event.getButtonInteraction().getCustomId());
+    //System.out.println(event.getButtonInteraction().getCustomId());
         ButtonInteraction b = event.getButtonInteraction();
         int index = Integer.parseInt(
             event.getButtonInteraction()
@@ -321,14 +323,36 @@ public class Discord {
 
 
         
-        System.out.println(btnStr);
+        //System.out.println(btnStr);
 
 
         if (btnStr.equals("Strength")){
+
+            Strength strength = Strength.getRequestId(workoutId).get(0);
             workoutEditMenu(b,                    
-            Strength.getRequestId(workoutId).get(0)
+            strength,
+            createStrengthActionRow(strength)
             );
         }
+        if (btnStr.equals("Isometric")){
+
+            Isometric isometric = Isometric.getRequestId(workoutId).get(0);
+            workoutEditMenu(b,                    
+            isometric,
+            createIsometricActionRow(isometric)
+            );
+        }
+        if (btnStr.equals("Cardio")){
+
+            Cardio cardio = Cardio.getRequestId(workoutId).get(0);
+            workoutEditMenu(b,                    
+            cardio,
+            createCardioActionRow(cardio)
+            );
+        }
+
+
+
 
 
 
@@ -858,8 +882,6 @@ public class Discord {
 
     public static <T extends Workout> CompletableFuture<InteractionOriginalResponseUpdater> 
         buttonMenu(SlashCommandInteraction sci, List<T> list){
-        System.out.println(list.toString());
-
     InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
         .setContent("Workout List")
         .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
@@ -894,31 +916,92 @@ public class Discord {
 
 
     // edit menu 
+    //Idea: pass in action rows for unique workout types!
 
     public static <T extends Workout> CompletableFuture<InteractionOriginalResponseUpdater> 
-        workoutEditMenu(ButtonInteraction b, T workout){
-        System.out.println(workout.toString());
-
+        workoutEditMenu(ButtonInteraction b, T workout, ActionRow actionRow){
+        //System.out.println(workout.toString());
+        int index = 0;
+        List<SelectMenuOption> list = createTemplateSelectMenuList(
+            workout.getClass().getSimpleName());
     InteractionImmediateResponseBuilder responder = b.createImmediateResponder()
         .setContent("Edit workout")
-        .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
-        int index = 0;
-            List<SelectMenuOption> list = createTemplateSelectMenuList(Template.map.get(workout.getTemplateId()).getClass().getSimpleName());
-            responder
-            .addComponents(
-                ActionRow.of(SelectMenu.create("options", "Click here to show the options",
-                list)
-             
-                ) 
+        .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
+        .addComponents(
+            actionRow,
+            ActionRow.of(
+                SelectMenu.createStringMenu(
+                    "options", 
+                    "Click here to show the options",
+                    list
+                )
+            ) 
+        );
+        responder.respond();
+        return responder.respond();
+    }
+
+
+
+
+public static ActionRow createStrengthActionRow(Strength workout){
+    SimpleDateFormat dateFormat = new SimpleDateFormat(workout.getUser().getDateFormatStr());
+     return ActionRow.of(
+                Button.secondary("date", dateFormat.format(workout.getDate())),
+                Button.secondary("weight", workout.getWeight().toString()),
+                Button.secondary("editReps", workout.getSet().toString()),
+                Button.success("addReps", "+"),
+                Button.danger("delReps", "-")
             );
-            
-            
+}
+
+public static ActionRow createIsometricActionRow(Isometric workout){
+    SimpleDateFormat dateFormat = new SimpleDateFormat(workout.getUser().getDateFormatStr());
+     return ActionRow.of(
+                Button.secondary("date", dateFormat.format(workout.getDate())),
+                Button.secondary("weight", workout.getWeight().toString()),
+                Button.secondary("editSet", workout.getSet().toString()),
+                Button.success("addTime", "+"),
+                Button.danger("delTime", "-")
+            );
+}
+
+public static ActionRow createCardioActionRow(Cardio workout){
+    SimpleDateFormat dateFormat = new SimpleDateFormat(workout.getUser().getDateFormatStr());
+     return ActionRow.of(
+                Button.secondary("date", dateFormat.format(workout.getDate())),
+                Button.secondary("distance", Double.toString(workout.getDistance())),
+                Button.secondary("unit", workout.getUnit().toString()),
+                Button.secondary("time", workout.getTime().toString())
+            );
+}
 
 
 
 
 
-   return responder.respond();
+    public static CompletableFuture<InteractionOriginalResponseUpdater> 
+        strengthEditMenu(ButtonInteraction b, Strength workout){
+        //System.out.println(workout.toString());
+        int index = 0;
+        List<SelectMenuOption> list = createTemplateSelectMenuList("Strength");
+    InteractionImmediateResponseBuilder responder = b.createImmediateResponder()
+        .setContent("Edit workout")
+        .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
+        .addComponents(
+            createStrengthActionRow(workout), 
+            ActionRow.of(
+                SelectMenu.createStringMenu(
+                    "options", 
+                    "Click here to show the options",
+                    list
+                )
+            ) 
+
+        );
+        responder.respond();
+        return responder.respond();
+
     }
 
 
@@ -929,13 +1012,22 @@ public class Discord {
 
 
 
-    public static ArrayList<SelectMenuOption> createTemplateSelectMenuList(String workoutType){
+
+
+
+    public static List<SelectMenuOption> createTemplateSelectMenuList(String workoutType){
         Template.map.clear();
         Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
         ArrayList<SelectMenuOption> templateList = new ArrayList<SelectMenuOption>();
+        ArrayList<String> templateNames = new ArrayList<>();
         for (Template t : Template.map.values()){
-            if (t.getWorkoutType().toLowerCase().equals(workoutType.toLowerCase()))
+            if (
+                t.getWorkoutType().toLowerCase().equals(workoutType.toLowerCase()) //same workout type
+                && !templateNames.contains(t.getName())  //is not a duplicate name
+            ) {
                 templateList.add(SelectMenuOption.create(t.getName(),String.valueOf(t.getId())));
+                templateNames.add(t.getName());
+            }
         }
         return templateList;
         }
@@ -943,7 +1035,6 @@ public class Discord {
 
 }
     
-
 
 
 
@@ -969,12 +1060,3 @@ public class Discord {
     }
 }
     
-
-
-
-
-
-
-
-
-
