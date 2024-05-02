@@ -2,6 +2,7 @@ package org.LibreGainz;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -127,6 +128,24 @@ public class Discord {
             ))
         )).createGlobal(api).join();
 
+
+
+
+
+
+
+
+
+        SlashCommand listexcerciseCommand = SlashCommand.with("listexcercise", "lists excercise workouts",
+        Arrays.asList(
+        SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true,
+        Arrays.asList(
+            SlashCommandOptionChoice.create("Strength", "Strength"),
+            SlashCommandOptionChoice.create("Cardio", "Cardio"),
+            SlashCommandOptionChoice.create("Isometric", "Isometric")
+            ))
+            
+        )).createGlobal(api).join();
 
 
 
@@ -394,6 +413,10 @@ public class Discord {
             case "excercise":
                 postTemplate(sci);
                 break;
+            case "listexcercise":
+            List<Template> valuesList = new ArrayList<>(Template.map.values());
+            excerciseButtonMenu(sci, valuesList);
+
 
 
 
@@ -465,6 +488,39 @@ public class Discord {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static List<Template> getTemplate(SlashCommandInteraction sci){
+        postUser(sci); 
+        User user = User.getRequestName(sci.getUser().getName()); //get the user, add them to the database if they are new
+        try {
+        List<Template> list = Template.getRequestAll();
+        String ret = "";
+        for (Template s: list){
+            ret += "\n" + s.toString();
+        }
+        respondPrivate(sci, ret);
+        return list;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 
 
@@ -892,7 +948,27 @@ public class Discord {
 
 
 
-
+    public static CompletableFuture<InteractionOriginalResponseUpdater> excerciseButtonMenu(SlashCommandInteraction sci, List<Template> list) {
+        System.out.println(list.toString());
+        InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
+                .setContent("Workout List")
+                .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
+        int index = 0;
+        for (Template template : list) {
+            String idStr = String.valueOf(template.getId());
+            responder
+                    .addComponents(
+                            ActionRow.of(Button.secondary(
+                                index + "," + template.getClass().getSimpleName() + "," + 
+                                idStr, template.toString()),  //This edits the workout // Button to edit the template
+                              Button.danger(index + ",Delete," + idStr, "Delete")    // Button to delete the template
+                            ));
+            index += 1;
+        }
+        return responder.respond();
+    }
+}
+    
 
 
 
