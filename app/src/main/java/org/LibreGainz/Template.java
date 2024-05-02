@@ -188,6 +188,15 @@ return templateId +
     ",\"" + workoutType + "\"" + 
     ",\"" + desc + "\"";
 }
+
+
+
+public String toString2(){
+return name + ", "+
+workoutType + ", " +
+desc;
+
+}
 /*
  * Append the toString() for this object onto a CSV file.
  */
@@ -252,13 +261,5 @@ public boolean postRequest(){
         }
         return true;
     }
-
-
-
-
-
-
-
-
 
 }

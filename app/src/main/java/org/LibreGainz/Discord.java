@@ -51,10 +51,14 @@ public class Discord {
     public static ArrayList<SlashCommandOptionChoice> createTemplateChoiceList(String workoutType){
     Template.map.clear();
     Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
+    ArrayList<String> templateNameList = new ArrayList<String>();
     ArrayList<SlashCommandOptionChoice> templateList = new ArrayList<SlashCommandOptionChoice>();
     for (Template t : Template.map.values()){
-        if (t.getWorkoutType().toLowerCase().equals(workoutType.toLowerCase()))
+        if (t.getWorkoutType().toLowerCase().equals(workoutType.toLowerCase())
+            && !templateNameList.contains(t.getName())
+        ){
             templateList.add(SlashCommandOptionChoice.create(t.getName(),String.valueOf(t.getId())));
+        }
     }
     return templateList;
     }
@@ -439,7 +443,7 @@ public class Discord {
                 break;
             case "listexcercise":
             List<Template> valuesList = new ArrayList<>(Template.map.values());
-            excerciseButtonMenu(sci, valuesList);
+            templateButtonMenu(sci, valuesList);
 
 
 
@@ -931,8 +935,8 @@ public class Discord {
             actionRow,
             ActionRow.of(
                 SelectMenu.createStringMenu(
-                    "options", 
-                    "Click here to show the options",
+                    "workoutType", 
+                    Template.map.get(workout.getTemplateId()).getName(),
                     list
                 )
             ) 
@@ -980,32 +984,6 @@ public static ActionRow createCardioActionRow(Cardio workout){
 
 
 
-    public static CompletableFuture<InteractionOriginalResponseUpdater> 
-        strengthEditMenu(ButtonInteraction b, Strength workout){
-        //System.out.println(workout.toString());
-        int index = 0;
-        List<SelectMenuOption> list = createTemplateSelectMenuList("Strength");
-    InteractionImmediateResponseBuilder responder = b.createImmediateResponder()
-        .setContent("Edit workout")
-        .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
-        .addComponents(
-            createStrengthActionRow(workout), 
-            ActionRow.of(
-                SelectMenu.createStringMenu(
-                    "options", 
-                    "Click here to show the options",
-                    list
-                )
-            ) 
-
-        );
-        responder.respond();
-        return responder.respond();
-
-    }
-
-
-
 
 
 
@@ -1033,28 +1011,33 @@ public static ActionRow createCardioActionRow(Cardio workout){
         }
    
 
-}
     
 
 
 
 
-    public static CompletableFuture<InteractionOriginalResponseUpdater> excerciseButtonMenu(SlashCommandInteraction sci, List<Template> list) {
-        System.out.println(list.toString());
+    public static CompletableFuture<InteractionOriginalResponseUpdater> 
+    templateButtonMenu(SlashCommandInteraction sci, List<Template> list)
+        {
+        //System.out.println(list.toString());
         InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
-                .setContent("Workout List")
-                .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
+            .setContent("Excercise List")
+            .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
         int index = 0;
+        ArrayList<String> templateNameList = new ArrayList<>();
         for (Template template : list) {
             String idStr = String.valueOf(template.getId());
+            if (!templateNameList.contains(template.getName())){                       ///NEW STuFF aHaHaaaaaa
             responder
-                    .addComponents(
-                            ActionRow.of(Button.secondary(
-                                index + "," + template.getClass().getSimpleName() + "," + 
-                                idStr, template.toString()),  //This edits the workout // Button to edit the template
-                              Button.danger(index + ",Delete," + idStr, "Delete")    // Button to delete the template
-                            ));
+            .addComponents(
+                ActionRow.of(Button.secondary(
+                    index + "," + template.getClass().getSimpleName() + "," + idStr,
+                    template.toString2()),  // Button to edit the template
+                    Button.danger(index + ",Delete," + idStr, "Delete")    // Button to delete the template
+                ));
             index += 1;
+            templateNameList.add(template.getName());
+            }
         }
         return responder.respond();
     }
