@@ -317,7 +317,7 @@ public static void csvLoad()
      * @param workoutId
      * @return
      */
-    public static List<Strength> getRequestId(int workoutId){
+    public static List<Strength> getRequestId(Long workoutId){
         try {
             String urlString = Device.getBaseUrl() + "/strength/" + String.valueOf(workoutId);
             return getRequest(urlString); 
