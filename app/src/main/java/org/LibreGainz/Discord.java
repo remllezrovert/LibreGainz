@@ -17,6 +17,7 @@ import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.MessageFlag;
+import org.javacord.api.entity.message.MessageUpdater;
 import org.javacord.api.entity.message.Messageable;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
@@ -56,7 +57,7 @@ public class Discord {
     Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
     ArrayList<String> templateNameList = new ArrayList<String>();
     ArrayList<SlashCommandOptionChoice> templateList = new ArrayList<SlashCommandOptionChoice>();
-    for (Template t : Template.map.values()){
+    for (Template t : Template.getRequestAll()){
         if (t.getWorkoutType().toLowerCase().equals(workoutType.toLowerCase())
             && !templateNameList.contains(t.getName())
         ){
@@ -64,7 +65,7 @@ public class Discord {
         }
     }
     return templateList;
-    }
+}
 
 
     public static void main(String[] args) {
@@ -103,8 +104,6 @@ public class Discord {
             ))
         )).createGlobal(api).join();
 
-        //this is how we update! I think????
-        //listcardio.createSlashCommandUpdater().updateGlobal(api);
 
 
 
@@ -144,7 +143,7 @@ public class Discord {
 
 
 
-        SlashCommand listexerciseCommand = SlashCommand.with("listexercise", "lists excercise workouts",
+        SlashCommand listexcerciseCommand = SlashCommand.with("listexcercise", "lists excercise workouts",
         Arrays.asList(
         SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true,
         Arrays.asList(
@@ -206,6 +205,7 @@ SlashCommand editcardioCommand = SlashCommand.with("editcardio", "lists cardio w
             SlashCommandOptionChoice.create("month","month")
             ))
         )).createGlobal(api).join();
+
 SlashCommand editallCommand = SlashCommand.with("editall", "lists all workouts for editing",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
@@ -216,7 +216,7 @@ SlashCommand editallCommand = SlashCommand.with("editall", "lists all workouts f
             ))
         )).createGlobal(api).join();
 
-SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists excercises for editing",
+SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists excercises for editing",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
@@ -249,7 +249,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exce
 
 
 
-    //This is the strenth command
+    //This is the strength command
     SlashCommand strengthCommand = SlashCommand.with("strength", "Testing for to see if I can get args.", 
     Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
@@ -332,7 +332,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exce
 
 
 
-        SlashCommand.with("exercise", "Testing for to see if I can get args.", 
+        SlashCommand.with("excercise", "Testing for to see if I can get args.", 
         Arrays.asList(
                 SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true, 
                 Arrays.asList(
@@ -340,9 +340,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exce
                     SlashCommandOptionChoice.create("Cardio", "Cardio"),
                     SlashCommandOptionChoice.create("Isometric", "Isometric")
                     )),
-                SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of exercise", true)
-
-                
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of excercise", true)
             )).createGlobal(api).join();
     
 
@@ -384,7 +382,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exce
 
 
         
-        System.out.println(btnStr);
+        //System.out.println(btnStr);
 
 
         if (btnStr.equals("Strength")){
@@ -415,11 +413,17 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exce
         
 
         if (btnStr.equals("Delete")){
-            Workout.deleteRequest(id);
+            Message message = b.getMessage();
+            MessageUpdater updater =  message.createUpdater();
             try {
-            event.getButtonInteraction()
-            .getMessage()
-            .delete();
+                 List<HighLevelComponent> existingActionRows = new ArrayList<>(message.getComponents());
+            if (!existingActionRows.isEmpty()) {
+                existingActionRows.remove(index);
+            }
+            for (HighLevelComponent a : existingActionRows)
+                updater.addComponents(a);
+            CompletableFuture<Message> updateFuture = updater.applyChanges();
+            Workout.deleteRequest(id);
             }
 
             catch (Exception e){
@@ -478,10 +482,13 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exce
                 listAll.addAll(getCardioDate(sci));
                 respondPrivate(sci,listFormatter(listAll));
                 break;
-            case "exercise":
+            case "excercise":
                 postTemplate(sci);
+                strengthCommand.createSlashCommandUpdater().updateGlobal(api);
+                isometricCommand.createSlashCommandUpdater().updateGlobal(api);
+                cardioCommand.createSlashCommandUpdater().updateGlobal(api);
                 break;
-            case "listexercise":
+            case "listexcercise":
                 List<Template> valuesList = new ArrayList<>(Template.map.values());
                 break;
             case "editstrength":
@@ -504,7 +511,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exce
                 for (MessageBuilder mb : new ButtonMenu(sci,editAll).getList())
                     mb.send(sci.getUser());
                 break;
-            case "editexercise":
+            case "editexcercise":
                 for (MessageBuilder mb : new TemplateMenu(sci,Template.getRequestAll()).getList())
                     mb.send(sci.getUser());
                 break;
@@ -893,6 +900,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exce
         t.setWorkoutType(sci.getArgumentStringValueByIndex(0).get());
         t.setName(sci.getArgumentStringValueByIndex(1).get());
         t.postRequest();
+
         respondPrivate(sci, t.toString());
     }
 
@@ -943,58 +951,6 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exce
         .setContent(responseStr)
         .respond();
     }
-
-
-
-/*
-    public static <T extends Workout> List<CompletableFuture<InteractionOriginalResponseUpdater>>
-        buttonMenu(SlashCommandInteraction sci, List<T> list){
-
-    List<CompletableFuture<InteractionOriginalResponseUpdater>> ret = new ArrayList<>();
-    for (List<T> arr : messagePackager(list)){
-        InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
-        .setContent("Workout List")
-        .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
-        int index = 0;
-            for (T workout : arr) {
-            String idStr = String.valueOf(workout.getId());
-            responder
-            .addComponents(
-                ActionRow.of(Button.secondary(
-                    index + "," + workout.getClass().getSimpleName() + "," + 
-                    idStr, workout.toString2()),  //This edits the workout
-                    Button.danger(index + ",Delete," + idStr, "🗑️")  //This deletes the workout
-
-                ));
-                index += 1;
-            }
-            CompletableFuture<InteractionOriginalResponseUpdater> future = responder.respond();
-            ret.add(future);
-            future.join();
-        //ret.add(responder.respond());
-    }
-    return ret;
-    }
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
