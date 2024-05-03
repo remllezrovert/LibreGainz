@@ -144,7 +144,7 @@ public class Discord {
 
 
 
-        SlashCommand listexcerciseCommand = SlashCommand.with("listexcercise", "lists excercise workouts",
+        SlashCommand listexerciseCommand = SlashCommand.with("listexercise", "lists excercise workouts",
         Arrays.asList(
         SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true,
         Arrays.asList(
@@ -216,7 +216,7 @@ SlashCommand editallCommand = SlashCommand.with("editall", "lists all workouts f
             ))
         )).createGlobal(api).join();
 
-SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists excercises for editing",
+SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists excercises for editing",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
@@ -332,7 +332,7 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
 
 
 
-        SlashCommand.with("excercise", "Testing for to see if I can get args.", 
+        SlashCommand.with("exercise", "Testing for to see if I can get args.", 
         Arrays.asList(
                 SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true, 
                 Arrays.asList(
@@ -340,7 +340,7 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                     SlashCommandOptionChoice.create("Cardio", "Cardio"),
                     SlashCommandOptionChoice.create("Isometric", "Isometric")
                     )),
-                SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of excercise", true)
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of exercise", true)
 
                 
             )).createGlobal(api).join();
@@ -478,10 +478,10 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 listAll.addAll(getCardioDate(sci));
                 respondPrivate(sci,listFormatter(listAll));
                 break;
-            case "excercise":
+            case "exercise":
                 postTemplate(sci);
                 break;
-            case "listexcercise":
+            case "listexercise":
                 List<Template> valuesList = new ArrayList<>(Template.map.values());
                 break;
             case "editstrength":
@@ -504,7 +504,7 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 for (MessageBuilder mb : new ButtonMenu(sci,editAll).getList())
                     mb.send(sci.getUser());
                 break;
-            case "editexcercise":
+            case "editexercise":
                 for (MessageBuilder mb : new TemplateMenu(sci,Template.getRequestAll()).getList())
                     mb.send(sci.getUser());
                 break;

@@ -31,7 +31,7 @@ public static List<MessageBuilder>
         {
         //System.out.println(list.toString());
         MessageBuilder responder = new MessageBuilder()
-            .setContent("Excercise List");
+            .setContent("exercise List");
         List<MessageBuilder> ret = new ArrayList<>();
         for (List<Template> objPage: Discord.objectPaginator(list)){
             int index = 0;
