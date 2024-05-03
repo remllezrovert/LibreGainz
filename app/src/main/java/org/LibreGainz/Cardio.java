@@ -264,7 +264,7 @@ public static void csvLoad()
      * @param workoutId
      * @return
      */
-    public static List<Cardio> getRequestId(int workoutId){
+    public static List<Cardio> getRequestId(Long workoutId){
         try {
             String urlString = Device.getBaseUrl() + "/cardio/" + String.valueOf(workoutId);
             return getRequest(urlString); 

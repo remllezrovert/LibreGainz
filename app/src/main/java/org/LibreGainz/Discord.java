@@ -14,13 +14,17 @@ import java.sql.Date;
 import org.checkerframework.checker.units.qual.A;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
+import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.MessageFlag;
+import org.javacord.api.entity.message.Messageable;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.component.Component;
 import org.javacord.api.entity.message.component.HighLevelComponent;
 import org.javacord.api.entity.message.component.SelectMenu;
 import org.javacord.api.entity.message.component.SelectMenuOption;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.ButtonClickEvent;
 import org.javacord.api.event.interaction.MessageComponentCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
@@ -31,8 +35,7 @@ import org.javacord.api.interaction.SlashCommandOptionType;
 import org.javacord.api.interaction.SlashCommandUpdater;
 import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
-
-import okhttp3.internal.ws.RealWebSocket.Message;
+import org.javacord.api.listener.interaction.MessageComponentCreateListener;
 
 import org.javacord.api.interaction.ButtonInteraction;
 import org.javacord.api.interaction.Interaction;
@@ -65,8 +68,7 @@ public class Discord {
 
 
     public static void main(String[] args) {
-        String token = "";  // Insert your bot's token here
-    
+        String token = "";// Insert your bot's token here
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
         Template.map.clear();
         Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
@@ -171,6 +173,61 @@ public class Discord {
             SlashCommandOptionChoice.create("month","month")
             ))
         )).createGlobal(api).join();
+
+
+
+
+
+     SlashCommand editstrengthCommand = SlashCommand.with("editstrength", "lists strength workouts",
+        Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
+            Arrays.asList(
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
+            ))
+        )).createGlobal(api).join();
+    SlashCommand editisometricCommand = SlashCommand.with("editisometric", "lists isometric workouts for editing",
+        Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
+            Arrays.asList(
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
+            ))
+        )).createGlobal(api).join();
+
+SlashCommand editcardioCommand = SlashCommand.with("editcardio", "lists cardio workouts for editing",
+        Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
+            Arrays.asList(
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
+            ))
+        )).createGlobal(api).join();
+SlashCommand editallCommand = SlashCommand.with("editall", "lists all workouts for editing",
+        Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
+            Arrays.asList(
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
+            ))
+        )).createGlobal(api).join();
+
+SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists excercises for editing",
+        Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
+            Arrays.asList(
+            SlashCommandOptionChoice.create("today","today"),
+            SlashCommandOptionChoice.create("week","week"),
+            SlashCommandOptionChoice.create("month","month")
+            ))
+        )).createGlobal(api).join();
+
+
+
 
 
 
@@ -317,7 +374,7 @@ public class Discord {
             .split(",")[1]
             .replaceAll("[^a-zA-Z]", "");
  
-        int workoutId = Integer.parseInt(
+        Long id = Long.parseLong(
             event.getButtonInteraction()
             .getCustomId()
             .split(",")[2]
@@ -327,12 +384,12 @@ public class Discord {
 
 
         
-        //System.out.println(btnStr);
+        System.out.println(btnStr);
 
 
         if (btnStr.equals("Strength")){
 
-            Strength strength = Strength.getRequestId(workoutId).get(0);
+            Strength strength = Strength.getRequestId(id).get(0);
             workoutEditMenu(b,                    
             strength,
             createStrengthActionRow(strength)
@@ -340,7 +397,7 @@ public class Discord {
         }
         if (btnStr.equals("Isometric")){
 
-            Isometric isometric = Isometric.getRequestId(workoutId).get(0);
+            Isometric isometric = Isometric.getRequestId(id).get(0);
             workoutEditMenu(b,                    
             isometric,
             createIsometricActionRow(isometric)
@@ -348,50 +405,32 @@ public class Discord {
         }
         if (btnStr.equals("Cardio")){
 
-            Cardio cardio = Cardio.getRequestId(workoutId).get(0);
+            Cardio cardio = Cardio.getRequestId(id).get(0);
             workoutEditMenu(b,                    
             cardio,
             createCardioActionRow(cardio)
             );
         }
-
-
-
-
-
+        
+        
 
         if (btnStr.equals("Delete")){
-        Workout.deleteRequest(workoutId);
+            Workout.deleteRequest(id);
+            try {
+            event.getButtonInteraction()
+            .getMessage()
+            .delete();
+            }
 
-        try {
-        event.getButtonInteraction()
-        .getMessage()
-        .delete();
-        }
-
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-      
-
-
-
-
-
-
-
-        event.getButtonInteraction()
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            event.getButtonInteraction()
             .createImmediateResponder()
             .setContent("Deleting Workout!")
             .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
             .respond();
-
-                 // Cast the interaction to ButtonInteraction
-            //ButtonInteraction buttonInteraction = (ButtonInteraction) event;
-            // Get the component object
-                }
+        }
 
 
     }
@@ -423,36 +462,60 @@ public class Discord {
                 break;
             case "liststrength":
             case "ls":
-                buttonMenu(sci,getStrengthDate(sci));
+                respondPrivate(sci,listFormatter(getStrengthDate(sci)));
+                //messagePackager(getStrengthDate(sci)).forEach((arr) -> buttonMenu(sci, arr));
                 break;
             case "listcardio":
-                buttonMenu(sci,getCardioDate(sci));
+                respondPrivate(sci,listFormatter(getCardioDate(sci)));
                 break;
             case "listisometric":
-                buttonMenu(sci,getIsometricDate(sci));
+                respondPrivate(sci,listFormatter(getIsometricDate(sci)));
                 break;
             case "listall":
                 ArrayList<Workout> listAll = new ArrayList<>();   // THIS DOES NOT WORK
                 listAll.addAll(getStrengthDate(sci));
                 listAll.addAll(getIsometricDate(sci));
                 listAll.addAll(getCardioDate(sci));
-                buttonMenu(sci,listAll);
+                respondPrivate(sci,listFormatter(listAll));
                 break;
             case "excercise":
                 postTemplate(sci);
                 break;
             case "listexcercise":
-            List<Template> valuesList = new ArrayList<>(Template.map.values());
-            templateButtonMenu(sci, valuesList);
+                List<Template> valuesList = new ArrayList<>(Template.map.values());
+                break;
+            case "editstrength":
+                for (MessageBuilder mb : new ButtonMenu(sci,getStrengthDate(sci)).getList())
+                    mb.send(sci.getUser());
+                break;
+            case "editisometric":
+                for (MessageBuilder mb : new ButtonMenu(sci,getIsometricDate(sci)).getList())
+                    mb.send(sci.getUser());
+                break;
+            case "editcardio":
+                for (MessageBuilder mb : new ButtonMenu(sci,getCardioDate(sci)).getList())
+                    mb.send(sci.getUser());
+                break;
+            case "editall":
+                ArrayList<Workout> editAll = new ArrayList<>();
+                editAll.addAll(getStrengthDate(sci));
+                editAll.addAll(getIsometricDate(sci));
+                editAll.addAll(getCardioDate(sci));
+                for (MessageBuilder mb : new ButtonMenu(sci,editAll).getList())
+                    mb.send(sci.getUser());
+                break;
+            case "editexcercise":
+                for (MessageBuilder mb : new TemplateMenu(sci,Template.getRequestAll()).getList())
+                    mb.send(sci.getUser());
+                break;
+
+            }
 
 
-
-
-        }
     });
 
 
-
+    
 }
 
 
@@ -883,27 +946,49 @@ public class Discord {
 
 
 
-
-    public static <T extends Workout> CompletableFuture<InteractionOriginalResponseUpdater> 
+/*
+    public static <T extends Workout> List<CompletableFuture<InteractionOriginalResponseUpdater>>
         buttonMenu(SlashCommandInteraction sci, List<T> list){
-    InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
+
+    List<CompletableFuture<InteractionOriginalResponseUpdater>> ret = new ArrayList<>();
+    for (List<T> arr : messagePackager(list)){
+        InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
         .setContent("Workout List")
         .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
-    int index = 0;
-    for (T workout : list) {
-        String idStr = String.valueOf(workout.getId());
-        responder
-        .addComponents(
-            ActionRow.of(Button.secondary(
-                index + "," + workout.getClass().getSimpleName() + "," + 
-                idStr, workout.toString2()),  //This edits the workout
-                Button.danger(index + ",Delete," + idStr, "🗑️")  //This deletes the workout
+        int index = 0;
+            for (T workout : arr) {
+            String idStr = String.valueOf(workout.getId());
+            responder
+            .addComponents(
+                ActionRow.of(Button.secondary(
+                    index + "," + workout.getClass().getSimpleName() + "," + 
+                    idStr, workout.toString2()),  //This edits the workout
+                    Button.danger(index + ",Delete," + idStr, "🗑️")  //This deletes the workout
 
-            ));
-        index += 1;
-        }
-   return responder.respond();
+                ));
+                index += 1;
+            }
+            CompletableFuture<InteractionOriginalResponseUpdater> future = responder.respond();
+            ret.add(future);
+            future.join();
+        //ret.add(responder.respond());
     }
+    return ret;
+    }
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1013,33 +1098,40 @@ public static ActionRow createCardioActionRow(Cardio workout){
 
     
 
-
-
-
-    public static CompletableFuture<InteractionOriginalResponseUpdater> 
-    templateButtonMenu(SlashCommandInteraction sci, List<Template> list)
-        {
-        //System.out.println(list.toString());
-        InteractionImmediateResponseBuilder responder = sci.createImmediateResponder()
-            .setContent("Excercise List")
-            .setFlags(MessageFlag.EPHEMERAL); // Ensure this is visible only to the user
-        int index = 0;
-        ArrayList<String> templateNameList = new ArrayList<>();
-        for (Template template : list) {
-            String idStr = String.valueOf(template.getId());
-            if (!templateNameList.contains(template.getName())){                       ///NEW STuFF aHaHaaaaaa
-            responder
-            .addComponents(
-                ActionRow.of(Button.secondary(
-                    index + "," + template.getClass().getSimpleName() + "," + idStr,
-                    template.toString2()),  // Button to edit the template
-                    Button.danger(index + ",Delete," + idStr, "Delete")    // Button to delete the template
-                ));
-            index += 1;
-            templateNameList.add(template.getName());
+public static <T> List<List<T>> objectPaginator(List<T> list) {
+        List<List<T>> ret = new ArrayList<>();
+        List<T> groupList = new ArrayList<>();
+        for (T object : list) {
+            if (groupList.size() == 5) {
+                ret.add(groupList);
+                groupList= new ArrayList<>();
             }
+            groupList.add(object);
         }
-        return responder.respond();
+        if (!groupList.isEmpty()) {
+            ret.add(groupList);
+        }
+        return ret;
+    }     
+    
+
+
+  
+
+
+
+
+
+
+
+    public static <T extends Workout> String listFormatter(List<T> list){
+        String ret = "";
+        for (T t: list){
+            ret += t.toString2() + "\n";
+        }
+        return ret;
     }
-}
+    
+
+   }
     

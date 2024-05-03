@@ -259,7 +259,7 @@ public void deleteRequest(){
     API.delete(Device.getBaseUrl() + "/" + userId +"/workout/" + workoutId);
 }
 
-public static void deleteRequest(int workoutId){
+public static void deleteRequest(Long workoutId){
     API.delete(Device.getBaseUrl() + "/workout/" + workoutId);
 }
 

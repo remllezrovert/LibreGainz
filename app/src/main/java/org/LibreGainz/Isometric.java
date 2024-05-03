@@ -244,7 +244,7 @@ public static void csvLoad()
      * @param workoutId
      * @return
      */
-    public static List<Isometric> getRequestId(int workoutId){
+    public static List<Isometric> getRequestId(Long workoutId){
         try {
             String urlString = Device.getBaseUrl() + "/isometric/" + String.valueOf(workoutId);
             return getRequest(urlString); 
