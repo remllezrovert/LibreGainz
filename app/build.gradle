@@ -27,7 +27,7 @@ dependencies {
 
    
 
-    implementation group: 'net.dv8tion', name: 'JDA', version: '5.0.0-beta.22'
+    //implementation group: 'net.dv8tion', name: 'JDA', version: '5.0.0-beta.22'
     implementation 'org.javacord:javacord:3.8.0'
 
 

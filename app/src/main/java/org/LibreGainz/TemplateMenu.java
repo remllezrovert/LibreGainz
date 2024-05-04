@@ -2,15 +2,11 @@ package org.LibreGainz;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import org.javacord.api.entity.message.MessageBuilder;
-import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.interaction.SlashCommandInteraction;
-import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder;
-import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 
 
 public class TemplateMenu{
