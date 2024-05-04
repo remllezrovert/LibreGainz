@@ -2,19 +2,12 @@ package org.LibreGainz;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.HashMap;
 import java.io.*;
-import java.net.http.HttpResponse;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 
 
@@ -414,13 +407,6 @@ public boolean postRequest(){
             }
             return true;
         }
-
-
-
-
-
-
-
 
 
 
