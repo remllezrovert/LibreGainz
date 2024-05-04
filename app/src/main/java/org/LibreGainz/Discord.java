@@ -8,6 +8,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.sql.Date;
 
@@ -559,6 +561,17 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
             .replaceAll("[^0-9]", "")
         );
 
+        if (mdlStr.equals("date")){
+            try {
+            Workout w = Workout.getRequestId(id).get(0);
+            String input = mdl.getTextInputValues().get(0);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(w.getUser().getDateFormatStr());
+            w.setDate(dateFormat.parse(input));
+            w.patchRequest();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
 
         if (mdlStr.startsWith("strength")){
             Strength s = Strength.getRequestId(id).get(0);
@@ -575,7 +588,8 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 break;
             }
             s.patchRequest();
-            event.getModalInteraction().createImmediateResponder().setContent("edited");
+
+            mdl.createImmediateResponder().setContent("edited");
             
         }
 
@@ -658,21 +672,37 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 cardioCommand.createSlashCommandUpdater().updateGlobal(api);
                 break;
             case "listexcercise":
-                List<Template> valuesList = new ArrayList<>(Template.getRequestAll());
-                for (MessageBuilder mb : new TemplateMenu(sci, valuesList).getList())
-                    mb.send(sci.getUser());
+                String eListStr = "";
+                for (Template t: Template.getRequestAll()){
+                    eListStr += t.toString() + "\n";
+                }
+                respondPrivate(sci,eListStr);
                 break;
             case "editstrength":
                 for (MessageBuilder mb : new ButtonMenu(sci,getStrengthDate(sci)).getList())
-                    mb.send(sci.getUser());
+                    mb.send(sci.getUser())
+                    .thenAccept(message -> {
+                    MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
+                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                }); 
                 break;
             case "editisometric":
                 for (MessageBuilder mb : new ButtonMenu(sci,getIsometricDate(sci)).getList())
-                    mb.send(sci.getUser());
+                    mb.send(sci.getUser())
+                    .thenAccept(message -> {
+                    MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
+                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                }); 
+
                 break;
             case "editcardio":
                 for (MessageBuilder mb : new ButtonMenu(sci,getCardioDate(sci)).getList())
-                    mb.send(sci.getUser());
+                    mb.send(sci.getUser())
+                    .thenAccept(message -> {
+                    MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
+                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                }); 
+
                 break;
             case "editall":
                 ArrayList<Workout> editAll = new ArrayList<>();
@@ -680,11 +710,21 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 editAll.addAll(getIsometricDate(sci));
                 editAll.addAll(getCardioDate(sci));
                 for (MessageBuilder mb : new ButtonMenu(sci,editAll).getList())
-                    mb.send(sci.getUser());
+                    mb.send(sci.getUser())
+                    .thenAccept(message -> {
+                    MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
+                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                }); 
+
                 break;
             case "editexcercise":
                 for (MessageBuilder mb : new TemplateMenu(sci,Template.getRequestAll()).getList())
-                    mb.send(sci.getUser());
+                    mb.send(sci.getUser())
+                    .thenAccept(message -> {
+                    MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
+                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                }); 
+
                 break;
 
             }
@@ -1264,4 +1304,38 @@ public static <T> List<List<T>> objectPaginator(List<T> list) {
     
 
    }
-    
+
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * This class deletes old messages after two minutes
+ */
+class MessageDeletionScheduler {
+
+    private final ScheduledExecutorService scheduler;
+
+    public MessageDeletionScheduler() {
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
+    }
+
+    public void scheduleMessageDeletion(Message message, long delayMinutes) {
+        scheduler.schedule(() -> deleteMessage(message), delayMinutes, TimeUnit.MINUTES);
+    }
+
+    private void deleteMessage(Message message) {
+        message.delete();
+    }
+}

@@ -344,7 +344,7 @@ public boolean postRequest(){
      * @return
      */
     public boolean patchRequest(){
-        String urlString = Device.getBaseUrl() + "/" + userId + "/cardio";
+        String urlString = Device.getBaseUrl() + "/cardio/" + workoutId;
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Cardio> list = new ArrayList<Cardio>();
         list.add(this);
