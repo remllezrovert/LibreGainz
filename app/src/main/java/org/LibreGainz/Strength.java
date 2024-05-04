@@ -86,7 +86,7 @@ public static ArrayList<Short> strToSet(String commaList){
      * Delete reps from the ArrayList<int>
      * @param setIndex
      */
-    public void delReps(short setIndex){
+    public void delReps(int setIndex){
         set.remove(setIndex);
     }
     /**
