@@ -319,7 +319,6 @@ public static void csvLoad()
             return null;
         }
     }
-
     public static List<Strength> getRequest(String urlString){
         try {
 
@@ -390,11 +389,11 @@ public boolean postRequest(){
     
     
     /**
-     * POST single object (this)
+     * PATCH single object (this)
      * @return
      */
     public boolean patchRequest(){
-        String urlString = Device.getBaseUrl() + "/" + userId + "/strength";
+        String urlString = Device.getBaseUrl() + "/strength/" + workoutId;
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Strength> list = new ArrayList<Strength>();
         list.add(this);

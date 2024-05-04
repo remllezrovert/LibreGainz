@@ -2,6 +2,7 @@ package org.LibreGainz;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.*;
@@ -252,6 +253,74 @@ public static void csvOverwrite(){
     CsvHandler.csvWipe(csvPath);
     map.forEach((k,v) -> v.csvAppend());
     }
+
+
+    /**
+     * GET all objects in the database
+     * @return
+     */
+    public static <T extends Workout> List<T> getRequestAll(){
+        try {
+            String urlString = Device.getBaseUrl() + "/workout";
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static <T extends Workout> List<T> getRequest(String urlString){
+        try {
+
+            String jsonString = API.get(urlString);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<T> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Workout.class));
+            return list ; 
+           
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * Get request to find objects using workoutId
+     * @param workoutId
+     * @return
+     */
+    public static <T extends Workout> List<T> getRequestId(Long workoutId){
+        try {
+            String urlString = Device.getBaseUrl() + "/workout/" + String.valueOf(workoutId);
+            return getRequest(urlString); 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * PATCH single object (this)
+     * @return
+     */
+    public boolean patchRequest(){
+        String urlString = Device.getBaseUrl() + "/workout/" + workoutId;
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<Workout> list = new ArrayList<Workout>();
+        list.add(this);
+            try {
+            API.patch(urlString, objectMapper
+                .writeValueAsString(list));
+            } catch(IOException e){
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+
+
+
+
 
 
 

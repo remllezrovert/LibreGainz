@@ -323,7 +323,7 @@ public boolean postRequest(){
      * @return
      */
     public boolean patchRequest(){
-        String urlString = Device.getBaseUrl() + "/" + userId + "/isometric";
+        String urlString = Device.getBaseUrl() + "/isometric/" + getId();
         ObjectMapper objectMapper = new ObjectMapper();
         ArrayList<Isometric> list = new ArrayList<Isometric>();
         list.add(this);
