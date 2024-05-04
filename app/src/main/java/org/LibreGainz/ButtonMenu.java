@@ -9,6 +9,7 @@ import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.MessageFlag;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.component.HighLevelComponent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
@@ -38,13 +39,7 @@ workoutButtonMenu(SlashCommandInteraction sci, List<T> list2) {
             int index = 0;
             for (T workout : objPage) {
                 String idStr = String.valueOf(workout.getId());
-                responder.addComponents(
-                    ActionRow.of(
-                            Button.secondary(
-                                    index + "," + workout.getClass().getSimpleName() + "," + idStr,
-                                    workout.toString2()),  // This edits the workout
-                            Button.danger(index + ",Delete," + idStr, "🗑️")  // This deletes the workout
-                    ));
+                responder.addComponents(createActionRow(workout, index, idStr));
                 index += 1;
             }
             ret.add(responder);
@@ -53,6 +48,15 @@ workoutButtonMenu(SlashCommandInteraction sci, List<T> list2) {
 }
 
 
+public static <T extends Workout> HighLevelComponent createActionRow(T workout, int index, String idStr){
+    return ActionRow.of(
+        Button.secondary(
+                index + "," + workout.getClass().getSimpleName() + "," + idStr,
+                workout.toString2()),  // This edits the workout
+        Button.danger(index + ",Delete," + idStr, "🗑️")  // This deletes the workout
+    );
+
+};
 
 
 

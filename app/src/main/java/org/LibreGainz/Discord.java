@@ -1,5 +1,6 @@
 package org.LibreGainz;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,6 +45,7 @@ import org.javacord.api.listener.interaction.MessageComponentCreateListener;
 
 import org.javacord.api.interaction.ButtonInteraction;
 import org.javacord.api.interaction.Interaction;
+import org.javacord.api.interaction.MessageComponentInteraction;
 import org.javacord.api.interaction.ModalInteraction;
 import org.javacord.api.interaction.SlashCommand;
 import org.javacord.api.interaction.SlashCommandBuilder;
@@ -148,7 +150,7 @@ public class Discord {
 
 
 
-        SlashCommand listexcerciseCommand = SlashCommand.with("listexcercise", "lists excercise workouts",
+        SlashCommand listexerciseCommand = SlashCommand.with("listexercise", "lists exercise workouts",
         Arrays.asList(
         SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true,
         Arrays.asList(
@@ -221,7 +223,7 @@ SlashCommand editallCommand = SlashCommand.with("editall", "lists all workouts f
             ))
         )).createGlobal(api).join();
 
-SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists excercises for editing",
+SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exercises for editing",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
@@ -337,7 +339,7 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
 
 
 
-        SlashCommand.with("excercise", "Testing for to see if I can get args.", 
+        SlashCommand.with("exercise", "Testing for to see if I can get args.", 
         Arrays.asList(
                 SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true, 
                 Arrays.asList(
@@ -345,7 +347,7 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                     SlashCommandOptionChoice.create("Cardio", "Cardio"),
                     SlashCommandOptionChoice.create("Isometric", "Isometric")
                     )),
-                SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of excercise", true)
+                SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of exercise", true)
             )).createGlobal(api).join();
     
 
@@ -365,6 +367,7 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
     // Check if the button clicked is the one you are interested in
     //System.out.println(event.getButtonInteraction().getCustomId());
         ButtonInteraction b = event.getButtonInteraction();
+        Message message = b.getMessage();
         int index = Integer.parseInt(
             event.getButtonInteraction()
             .getCustomId()
@@ -397,6 +400,7 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
             strength,
             createStrengthActionRow(strength)
             );
+            message.delete();
         }
         if (btnStr.equals("Isometric")){
 
@@ -405,6 +409,7 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 isometric,
                 createIsometricActionRow(isometric)
             );
+            message.delete();
         }
         if (btnStr.equals("Cardio")){
 
@@ -413,12 +418,12 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
             cardio,
             createCardioActionRow(cardio)
             );
+            message.delete();
         }
         
         
 
         if (btnStr.equals("Delete")){
-            Message message = b.getMessage();
             MessageUpdater updater =  message.createUpdater();
             try {
                  List<HighLevelComponent> existingActionRows = new ArrayList<>(message.getComponents());
@@ -460,23 +465,37 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
 
 
         // Handle strength edit button presses
-        if (btnStr.equals("strengthEditSet")){
+        
+        if (btnStr.startsWith("strength")){
+        switch(btnStr){
+        case "strengthEditSet":
             b.respondWithModal("0,strengthEditSet,"+id, "Type a new set example:    1, 2, 3, 4",
             ActionRow.of(TextInput.create(TextInputStyle.SHORT, "1,strengthEditSet,"+id, "This is a Text Input Field"))
             );
-            //Strength s = Strength.getRequestId(id).get(0);
-        }
-        if (btnStr.equals("strengthAddSet")){
+            break;
+        case "strengthAddSet":
             b.respondWithModal("0,strengthAddSet,"+id, "Type a new set example:    1, 2, 3, 4",
             ActionRow.of(TextInput.create(
                 TextInputStyle.SHORT, "1,strengthAddSet,"+id, "This is a Text Input Field"))
             );
-        }
-        if (btnStr.equals("strengthDelSet")){
+            break;
+        case "strengthDelSet":
             Strength strength = Strength.getRequestId(id).get(0);
             if (!strength.getSet().isEmpty()){
-                strength.delReps( (short)(strength.getSet().size() - 1));
+                strength.delReps(strength.getSet().size() - 1);
+        //This needs to be fixed somehow
             }
+            break;
+        case "strengthWeight":
+            b.respondWithModal("0,strengthWeight,"+id, "Enter a weight, example:   90kg",
+            ActionRow.of(TextInput.create(
+                TextInputStyle.SHORT, "1,strengthWeight,"+id, "This is a Text Input Field"))
+            );
+            break;
+        }
+        //this is new and possibly problematic
+
+
         }
 
 
@@ -485,7 +504,9 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
 
 
         //Handle isometric edit button pushes
-        if (btnStr.equals("isometricEditSet")){
+        if (btnStr.startsWith("isometric")) {
+        switch(btnStr){
+        case "isometricEditSet":
             b.respondWithModal("0,isometricEditSet,"+id, "Type a new set example:    1h 2m 1s,   2m 1s,  3s,  1h 2m 1s",
             ActionRow.of(
                 TextInput.create(
@@ -493,19 +514,31 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                     "1,isometricEditSet,"+id, 
                     "This is a Text Input Field"))
             );
-        }
-        if (btnStr.equals("isometricAddSet")){
+            break;
+        case "isometricAddSet":
             b.respondWithModal("0,isometricAddSet,"+id, "Add one or many to the current set:   2m 3s,   1h 2m 3s,   2s",
             ActionRow.of(TextInput.create(
                 TextInputStyle.SHORT, "1,isometricAddSet,"+id, "This is a Text Input Field"))
             );
-        }
-        if (btnStr.equals("isometricDelSet")){
+            break;
+        case "isometricDelSet":
             Strength strength = Strength.getRequestId(id).get(0);
             if (!strength.getSet().isEmpty()){
                 strength.delReps( (short)(strength.getSet().size() - 1));
             }
+            break;
+        case "isometricWeight":
+            b.respondWithModal("0,isometricWeight,"+id, "Enter a weight, example:   90kg",
+            ActionRow.of(TextInput.create(
+                TextInputStyle.SHORT, "1,isometricWeight,"+id, "This is a Text Input Field"))
+            );
+            break;
         }
+    }
+
+
+
+
 
 
         //Handle cardio edit button pushes
@@ -568,6 +601,9 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
             SimpleDateFormat dateFormat = new SimpleDateFormat(w.getUser().getDateFormatStr());
             w.setDate(dateFormat.parse(input));
             w.patchRequest();
+            mdl.createImmediateResponder().
+                setContent(Workout.getRequestId(id).get(0).toString2())
+                .respond();
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -586,10 +622,15 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 Strength.strToSet(input)
                     .forEach((reps) -> s.addReps(reps));
                 break;
+            case "strengthWeight":
+                s.setWeight(WeightObj.strToWeight(input));
+            break;
             }
             s.patchRequest();
+                mdl.createImmediateResponder()
+                .setContent(Strength.getRequestId(id).get(0).toString2())
+                .respond();
 
-            mdl.createImmediateResponder().setContent("edited");
             
         }
 
@@ -607,8 +648,17 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 Isometric.strToSet(input)
                     .forEach((time) -> i.addTime(time.toString()));
             break;
+            case "isometricWeight":
+                i.setWeight(WeightObj.strToWeight(input));
+            break;
         }
         i.patchRequest();
+        mdl.createImmediateResponder().
+                setContent(Isometric.getRequestId(id).get(0).toString2())
+                .respond();
+
+
+            
     }
 
     if (mdlStr.startsWith("cardio")){
@@ -624,6 +674,9 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
             break;
         }
         c.patchRequest();
+ mdl.createImmediateResponder().
+        setContent(Cardio.getRequestId(id).get(0).toString2())
+        .respond();
         }
     });
 
@@ -665,13 +718,13 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 listAll.addAll(getCardioDate(sci));
                 respondPrivate(sci,listFormatter(listAll));
                 break;
-            case "excercise":
+            case "exercise":
                 postTemplate(sci);
                 strengthCommand.createSlashCommandUpdater().updateGlobal(api);
                 isometricCommand.createSlashCommandUpdater().updateGlobal(api);
                 cardioCommand.createSlashCommandUpdater().updateGlobal(api);
                 break;
-            case "listexcercise":
+            case "listexercise":
                 String eListStr = "";
                 for (Template t: Template.getRequestAll()){
                     eListStr += t.toString() + "\n";
@@ -717,7 +770,7 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
                 }); 
 
                 break;
-            case "editexcercise":
+            case "editexercise":
                 for (MessageBuilder mb : new TemplateMenu(sci,Template.getRequestAll()).getList())
                     mb.send(sci.getUser())
                     .thenAccept(message -> {
@@ -836,6 +889,14 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
 
 
 
+    public static Date findDate(String search){
+        return switch(search){
+            case "month"-> Date.valueOf(LocalDate.now().minusMonths(1));
+            case "week"-> Date.valueOf(LocalDate.now().minusWeeks(1));
+            default -> Date.valueOf(LocalDate.now());
+        };
+    }
+
 
     /**
      * GET all of the strength objects that belong to this user
@@ -846,22 +907,10 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
         postUser(sci); 
         User user = User.getRequestName(sci.getUser().getName()); //get the user, add them to the database if they are new
         String search = sci.getArgumentStringValueByName("search").get();
-
         java.util.Date date = new java.util.Date(); //today
         java.sql.Date endDate = new Date(date.getTime()); //get today
-        java.sql.Date startDate;
+        java.sql.Date startDate = findDate(search);
 
-        switch(search){
-            case "month":
-                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-730*60*60*1000));
-                break;
-            case "week": 
-                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-168*60*60*1000));
-                break;
-            default:
-                startDate = new Date(date.getTime());
-                break;
-        }
         try {
         List<Strength> list = Strength.getRequestDate(user,startDate,endDate,15);
         return list;
@@ -890,20 +939,8 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
 
         java.util.Date date = new java.util.Date(); //today
         java.sql.Date endDate = new Date(date.getTime()); //get today
-        java.sql.Date startDate;
-
-        switch(search){
-            case "month":
-                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-730*60*60*1000));
-                break;
-            case "week": 
-                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-168*60*60*1000));
-                break;
-            default:
-                startDate = new Date(date.getTime());
-                break;
-        }
-        try {
+        java.sql.Date startDate = findDate(search);
+       try {
         List<Isometric> list = Isometric.getRequestDate(user,startDate,endDate,15);
         return list;
         } catch (Exception e){
@@ -917,42 +954,6 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public static List<Cardio> getCardioDate(SlashCommandInteraction sci){
         postUser(sci); 
         User user = User.getRequestName(sci.getUser().getName()); //get the user, add them to the database if they are new
@@ -960,20 +961,8 @@ SlashCommand editexcerciseCommand = SlashCommand.with("editexcercise", "lists ex
 
         java.util.Date date = new java.util.Date(); //today
         java.sql.Date endDate = new Date(date.getTime()); //get today
-        java.sql.Date startDate;
-
-        switch(search){
-            case "month":
-                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-730*60*60*1000));
-                break;
-            case "week": 
-                startDate = (java.sql.Date)(new Date(System.currentTimeMillis()-168*60*60*1000));
-                break;
-            default:
-                startDate = new Date(date.getTime());
-                break;
-        }
-        try {
+        java.sql.Date startDate = findDate(search);
+       try {
         List<Cardio> list = Cardio.getRequestDate(user,startDate,endDate,15);
         return list;
         } catch (Exception e){
