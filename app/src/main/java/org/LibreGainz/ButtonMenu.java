@@ -49,10 +49,12 @@ workoutButtonMenu(SlashCommandInteraction sci, List<T> list2) {
 
 
 public static <T extends Workout> HighLevelComponent createActionRow(T workout, int index, String idStr){
+    System.out.println(workout.toString2());
     return ActionRow.of(
         Button.secondary(
                 index + "," + workout.getClass().getSimpleName() + "," + idStr,
-                workout.toString2()),  // This edits the workout
+                workout.buttonString()
+        ),  // This edits the workout
         Button.danger(index + ",Delete," + idStr, "🗑️")  // This deletes the workout
     );
 
