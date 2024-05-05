@@ -199,9 +199,33 @@ public static void csvLoad()
         }
         return dateString + ",  " +
         Template.map.get(getTemplateId()).getName() +
-        ",  " + weightString +  
-        "\n" + set.toString().substring(1, set.toString().length() - 1).replaceAll(",", ",   ");
+        ",  " + weightString
+        +", "+set.toString().substring(1, set.toString().length() - 1).replaceAll(",", ",   ");
     }
+
+
+public String buttonString() {
+        String dateString = "0";
+        String weightString;
+        if (date != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr()); 
+                dateString = dateFormat.format(date);
+        }
+        else {
+             dateString = "null";
+        }
+        if (weight != null) {
+            weightString = weight.toString();
+              
+        }
+        else {
+            weightString = "null";
+        }
+        return dateString + ",  " +
+        Template.map.get(getTemplateId()).getName() +
+        ",  " + weightString;
+    }
+
 
 
  /* get a CSV friendly string representing this object's superclass

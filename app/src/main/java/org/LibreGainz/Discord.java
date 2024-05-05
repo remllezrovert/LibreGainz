@@ -28,6 +28,7 @@ import org.javacord.api.entity.message.component.Component;
 import org.javacord.api.entity.message.component.HighLevelComponent;
 import org.javacord.api.entity.message.component.SelectMenu;
 import org.javacord.api.entity.message.component.SelectMenuOption;
+
 import org.javacord.api.entity.message.component.TextInput;
 import org.javacord.api.entity.message.component.TextInputStyle;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -42,7 +43,10 @@ import org.javacord.api.interaction.SlashCommandUpdater;
 import org.javacord.api.interaction.callback.InteractionImmediateResponseBuilder;
 import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.javacord.api.listener.interaction.MessageComponentCreateListener;
+import org.javacord.api.listener.interaction.SelectMenuChooseListener;
 
+
+import org.javacord.api.interaction.SelectMenuInteraction;
 import org.javacord.api.interaction.ButtonInteraction;
 import org.javacord.api.interaction.Interaction;
 import org.javacord.api.interaction.MessageComponentInteraction;
@@ -155,8 +159,8 @@ public class Discord {
         SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "type", "type", true,
         Arrays.asList(
             SlashCommandOptionChoice.create("Strength", "Strength"),
-            SlashCommandOptionChoice.create("Cardio", "Cardio"),
-            SlashCommandOptionChoice.create("Isometric", "Isometric")
+            SlashCommandOptionChoice.create("Isometric", "Isometric"),
+            SlashCommandOptionChoice.create("Cardio", "Cardio")
             ))
             
         )).createGlobal(api).join();
@@ -361,7 +365,6 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
 
 
 
-
   
         api.addButtonClickListener(event -> {
     // Check if the button clicked is the one you are interested in
@@ -400,8 +403,10 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             strength,
             createStrengthActionRow(strength)
             );
-            message.delete();
         }
+
+
+
         if (btnStr.equals("Isometric")){
 
             Isometric isometric = Isometric.getRequestId(id).get(0);
@@ -409,7 +414,6 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
                 isometric,
                 createIsometricActionRow(isometric)
             );
-            message.delete();
         }
         if (btnStr.equals("Cardio")){
 
@@ -418,7 +422,6 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             cardio,
             createCardioActionRow(cardio)
             );
-            message.delete();
         }
         
         
@@ -475,15 +478,19 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             break;
         case "strengthAddSet":
             b.respondWithModal("0,strengthAddSet,"+id, "Type a new set example:    1, 2, 3, 4",
-            ActionRow.of(TextInput.create(
-                TextInputStyle.SHORT, "1,strengthAddSet,"+id, "This is a Text Input Field"))
+            ActionRow.of(TextInput.create(TextInputStyle.SHORT, "1,strengthAddSet,"+id, "This is a Text Input Field"))
             );
             break;
         case "strengthDelSet":
             Strength strength = Strength.getRequestId(id).get(0);
             if (!strength.getSet().isEmpty()){
-                strength.delReps(strength.getSet().size() - 1);
-        //This needs to be fixed somehow
+                strength.delReps(strength.getSet().size()-1);
+                strength.patchRequest();
+                b.createImmediateResponder()
+                 .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
+                .append(
+                    Strength.getRequestId(strength.getId()).get(0).toString2()
+                ).respond();
             }
             break;
         case "strengthWeight":
@@ -493,9 +500,6 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             );
             break;
         }
-        //this is new and possibly problematic
-
-
         }
 
 
@@ -507,33 +511,43 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
         if (btnStr.startsWith("isometric")) {
         switch(btnStr){
         case "isometricEditSet":
-            b.respondWithModal("0,isometricEditSet,"+id, "Type a new set example:    1h 2m 1s,   2m 1s,  3s,  1h 2m 1s",
+            b.respondWithModal("0,isometricEditSet,"+id, "Type a new set example",
             ActionRow.of(
                 TextInput.create(
-                    TextInputStyle.SHORT,
-                    "1,isometricEditSet,"+id, 
-                    "This is a Text Input Field"))
+                    TextInputStyle.SHORT, "1,isometricEditSet,"+id, "This is a Text Input Field"))
             );
             break;
         case "isometricAddSet":
-            b.respondWithModal("0,isometricAddSet,"+id, "Add one or many to the current set:   2m 3s,   1h 2m 3s,   2s",
-            ActionRow.of(TextInput.create(
-                TextInputStyle.SHORT, "1,isometricAddSet,"+id, "This is a Text Input Field"))
+            b.respondWithModal("0,isometricAddSet,"+id, "Add one or many times",
+            ActionRow.of(
+                TextInput.create(
+                    TextInputStyle.SHORT, "1,isometricAddSet,"+id, "This is a Text Input Field"))
             );
             break;
         case "isometricDelSet":
-            Strength strength = Strength.getRequestId(id).get(0);
-            if (!strength.getSet().isEmpty()){
-                strength.delReps( (short)(strength.getSet().size() - 1));
+            Isometric isometric = Isometric.getRequestId(id).get(0);
+            if (!isometric.getSet().isEmpty()){
+                isometric.delTime( isometric.getSet().size() - 1);
             }
+                isometric.patchRequest();
+                b.createImmediateResponder()
+                 .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
+                .append(
+                    Isometric.getRequestId(isometric.getId()).get(0).toString2()
+                ).respond();
+
             break;
         case "isometricWeight":
             b.respondWithModal("0,isometricWeight,"+id, "Enter a weight, example:   90kg",
-            ActionRow.of(TextInput.create(
-                TextInputStyle.SHORT, "1,isometricWeight,"+id, "This is a Text Input Field"))
+            ActionRow.of(
+                TextInput.create(
+                    TextInputStyle.SHORT, "1,isometricWeight,"+id, "This is a Text Input Field"))
             );
             break;
         }
+
+
+
     }
 
 
@@ -602,7 +616,8 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             w.setDate(dateFormat.parse(input));
             w.patchRequest();
             mdl.createImmediateResponder().
-                setContent(Workout.getRequestId(id).get(0).toString2())
+                setContent("Edited Date")
+                .setFlags(MessageFlag.EPHEMERAL)
                 .respond();
             }catch (Exception e){
                 e.printStackTrace();
@@ -628,6 +643,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             }
             s.patchRequest();
                 mdl.createImmediateResponder()
+                .setFlags(MessageFlag.EPHEMERAL)
                 .setContent(Strength.getRequestId(id).get(0).toString2())
                 .respond();
 
@@ -645,16 +661,18 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
                 );
             break;
             case "isometricAddSet":
+                i.getSet().addAll(
                 Isometric.strToSet(input)
-                    .forEach((time) -> i.addTime(time.toString()));
+                );
             break;
             case "isometricWeight":
                 i.setWeight(WeightObj.strToWeight(input));
             break;
         }
         i.patchRequest();
-        mdl.createImmediateResponder().
-                setContent(Isometric.getRequestId(id).get(0).toString2())
+        mdl.createImmediateResponder()
+                .setFlags(MessageFlag.EPHEMERAL)
+                .setContent(Isometric.getRequestId(id).get(0).toString2())
                 .respond();
 
 
@@ -674,8 +692,9 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             break;
         }
         c.patchRequest();
- mdl.createImmediateResponder().
-        setContent(Cardio.getRequestId(id).get(0).toString2())
+        mdl.createImmediateResponder()
+        .setFlags(MessageFlag.EPHEMERAL)
+        .setContent(Cardio.getRequestId(id).get(0).toString2())
         .respond();
         }
     });
@@ -720,9 +739,9 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
                 break;
             case "exercise":
                 postTemplate(sci);
-                strengthCommand.createSlashCommandUpdater().updateGlobal(api);
-                isometricCommand.createSlashCommandUpdater().updateGlobal(api);
-                cardioCommand.createSlashCommandUpdater().updateGlobal(api);
+                strengthCommand.createSlashCommandUpdater().updateGlobal(api).join();
+                isometricCommand.createSlashCommandUpdater().updateGlobal(api).join();
+                cardioCommand.createSlashCommandUpdater().updateGlobal(api).join();
                 break;
             case "listexercise":
                 String eListStr = "";
@@ -740,6 +759,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
                 }); 
                 break;
             case "editisometric":
+//This is broken. Not sure why
                 for (MessageBuilder mb : new ButtonMenu(sci,getIsometricDate(sci)).getList())
                     mb.send(sci.getUser())
                     .thenAccept(message -> {
@@ -779,14 +799,44 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
                 }); 
 
                 break;
-
             }
 
+        
+
+
+    });
+        // Get the output of the SelectMenu    
+
+        api.addSelectMenuChooseListener((event)-> {
+
+        SelectMenuInteraction smi= event.getSelectMenuInteraction();
+        String customId = smi.getCustomId();
+        int index = Integer.parseInt(
+            customId
+            .split(",")[0]
+            .replaceAll("[^0-9]", "")
+        );
+        String selectStr = customId
+            .split(",")[1]
+            .replaceAll("[^a-zA-Z]", "");
+ 
+        Long id = Long.parseLong(
+            customId
+            .split(",")[2]
+            .replaceAll("[^0-9]", "")
+        );
+        
+        if (selectStr.equals("workoutType")){
+            Workout w = Workout.getRequestId(id).get(0);
+            int templateId = Integer.valueOf(smi.getChosenOptions().get(0).getValue());
+            w.setTemplateId(templateId);
+            w.patchRequest();
+            smi.acknowledge();
+        }
 
     });
 
 
-    
 }
 
 
@@ -1153,7 +1203,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
     }
 
 
-
+    
 
 
 
@@ -1170,13 +1220,13 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
         List<SelectMenuOption> list = createTemplateSelectMenuList(
             workout.getClass().getSimpleName());
     InteractionImmediateResponseBuilder responder = b.createImmediateResponder()
-        .setContent("Edit workout")
-        .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
+        .setContent(workout.toString2())
+        .setFlags(MessageFlag.EPHEMERAL)
         .addComponents(
             actionRow,
             ActionRow.of(
                 SelectMenu.createStringMenu(
-                    "workoutType", 
+                    "10,workoutType,"+workout.getId(), 
                     Template.map.get(workout.getTemplateId()).getName(),
                     list
                 )
@@ -1193,9 +1243,9 @@ public static ActionRow createStrengthActionRow(Strength workout){
     SimpleDateFormat dateFormat = new SimpleDateFormat(workout.getUser().getDateFormatStr());
     Long id = workout.getId();
      return ActionRow.of(
-                Button.secondary("0,date,"+id, dateFormat.format(workout.getDate())),
-                Button.secondary("1,strengthWeight,"+id , workout.getWeight().toString()),
-                Button.secondary("2,strengthEditSet,"+id, workout.getSet().toString()),
+                Button.secondary("0,date,"+id, "Date"),
+                Button.secondary("1,strengthWeight,"+id , "Weight"),
+                Button.secondary("2,strengthEditSet,"+id, "Set"),
                 Button.success("3,strengthAddSet,"+id, "+"),
                 Button.danger("4,strengthDelSet,"+id, "-")
             );
@@ -1205,9 +1255,9 @@ public static ActionRow createIsometricActionRow(Isometric workout){
     Long id = workout.getId();
     SimpleDateFormat dateFormat = new SimpleDateFormat(workout.getUser().getDateFormatStr());
      return ActionRow.of(
-                Button.secondary("0,date,"+id, dateFormat.format(workout.getDate())),
-                Button.secondary("1,isometricWeight,"+id, workout.getWeight().toString()),
-                Button.secondary("2,isometricEditSet,"+id, workout.getSet().toString()),
+                Button.secondary("0,date,"+id, "Date"),
+                Button.secondary("1,isometricWeight,"+id, "Weight"),
+                Button.secondary("2,isometricEditSet,"+id, "Time"),
                 Button.success("3,isometricAddSet,"+id, "+"),
                 Button.danger("4,isometricDelSet,"+id, "-")
             );
@@ -1217,10 +1267,9 @@ public static ActionRow createCardioActionRow(Cardio workout){
     SimpleDateFormat dateFormat = new SimpleDateFormat(workout.getUser().getDateFormatStr());
     Long id = workout.getId();
      return ActionRow.of(
-                Button.secondary("0,date,"+id, dateFormat.format(workout.getDate())),
-                Button.secondary("1,cardioDistance,"+id, 
-                    Double.toString(workout.getDistance()) + workout.getUnit().toString()),
-                Button.secondary("2,cardioTime,"+id, workout.getTime().toString())
+                Button.secondary("0,date,"+id, "Date"),
+                Button.secondary("1,cardioDistance,"+id, "Distance"),
+                Button.secondary("2,cardioTime,"+id, "Time")
             );
 }
 

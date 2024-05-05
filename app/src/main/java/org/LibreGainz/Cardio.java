@@ -221,7 +221,30 @@ public static void csvLoad()
         ",  " + distance + " " + distanceUnit + 
         ",  " + timeString;
     }
+   
+ public String buttonString() {
+        String dateString = "0";
+        String timeString; 
+        if (date != null) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr()); 
+                dateString = dateFormat.format(date);
+        }
+        else {
+             dateString = "null";
+        }
+        if (time != null) {
+            timeString = time.toString();
+              
+        }
+        else {
+            timeString = "null";
+        }
+        return dateString + ",  " + Template.map.get(getTemplateId()).getName() +
+        ",  " + distance + " " + distanceUnit;
+    }
     
+   
+
     /**
      * get a CSV friendly string representing this object's superclass
      * @return csvStr

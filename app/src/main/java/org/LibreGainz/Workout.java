@@ -354,6 +354,16 @@ public String toString2(){
     return "null";
 }
 
+public String buttonString(){
+SimpleDateFormat dateFormat = new SimpleDateFormat(user.getDateFormatStr());
+return 
+    ",\"" + dateFormat.format(date);
+}
+
+
+
+
+
  /* get a CSV friendly string representing this object's superclass
  * @return csvStr
  */
