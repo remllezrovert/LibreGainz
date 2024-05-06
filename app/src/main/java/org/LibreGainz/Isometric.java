@@ -200,7 +200,7 @@ public static void csvLoad()
         return dateString + ",  " +
         Template.map.get(getTemplateId()).getName() +
         ",  " + weightString
-        +", "+set.toString().substring(1, set.toString().length() - 1).replaceAll(",", ",   ");
+        +"\n"+set.toString().substring(1, set.toString().length() - 1).replaceAll(",", ",   ");
     }
 
 

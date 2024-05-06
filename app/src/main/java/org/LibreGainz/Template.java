@@ -262,4 +262,17 @@ public boolean postRequest(){
         return true;
     }
 
+public void deleteRequest(){
+    API.delete(Device.getBaseUrl() + "/" + userId +"/template/" + templateId);
+}
+
+public static void deleteRequest(Long templateId){
+    API.delete(Device.getBaseUrl() + "/template/" + templateId);
+}
+
+
+
+
+
+
 }

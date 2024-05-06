@@ -271,7 +271,6 @@ public static void csvOverwrite(){
 
     public static <T extends Workout> List<T> getRequest(String urlString){
         try {
-
             String jsonString = API.get(urlString);
             ObjectMapper objectMapper = new ObjectMapper();
             List<T> list = objectMapper.readValue(jsonString, objectMapper.getTypeFactory().constructCollectionType(List.class, Workout.class));

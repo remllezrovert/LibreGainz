@@ -231,9 +231,9 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
             Arrays.asList(
-            SlashCommandOptionChoice.create("today","today"),
-            SlashCommandOptionChoice.create("week","week"),
-            SlashCommandOptionChoice.create("month","month")
+            SlashCommandOptionChoice.create("Strength", "Strength"),
+            SlashCommandOptionChoice.create("Isometric", "Isometric"),
+            SlashCommandOptionChoice.create("Cardio", "Cardio")
             ))
         )).createGlobal(api).join();
 
@@ -443,10 +443,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
                 e.printStackTrace();
             }
             event.getButtonInteraction()
-            .createImmediateResponder()
-            .setContent("Deleting Workout!")
-            .setFlags(MessageFlag.EPHEMERAL) // Ensure this is visible only to the user
-            .respond();
+            .acknowledge();
         }
 
 
@@ -573,6 +570,31 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
                 TextInputStyle.SHORT, "1,cardioDistance,"+id, "This is a Text Input Field"))
             );
         }
+
+
+
+
+if (btnStr.equals("templateDelete")){
+            MessageUpdater updater =  message.createUpdater();
+            try {
+                 List<HighLevelComponent> existingActionRows = new ArrayList<>(message.getComponents());
+            if (!existingActionRows.isEmpty()) {
+                existingActionRows.remove(index);
+            }
+            for (HighLevelComponent a : existingActionRows)
+                updater.addComponents(a);
+            CompletableFuture<Message> updateFuture = updater.applyChanges();
+            Template.deleteRequest(id);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+            event.getButtonInteraction().acknowledge();
+        }
+
+
+
+
 
 
 
@@ -722,7 +744,6 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             case "liststrength":
             case "ls":
                 respondPrivate(sci,listFormatter(getStrengthDate(sci)));
-                //messagePackager(getStrengthDate(sci)).forEach((arr) -> buttonMenu(sci, arr));
                 break;
             case "listcardio":
                 respondPrivate(sci,listFormatter(getCardioDate(sci)));
@@ -746,7 +767,10 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             case "listexercise":
                 String eListStr = "";
                 for (Template t: Template.getRequestAll()){
-                    eListStr += t.toString() + "\n";
+                    if (t.getWorkoutType().equals(
+                        sci.getArgumentStringValueByIndex(0).get()
+                    ))
+                        eListStr += t.toString() + "\n";
                 }
                 respondPrivate(sci,eListStr);
                 break;
@@ -759,7 +783,6 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
                 }); 
                 break;
             case "editisometric":
-//This is broken. Not sure why
                 for (MessageBuilder mb : new ButtonMenu(sci,getIsometricDate(sci)).getList())
                     mb.send(sci.getUser())
                     .thenAccept(message -> {
@@ -791,7 +814,14 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
 
                 break;
             case "editexercise":
-                for (MessageBuilder mb : new TemplateMenu(sci,Template.getRequestAll()).getList())
+                List <Template> tList = new ArrayList<Template>();
+                Template.getRequestAll().forEach((t)-> {
+                    if (t.getWorkoutType().equals(
+                        sci.getArgumentStringValueByIndex(0).get()
+                        ))
+                        tList.add(t);
+                });
+                for (MessageBuilder mb : new TemplateMenu(sci,tList).getList())
                     mb.send(sci.getUser())
                     .thenAccept(message -> {
                     MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();

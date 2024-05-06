@@ -6,6 +6,7 @@ import java.util.List;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.component.ActionRow;
 import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.component.HighLevelComponent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 
 
@@ -26,21 +27,15 @@ public static List<MessageBuilder>
     templateButtonMenu(SlashCommandInteraction sci, List<Template> list)
         {
         //System.out.println(list.toString());
-        MessageBuilder responder = new MessageBuilder()
-            .setContent("exercise List");
         List<MessageBuilder> ret = new ArrayList<>();
         for (List<Template> objPage: Discord.objectPaginator(list)){
+            MessageBuilder responder = new MessageBuilder()
+            .setContent("                    ");
             int index = 0;
             for (Template template : objPage) {
-            String idStr = String.valueOf(template.getId());
-            responder
-            .addComponents(
-                ActionRow.of(Button.secondary(
-                    index + "," + template.getClass().getSimpleName() + "," + idStr,
-                    template.toString()),  // Button to edit the template
-                    Button.danger(index + ",Delete," + idStr, "Delete")    // Button to delete the template
-                ));
-            index += 1;
+                String idStr = String.valueOf(template.getId());
+                responder.addComponents(createActionRow(template, index, idStr));
+                index += 1;
             }
             ret.add(responder);
         }
@@ -48,6 +43,18 @@ public static List<MessageBuilder>
     }
 
 
+
+public static HighLevelComponent createActionRow(Template template, int index, String idStr){
+    System.out.println(template.toString());
+    return ActionRow.of(
+        Button.secondary(
+                index + ",template," + idStr,
+                template.getName()
+        ),  // This edits the workout
+        Button.danger(index + ",templateDelete," + idStr, "🗑️")  // This deletes the workout
+    );
+
+};
 
 
     public List<MessageBuilder> getList() {

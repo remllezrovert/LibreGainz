@@ -26,12 +26,10 @@ public class ButtonMenu{
         map.putIfAbsent(sci.getId(),this);
     }
 
-//constructor takes sci and list<t>
-//object has attribute list
-// listIndex,seeMore,menuId
  
 public <T extends Workout>  List<MessageBuilder> 
-workoutButtonMenu(SlashCommandInteraction sci, List<T> list2) {
+workoutButtonMenu(SlashCommandInteraction sci, List<T> list2) 
+    {
     List<MessageBuilder> ret = new ArrayList<>();
         for (List<T> objPage : Discord.objectPaginator(list2)) {
             MessageBuilder responder = new MessageBuilder()
@@ -49,7 +47,7 @@ workoutButtonMenu(SlashCommandInteraction sci, List<T> list2) {
 
 
 public static <T extends Workout> HighLevelComponent createActionRow(T workout, int index, String idStr){
-    System.out.println(workout.toString2());
+    //System.out.println(workout.toString2());
     return ActionRow.of(
         Button.secondary(
                 index + "," + workout.getClass().getSimpleName() + "," + idStr,
