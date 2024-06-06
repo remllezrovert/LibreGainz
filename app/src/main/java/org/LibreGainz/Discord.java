@@ -132,10 +132,10 @@ public static List<SlashCommandOption> getCardioOptions(){
 
     public static void main(String[] args) {
         String token = "";// Insert your bot's token here
+        Long serverId;
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
         Template.map.clear();
         Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
-        Long serverId = 1202646905822384148L;
 
 
         //this is information for the demolist command, and all of the autofill options in discord
