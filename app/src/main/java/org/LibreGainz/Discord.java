@@ -79,8 +79,60 @@ public class Discord {
 }
 
 
+
+   //List<SlashCommandOption> strengthOptions = 
+public static List<SlashCommandOption> getStrengthOptions(){
+return Arrays.asList(
+    SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
+    createTemplateChoiceList("strength")
+    ),
+    SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "weight", "weight", true),
+    SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
+        Arrays.asList(
+                SlashCommandOptionChoice.create("KG", "KG"),
+                SlashCommandOptionChoice.create("LB", "LB")
+    )),
+    SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "set", "the set of reps (1,2,3,4,)", true)
+);
+}
+
+public static List<SlashCommandOption> getIsometricOptions(){
+ return Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
+            createTemplateChoiceList("isometric")
+            ),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "weight", "weight", true),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
+                Arrays.asList(
+                        SlashCommandOptionChoice.create("KG", "KG"),
+                        SlashCommandOptionChoice.create("LB", "LB")
+            )),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "Time", "Time 2h 5m 3s, 2h 5m 3s", true)
+        );
+}
+
+public static List<SlashCommandOption> getCardioOptions(){
+ return Arrays.asList(
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
+            createTemplateChoiceList("cardio")
+            ),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.DECIMAL, "distance", "distance", true),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
+                Arrays.asList(
+                        SlashCommandOptionChoice.create("MI", "MI"),
+                        SlashCommandOptionChoice.create("KM", "KM")
+            )),
+            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "Time", "Time (2h 5m 3s)", false)
+        );
+}
+
+
+
+
+
     public static void main(String[] args) {
         String token = "";// Insert your bot's token here
+        Long serverId;
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
         Template.map.clear();
         Template.getRequestAll().forEach((t) -> Template.map.putIfAbsent(t.getId(), t));
@@ -95,7 +147,8 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-        )).createGlobal(api).join();
+        )).createForServer(api, serverId).join();
+        //createForServer(api,serverId).join();
 
 
 
@@ -113,7 +166,7 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-        )).createGlobal(api).join();
+        )).createForServer(api, serverId).join();
 
 
 
@@ -131,7 +184,8 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-        )).createGlobal(api).join();
+
+        )).createForServer(api, serverId).join();
 
 
 
@@ -144,7 +198,7 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-        )).createGlobal(api).join();
+        )).createForServer(api, serverId).join();
 
 
 
@@ -163,7 +217,7 @@ public class Discord {
             SlashCommandOptionChoice.create("Cardio", "Cardio")
             ))
             
-        )).createGlobal(api).join();
+        )).createForServer(api, serverId).join();
 
 
 
@@ -182,8 +236,7 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-        )).createGlobal(api).join();
-
+        )).createForServer(api,serverId).join();
 
 
 
@@ -196,7 +249,7 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-        )).createGlobal(api).join();
+        )).createForServer(api,serverId).join();
     SlashCommand editisometricCommand = SlashCommand.with("editisometric", "lists isometric workouts for editing",
         Arrays.asList(
             SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "search", "Type of list",true,
@@ -205,7 +258,7 @@ public class Discord {
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-        )).createGlobal(api).join();
+        )).createForServer(api,serverId).join();
 
 SlashCommand editcardioCommand = SlashCommand.with("editcardio", "lists cardio workouts for editing",
         Arrays.asList(
@@ -215,7 +268,7 @@ SlashCommand editcardioCommand = SlashCommand.with("editcardio", "lists cardio w
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-        )).createGlobal(api).join();
+        )).createForServer(api,serverId).join();
 
 SlashCommand editallCommand = SlashCommand.with("editall", "lists all workouts for editing",
         Arrays.asList(
@@ -225,7 +278,7 @@ SlashCommand editallCommand = SlashCommand.with("editall", "lists all workouts f
             SlashCommandOptionChoice.create("week","week"),
             SlashCommandOptionChoice.create("month","month")
             ))
-        )).createGlobal(api).join();
+        )).createForServer(api,serverId).join();
 
 SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exercises for editing",
         Arrays.asList(
@@ -235,111 +288,18 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
             SlashCommandOptionChoice.create("Isometric", "Isometric"),
             SlashCommandOptionChoice.create("Cardio", "Cardio")
             ))
-        )).createGlobal(api).join();
+        )).createForServer(api,serverId).join();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //This is the strength command
     SlashCommand strengthCommand = SlashCommand.with("strength", "Testing for to see if I can get args.", 
-    Arrays.asList(
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
-            createTemplateChoiceList("strength")
-            ),
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "weight", "weight", true),
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
-                Arrays.asList(
-                        SlashCommandOptionChoice.create("KG", "KG"),
-                        SlashCommandOptionChoice.create("LB", "LB")
-            )),
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "set", "the set of reps (1,2,3,4,)", true)
-        )).createGlobal(api).join();
+    getStrengthOptions()).createForServer(api,serverId).join();
 
+    SlashCommand isometricCommand = SlashCommand.with("isometric", "Testing for to see if I can get args.", 
+    getIsometricOptions()).createForServer(api,serverId).join();
 
-
-
-
-
-
-
-
-
-
-        SlashCommand isometricCommand = SlashCommand.with("isometric", "Testing for to see if I can get args.", 
-    Arrays.asList(
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
-            createTemplateChoiceList("isometric")
-            ),
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "weight", "weight", true),
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
-                Arrays.asList(
-                        SlashCommandOptionChoice.create("KG", "KG"),
-                        SlashCommandOptionChoice.create("LB", "LB")
-            )),
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "Time", "Time 2h 5m 3s, 2h 5m 3s", true)
-        )).createGlobal(api).join();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //This is the cardio command
     SlashCommand cardioCommand = SlashCommand.with("cardio", "Testing for to see if I can get args.", 
-    Arrays.asList(
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "templateId", "template id", true, 
-            createTemplateChoiceList("cardio")
-            ),
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.DECIMAL, "distance", "distance", true),
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "unit", "unit", true,
-                Arrays.asList(
-                        SlashCommandOptionChoice.create("MI", "MI"),
-                        SlashCommandOptionChoice.create("KM", "KM")
-            )),
-            SlashCommandOption.createWithChoices(SlashCommandOptionType.STRING, "Time", "Time (2h 5m 3s)", false)
-        )).createGlobal(api).join();
-
-
-
-
-
-
-
-
-
-
-
-
+    getCardioOptions()
+        ).createForServer(api,serverId).join();
 
 
 
@@ -352,7 +312,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
                     SlashCommandOptionChoice.create("Isometric", "Isometric")
                     )),
                 SlashCommandOption.create(SlashCommandOptionType.STRING, "name", "name of exercise", true)
-            )).createGlobal(api).join();
+            )).createForServer(api,serverId).join();
     
 
 
@@ -367,7 +327,6 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
 
   
         api.addButtonClickListener(event -> {
-    // Check if the button clicked is the one you are interested in
     //System.out.println(event.getButtonInteraction().getCustomId());
         ButtonInteraction b = event.getButtonInteraction();
         Message message = b.getMessage();
@@ -395,9 +354,7 @@ SlashCommand editexerciseCommand = SlashCommand.with("editexercise", "lists exer
         
         //System.out.println(btnStr);
 
-
-        if (btnStr.equals("Strength")){
-
+if (btnStr.equals("Strength")){
             Strength strength = Strength.getRequestId(id).get(0);
             workoutEditMenu(b,                    
             strength,
@@ -589,6 +546,12 @@ if (btnStr.equals("templateDelete")){
             catch (Exception e){
                 e.printStackTrace();
             }
+            strengthCommand.createSlashCommandUpdater().setSlashCommandOptions(getStrengthOptions())
+                .updateForServer(api,serverId).join();
+            isometricCommand.createSlashCommandUpdater().setSlashCommandOptions(getIsometricOptions())
+                .updateForServer(api, serverId).join();
+            cardioCommand.createSlashCommandUpdater().setSlashCommandOptions(getCardioOptions())
+                .updateForServer(api, serverId).join();
             event.getButtonInteraction().acknowledge();
         }
 
@@ -704,7 +667,6 @@ if (btnStr.equals("templateDelete")){
     if (mdlStr.startsWith("cardio")){
         Cardio c = Cardio.getRequestId(id).get(0);
         String input = mdl.getTextInputValues().get(0);
-        System.out.println("input is: "+ input);
         switch(mdlStr){
             case "cardioTime":
                 c.setTime(TimeConversion.convertToSqlTime(input));            
@@ -760,9 +722,18 @@ if (btnStr.equals("templateDelete")){
                 break;
             case "exercise":
                 postTemplate(sci);
-                strengthCommand.createSlashCommandUpdater().updateGlobal(api).join();
-                isometricCommand.createSlashCommandUpdater().updateGlobal(api).join();
-                cardioCommand.createSlashCommandUpdater().updateGlobal(api).join();
+                try {
+                TimeUnit.SECONDS.sleep(2);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                strengthCommand.createSlashCommandUpdater().setSlashCommandOptions(getStrengthOptions())
+                    .updateForServer(api,serverId).join();
+                isometricCommand.createSlashCommandUpdater().setSlashCommandOptions(getIsometricOptions())
+                    .updateForServer(api, serverId).join();
+                cardioCommand.createSlashCommandUpdater().setSlashCommandOptions(getCardioOptions())
+                    .updateForServer(api, serverId).join();
+
                 break;
             case "listexercise":
                 String eListStr = "";
@@ -776,27 +747,27 @@ if (btnStr.equals("templateDelete")){
                 break;
             case "editstrength":
                 for (MessageBuilder mb : new ButtonMenu(sci,getStrengthDate(sci)).getList())
-                    mb.send(sci.getUser())
+                    mb.send(sci.getChannel().get())
                     .thenAccept(message -> {
                     MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
-                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                    deletionScheduler.scheduleMessageDeletion(message, 1);
                 }); 
                 break;
             case "editisometric":
                 for (MessageBuilder mb : new ButtonMenu(sci,getIsometricDate(sci)).getList())
-                    mb.send(sci.getUser())
+                    mb.send(sci.getChannel().get())
                     .thenAccept(message -> {
                     MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
-                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                    deletionScheduler.scheduleMessageDeletion(message, 1);
                 }); 
 
                 break;
             case "editcardio":
                 for (MessageBuilder mb : new ButtonMenu(sci,getCardioDate(sci)).getList())
-                    mb.send(sci.getUser())
+                    mb.send(sci.getChannel().get())
                     .thenAccept(message -> {
                     MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
-                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                    deletionScheduler.scheduleMessageDeletion(message, 1);
                 }); 
 
                 break;
@@ -806,10 +777,10 @@ if (btnStr.equals("templateDelete")){
                 editAll.addAll(getIsometricDate(sci));
                 editAll.addAll(getCardioDate(sci));
                 for (MessageBuilder mb : new ButtonMenu(sci,editAll).getList())
-                    mb.send(sci.getUser())
+                    mb.send(sci.getChannel().get())
                     .thenAccept(message -> {
                     MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
-                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                    deletionScheduler.scheduleMessageDeletion(message, 1);
                 }); 
 
                 break;
@@ -822,10 +793,10 @@ if (btnStr.equals("templateDelete")){
                         tList.add(t);
                 });
                 for (MessageBuilder mb : new TemplateMenu(sci,tList).getList())
-                    mb.send(sci.getUser())
+                    mb.send(sci.getChannel().get())
                     .thenAccept(message -> {
                     MessageDeletionScheduler deletionScheduler = new MessageDeletionScheduler();
-                    deletionScheduler.scheduleMessageDeletion(message, 2); // 2 minutes
+                    deletionScheduler.scheduleMessageDeletion(message, 1);
                 }); 
 
                 break;

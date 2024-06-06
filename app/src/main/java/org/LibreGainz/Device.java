@@ -8,7 +8,7 @@ public class Device {
     private int userId;
     @JsonProperty("timestamp")
     private Timestamp sync;
-    private static String baseUrl = "http://remllez.com:8080";
+    private static String baseUrl = "http://localhost:8081";
     private static User user = new User("tina");
 
     public long getId() {
